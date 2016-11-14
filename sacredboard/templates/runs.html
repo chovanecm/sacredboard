@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Runs</title>
+</head>
+<body>
+    <h1>This is the list of runs</h1>
+    {% for run in runs %}
+        <div>
+            <h3>{{run.experiment.name}}</h3>
+            Status: {{run.status}}<br>
+            Start time: {{run.start_time}}<br>
+            Last active: {{run.heartbeat}} <br>
+            Active before: {{run.heartbeat | timediff}} <br>
+        </div>
+    {% endfor %}
+</body>
+</html>
