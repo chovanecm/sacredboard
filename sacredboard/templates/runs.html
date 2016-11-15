@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Runs</title>
+
+    <script src="//code.jquery.com/jquery-1.12.3.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('table').DataTable();
+        });
+    </script>
 </head>
 <body>
 <h1>This is the list of runs</h1>
@@ -12,8 +22,8 @@
         <th>Experiment name</th>
         <th>Status</th>
         <th>Start time</th>
-        <th>Last active</th>
-        <th>Active before</th>
+        <th>Last activity</th>
+        <th>No update for (s)</th>
     </tr>
     </thead>
     <tbody>

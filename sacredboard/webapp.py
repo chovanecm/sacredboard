@@ -44,6 +44,7 @@ def timediff(time):
 def run(debug, m):
     add_mongo_config(app, m)
     app.config['DEBUG'] = debug
+    app.debug = debug
     app.run(host="0.0.0.0", debug=debug)
 
 
