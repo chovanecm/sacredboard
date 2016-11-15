@@ -5,15 +5,28 @@
     <title>Runs</title>
 </head>
 <body>
-    <h1>This is the list of runs</h1>
+<h1>This is the list of runs</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Experiment name</th>
+        <th>Status</th>
+        <th>Start time</th>
+        <th>Last active</th>
+        <th>Active before</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for run in runs %}
-        <div>
-            <h3>{{run.experiment.name}}</h3>
-            Status: {{run.status}}<br>
-            Start time: {{run.start_time}}<br>
-            Last active: {{run.heartbeat}} <br>
-            Active before: {{run.heartbeat | timediff}} <br>
-        </div>
+    <tr>
+        <td>{{run.experiment.name}}</td>
+        <td>{{run.status}}</td>
+        <td>{{run.start_time}}</td>
+        <td>{{run.heartbeat}}</td>
+        <td>{{run.heartbeat | timediff}}</td>
+    </tr>
     {% endfor %}
+    </tbody>
+</table>
 </body>
 </html>

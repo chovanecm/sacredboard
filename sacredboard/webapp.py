@@ -26,7 +26,7 @@ def runs():
     import pymongo
     client = pymongo.MongoClient(host=app.config["mongo"]["host"], port=app.config["mongo"]["port"])
     db = getattr(client, app.config["mongo"]["db"])
-    return render_template("runs.html", runs=db.default.runs.find(), type=type)
+    return render_template("runs.html", runs=db.runs.find(), type=type)
 
 
 @app.template_filter("timediff")
@@ -43,6 +43,7 @@ def timediff(time):
 @click.option("-m", default="sacred")
 def run(debug, m):
     add_mongo_config(app, m)
+    app.config['DEBUG'] = debug
     app.run(host="0.0.0.0", debug=debug)
 
 
