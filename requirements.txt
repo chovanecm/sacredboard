@@ -1,4 +1,3 @@
 flask
 click
 pymongo
-bson

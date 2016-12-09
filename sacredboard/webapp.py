@@ -1,41 +1,11 @@
-from flask import Flask
-from flask import render_template
-from flask import jsonify
-from bson.json_util import dumps
-
+import locale
 import click
+from flask import Flask
+from sacredboard.config import jinja_filters
+from sacredboard.config import routes
+
+locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
-
-
-@app.route("/")
-def hello_world():
-    return "Hello world"
-
-
-@app.route("/api/runs")
-def api_runs():
-    import pymongo
-    client = pymongo.MongoClient(host=app.config["mongo"]["host"], port=app.config["mongo"]["port"])
-    db = getattr(client, app.config["mongo"]["db"])
-    results = list(db.default.runs.find())
-    return dumps(results)
-
-
-@app.route("/runs")
-def runs():
-    import pymongo
-    client = pymongo.MongoClient(host=app.config["mongo"]["host"], port=app.config["mongo"]["port"])
-    db = getattr(client, app.config["mongo"]["db"])
-    return render_template("runs.html", runs=db.runs.find(), type=type)
-
-
-@app.template_filter("timediff")
-def timediff(time):
-    import datetime
-    now = datetime.datetime.now()
-    diff = now - time
-    diff_sec = diff.total_seconds()
-    return diff_sec
 
 
 @click.command()
@@ -45,6 +15,8 @@ def run(debug, m):
     add_mongo_config(app, m)
     app.config['DEBUG'] = debug
     app.debug = debug
+    jinja_filters.setup_filters(app)
+    routes.setup_routes(app)
     app.run(host="0.0.0.0", debug=debug)
 
 

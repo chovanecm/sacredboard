@@ -31,8 +31,8 @@
     <tr>
         <td>{{run.experiment.name}}</td>
         <td>{{run.status}}</td>
-        <td>{{run.start_time}}</td>
-        <td>{{run.heartbeat}}</td>
+        <td>{{run.start_time | format_datetime}}</td>
+        <td>{{run.heartbeat | format_datetime }}</td>
         <td>{{run.heartbeat | timediff}}</td>
     </tr>
     {% endfor %}
