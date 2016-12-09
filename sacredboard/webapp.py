@@ -3,7 +3,7 @@ import click
 from flask import Flask
 from sacredboard.config import jinja_filters
 from sacredboard.config import routes
-
+from sacredboard.app.data.mongodb import PyMongoDataAccess
 locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
 
@@ -29,7 +29,8 @@ def add_mongo_config(app, connection_string):
         config["port"] = int(split_string[-2])
     if len(split_string) > 2:
         config["host"] = split_string[-3]
-    app.config["mongo"] = config
+    app.config["data"] = PyMongoDataAccess(config["host"], config["port"], config["db"])
+    app.config["data"].connect()
 
 if __name__ == '__main__':
     run()
