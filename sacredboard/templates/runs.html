@@ -2,15 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Runs</title>
 
     <script src="//code.jquery.com/jquery-1.12.3.js"></script>
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 
+    <!-- Responsive -->
+    <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css">
+
+
+    <!-- Column reorder -->
+
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/colreorder/1.3.2/css/colReorder.dataTables.min.css">
+    <script src="https://cdn.datatables.net/colreorder/1.3.2/js/dataTables.colReorder.min.js"></script>
+
+
+    <!-- Scroller for fast rendering-->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/scroller/1.4.2/css/scroller.dataTables.min.css">
+    <script src="https://cdn.datatables.net/scroller/1.4.2/js/dataTables.scroller.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
-            $('table').DataTable();
+            $('table').DataTable(
+                {
+                    responsive: true,
+                    colReorder: true,
+                    // Scroller:
+                    scrollY: 200,
+                    deferRender: true,
+                    scroller: false,
+
+                    serverSide: true,
+                    ajax: '/api/runs',
+                    "columns": [
+                        {"data": "experiment_name"},
+                        {"data": "status"},
+                        {"data": "start_time"},
+                        {"data": "heartbeat"},
+                        {"data": "heartbeat_diff"},
+                        {"data": "hostname"},
+                        {"data": "captured_out_last_line"},
+                        {"data": "result"}
+                    ]
+                }
+            );
         });
     </script>
 </head>
