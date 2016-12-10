@@ -24,16 +24,22 @@
         <th>Start time</th>
         <th>Last activity</th>
         <th>No update for (s)</th>
+        <th>Hostname</th>
+        <th>Last captured output</th>
+        <th>Result</th>
     </tr>
     </thead>
     <tbody>
     {% for run in runs %}
     <tr>
         <td>{{run.experiment.name}}</td>
-        <td>{{run.status}}</td>
+        <td title="{{run.status}}">{{run.status | first_letter}}</td>
         <td>{{run.start_time | format_datetime}}</td>
         <td>{{run.heartbeat | format_datetime }}</td>
         <td>{{run.heartbeat | timediff}}</td>
+        <td>{{run.host.hostname}}</td>
+        <td>{{run.captured_out | last_line}}</td>
+        <td>{{run.result}}</td>
     </tr>
     {% endfor %}
     </tbody>
