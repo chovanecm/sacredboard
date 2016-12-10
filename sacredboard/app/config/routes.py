@@ -1,6 +1,6 @@
 from flask import render_template
 from flask import Blueprint
-
+from flask import current_app
 routes = Blueprint("routes", __name__)
 
 
@@ -11,9 +11,9 @@ def hello_world():
 
 @routes.route("/runs")
 def runs():
-    return render_template("runs.html", runs=routes.sacred_data.runs(), type=type)
+    data = current_app.config["data"]
+    return render_template("runs.html", runs=data.runs(), type=type)
 
 
 def setup_routes(app):
     app.register_blueprint(routes)
-    routes.sacred_data = app.config["data"]
