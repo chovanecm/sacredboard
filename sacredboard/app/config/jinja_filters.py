@@ -2,7 +2,7 @@ import datetime
 from flask import Blueprint
 
 filters = Blueprint("filters", __name__)
-
+from bson.json_util import dumps
 
 @filters.app_template_filter("format_datetime")
 def format_datetime(value):
@@ -42,6 +42,10 @@ def last_line(text):
 @filters.app_template_filter("first_letter")
 def first_letter(text):
     return text[:1]
+
+@filters.app_template_filter("dump_json")
+def dump_json(obj):
+    return dumps(obj)
 
 
 def setup_filters(app):

@@ -42,14 +42,14 @@
                     serverSide: true,
                     ajax: '/api/runs',
                     "columns": [
-                        {"data": "experiment_name"},
-                        {"data": "status"},
-                        {"data": "start_time"},
-                        {"data": "heartbeat"},
-                        {"data": "heartbeat_diff"},
-                        {"data": "hostname"},
-                        {"data": "captured_out_last_line"},
-                        {"data": "result"}
+                        {"data": "experiment_name", "name": "experiment.name"},
+                        {"data": "status", "name": "status"},
+                        {"data": "start_time", "name": "start_time"},
+                        {"data": "heartbeat", "name": "heartbeat"},
+                        {"data": "heartbeat_diff", "name": "heartbeat"},
+                        {"data": "hostname", "name": "hostname"},
+                        {"data": "captured_out_last_line", "name": "captured_out", "orderable": false},
+                        {"data": "result", "name": "result"}
                     ]
                 }
             );
