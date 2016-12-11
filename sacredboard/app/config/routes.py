@@ -39,7 +39,7 @@ def api_runs():
     # records_total should be the total size of the records in the databse, not fo that what was returned
     records_total = runs.count()
     records_filtered = runs.count()
-    return Response(render_template("api/runs.js", runs=[run for run in runs], draw=draw, recordsTotal=records_total,
+    return Response(render_template("api/runs.js", runs=runs, draw=draw, recordsTotal=records_total,
                                     recordsFiltered=records_filtered), mimetype="application/json")
 
 

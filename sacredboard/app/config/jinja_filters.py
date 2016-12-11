@@ -43,10 +43,15 @@ def last_line(text):
 def first_letter(text):
     return text[:1]
 
+
 @filters.app_template_filter("dump_json")
 def dump_json(obj):
     return dumps(obj)
 
+
+@filters.app_template_filter("tostr")
+def tostr(obj):
+    return str(obj)
 
 def setup_filters(app):
     app.register_blueprint(filters)
