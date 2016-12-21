@@ -1,5 +1,5 @@
 import pymongo
-
+import bson
 
 class PyMongoDataAccess:
 
@@ -13,15 +13,18 @@ class PyMongoDataAccess:
         self._client = pymongo.MongoClient(host=self._host, port=self._port)
         self._db = getattr(self._client, self._db_name)
 
-    def runs(self, sort_by=None, sort_direction=None, start=0, limit=None):
+    def get_runs(self, sort_by=None, sort_direction=None, start=0, limit=None):
         cursor = self._db.runs.find()
         if (sort_by is not None):
-            cursor =  self._apply_sort(cursor, sort_by, sort_direction)
+            cursor = self._apply_sort(cursor, sort_by, sort_direction)
         cursor = cursor.skip(start)
         if limit is not None:
             cursor = cursor.limit(limit)
         return cursor
 
+    def get_run(self, run_id):
+        cursor = self._db.runs.find({"_id": bson.ObjectId(run_id)})
+        return cursor
 
     def _apply_sort(self, cursor, sort_by, sort_direction):
         """
