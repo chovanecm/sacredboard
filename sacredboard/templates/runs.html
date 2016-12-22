@@ -6,58 +6,92 @@
 
     <title>Runs</title>
 
-    <script src="//code.jquery.com/jquery-1.12.3.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-
-    <!-- Responsive -->
-    <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+    <!-- jQuery -->
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <!-- DataTables, jQuery and its plugins, debug mode -->
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css">
+          href="https://cdn.datatables.net/v/bs-3.3.7/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-html5-1.2.4/b-print-1.2.4/fh-3.1.2/sc-1.4.2/datatables.css"/>
 
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs-3.3.7/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.4/b-html5-1.2.4/b-print-1.2.4/fh-3.1.2/sc-1.4.2/datatables.js"></script>
 
-    <!-- Column reorder -->
-
-    <link rel="stylesheet" type="text/css"
-          href="https://cdn.datatables.net/colreorder/1.3.2/css/colReorder.dataTables.min.css">
-    <script src="https://cdn.datatables.net/colreorder/1.3.2/js/dataTables.colReorder.min.js"></script>
-
-
-    <!-- Scroller for fast rendering-->
-    <link rel="stylesheet" type="text/css"
-          href="https://cdn.datatables.net/scroller/1.4.2/css/scroller.dataTables.min.css">
-    <script src="https://cdn.datatables.net/scroller/1.4.2/js/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/sacredboard.js')}}"></script>
 
     <!-- master-detail view -->
     <style type="text/css">
-        #runs tr {
+        #runs tr[role="row"] {
             cursor: pointer;
+        }
+
+        td.details-control:before {
+            /*background: url('../resources/details_open.png') no-repeat center center;*/
+            content: "+";
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control:before {
+            /*background: url('../resources/details_close.png') no-repeat center center;*/
+            content: "-";
+
         }
     </style>
     <script type="text/javascript">
         function format(d) {
             // `d` is the original data object for the row
-            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-             '<tr>' +
-             '<td>Full captured out:</td>' +
-             '<td><pre style="overflow: auto; height: 20eM">' + d.object.captured_out + '</pre></td>' +
-             '</tr>' +
-             '</table>';
+            var tabs = `<div class="container-fluid" style="height: 20eM; padding-left: 1eM; padding-top: 1eM">
+                            <div class="row">
+                                <div class="col-md-2">
+                                      <ul class="nav nav-pills nav-stacked">
+                                        <li role="presentation" class="active"><a href="#captured-output" data-toggle="pill">Captured output</a></li>
+                                        <li role="presentation"><a href="#fragment-2" data-toggle="pill">Two</a></li>
+                                        <li role="presentation"><a href="#fragment-3" data-toggle="pill">Three</a></li>
+                                      </ul>
+                                  </div>
+                                  <div class="tab-content col-md-10">
+                                      <div id="captured-output" class="tab-pane active">
+                                        <pre style="overflow: auto; height: 18eM; width: 75eM; background-color: lavender" class="scrollDown">` + d.object.captured_out + `</pre>
+                                      </div>
+                                      <div id="fragment-2" class="tab-pane">
+                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                      </div>
+                                      <div id="fragment-3"  class="tab-pane">
+                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>`;
+
+            var tmp = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                '<tr>' +
+                '<td>Full captured out:</td>' +
+                '<td><pre style="overflow: auto; height: 20eM; width: 75eM; background-color: lavender" class="scrollDown">' + d.object.captured_out + '</pre></td>' +
+                '</tr>' +
+                '</table>';
+            return tabs;
 
         }
         $(document).ready(function () {
             var table = $('#runs').DataTable(
                 {
-                    responsive: false,
                     colReorder: true,
+                    responsive: false,
+
                     // Scroller:
                     scrollY: window.innerHeight / 1.3,
                     deferRender: true,
                     scroller: false,
-
                     serverSide: true,
                     ajax: '{{url_for("routes.api_runs")}}',
                     "columns": [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": ''
+                        },
                         {"data": "experiment_name", "name": "experiment.name"},
                         {
                             "data": "status", "name": "status", "render": function (data, row) {
@@ -72,14 +106,13 @@
                         {"data": "result", "name": "result"},
                         {"data": "id", "visible": false}
                     ],
-                    order: [["4", "desc"]]
+                    order: [["5", "desc"]]
                 }
             );
             // Add event listener for opening and closing details
             $('#runs tbody').on('click', 'tr', function () {
                 var tr = $(this)
                 var row = table.row(tr);
-
                 if (row.child.isShown()) {
                     // This row is already open - close it
                     row.child.hide();
@@ -91,48 +124,55 @@
                         url: "{{url_for('routes.api_run', run_id='')}}" + id
                     }).done(function (data) {
                         row.child(format(data.data[0])).show();
+                        $(tr[0].nextSibling).find(".scrollDown").each(function (i, obj) {
+                            scrollDown(obj);
+                        });
                     });
 
                     tr.addClass('shown');
                 }
             });
-        });
 
+
+        });
 
     </script>
 </head>
 <body>
 <h1>This is the list of runs</h1>
-<table id="runs">
-    <thead>
-    <tr>
-        <th>Experiment name</th>
-        <th>Status</th>
-        <th>Start time</th>
-        <th>Last activity</th>
-        <th>No update for (s)</th>
-        <th>Hostname</th>
-        <th>Last captured output</th>
-        <th>Result</th>
+<div class="container-fluid">
+    <table id="runs" class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th><!-- expand / hide button --></th>
+            <th>Experiment name</th>
+            <th>Status</th>
+            <th>Start time</th>
+            <th>Last activity</th>
+            <th>No update for (s)</th>
+            <th>Hostname</th>
+            <th>Last captured output</th>
+            <th>Result</th>
 
-    </tr>
-    </thead>
-    <tbody>
-    {% for run in runs %}
-    <tr>
-        <td></td>
-        <td>{{run.experiment.name}}</td>
-        <td title="{{run.status}}">{{run.status | first_letter}}</td>
-        <td>{{run.start_time | format_datetime}}</td>
-        <td>{{run.heartbeat | format_datetime }}</td>
-        <td>{{run.heartbeat | timediff}}</td>
-        <td>{{run.host.hostname}}</td>
-        <td>{{run.captured_out | last_line}}</td>
-        <td>{{run.result}}</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for run in runs %}
+        <tr>
+            <td></td>
+            <td>{{run.experiment.name}}</td>
+            <td title="{{run.status}}">{{run.status | first_letter}}</td>
+            <td>{{run.start_time | format_datetime}}</td>
+            <td>{{run.heartbeat | format_datetime }}</td>
+            <td>{{run.heartbeat | timediff}}</td>
+            <td>{{run.host.hostname}}</td>
+            <td>{{run.captured_out | last_line}}</td>
+            <td>{{run.result}}</td>
 
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
