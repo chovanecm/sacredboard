@@ -33,6 +33,8 @@ def api_runs():
     order_dir = request.args.get("order[0][dir]")
     if order_column is not None:
         order_column = request.args.get("columns[%d][name]" % (int)(order_column))
+        if order_column == "hostname":
+            order_column = "host.hostname"
     runs = data.get_runs(start=start, limit=length, sort_by=order_column, sort_direction=order_dir)
     # records_total should be the total size of the records in the databse, not fo that what was returned
     records_total = runs.count()
