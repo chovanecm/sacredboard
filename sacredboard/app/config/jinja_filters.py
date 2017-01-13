@@ -53,5 +53,12 @@ def dump_json(obj):
 def tostr(obj):
     return str(obj)
 
+
+@filters.app_template_filter("detect_alive_experiment")
+def detect_alive_experiment(timediff):
+    """ Decide whether experiment is alive or not """
+    return timediff < 120
+
+
 def setup_filters(app):
     app.register_blueprint(filters)
