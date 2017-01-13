@@ -74,7 +74,7 @@
                       <ul class="nav nav-pills nav-stacked">
                         <li role="presentation" class="active"><a href="#experiment-config-` + escapeHtml(d.id) + `" data-toggle="pill">Config</a></li>
                         <li role="presentation"><a href="#captured-output-` + escapeHtml(d.id) + `" data-toggle="pill">Captured output</a></li>
-                        <li role="presentation"><a href="#fragment-3" data-toggle="pill">Three</a></li>
+                        <li role="presentation"><a href="#fragment-3` + escapeHtml(d.id) + `" data-toggle="pill">Three</a></li>
                       </ul>
                   </div>
                   <div class="tab-content col-md-10">
@@ -146,21 +146,27 @@
             $('#runs tbody').on('click', 'tr', function () {
                 var tr = $(this)
                 var row = table.row(tr);
-                if (row.data() == undefined) {
-                    // Nothing to do here
-                    return;
-                }
                 if (row.child.isShown()) {
                     // This row is already open - close it
                     row.child.hide();
                     tr.removeClass('shown');
                 }
                 else {
+                    if (row.data() == undefined) {
+                        // Nothing to do here
+                        return;
+                    }
                     var id = row.data().id
                     var f = function () {
                         $.ajax({
                             url: "{{url_for('routes.api_run', run_id='')}}" + id
                         }).done(function (data) {
+                            if (data.data[0].id != row.data().id) {
+                                /* Before this ajax function was called,
+                                  our parent row has changed (belongs to some other experiment)
+                                  there is nothing to do here. */
+                                return;
+                            }
                             var detail_view = null;
                             //Show detailed view if not shown yet
                             if (!row.child.isShown()) {
