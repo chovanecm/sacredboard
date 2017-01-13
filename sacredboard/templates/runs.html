@@ -34,6 +34,7 @@
     <script type="text/javascript"
             src="https://cdn.datatables.net/v/bs/dt-1.10.13/r-2.1.0/sc-1.4.2/datatables.min.js"></script>
 
+    <script type="text/javascript" src="{{url_for('static', filename='js/utils.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/runs.js')}}"></script>
 
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/runs.css')}}"/>
@@ -57,30 +58,45 @@
         }
     </style>
     <script type="text/javascript">
-        function format(d) {
+        function render_config_parameters(config) {
+            var output = "";
+            for (var key in config) {
+                output += '<tr><td>' + escapeHtml(key) + '</td><td>' + escapeHtml(config[key]) + '</td></tr>\n';
+            }
+            return output;
+        }
+        function run_detail_view(d) {
             // `d` is the original data object for the row
-            var tabs = `<div class="container-fluid" style="padding-left: 1eM; padding-top: 1eM">
-                            <div class="row">
-                                <div class="col-md-2">
-                                      <ul class="nav nav-pills nav-stacked">
-                                        <li role="presentation" class="active"><a href="#captured-output" data-toggle="pill">Captured output</a></li>
-                                        <li role="presentation"><a href="#fragment-2" data-toggle="pill">Two</a></li>
-                                        <li role="presentation"><a href="#fragment-3" data-toggle="pill">Three</a></li>
-                                      </ul>
-                                  </div>
-                                  <div class="tab-content col-md-10">
-                                      <div id="captured-output" class="tab-pane active">
-                                        <pre style="overflow: auto; height: 18eM; width: 75eM; background-color: lavender" class="scrollDown" sacred-content="captured_out">` + d.object.captured_out + `</pre>
-                                      </div>
-                                      <div id="fragment-2" class="tab-pane">
-                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                                      </div>
-                                      <div id="fragment-3"  class="tab-pane">
-                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                                      </div>
-                                  </div>
-                                </div>
-                            </div>`;
+            var tabs = `
+            <div class="container-fluid" style="padding-left: 1eM; padding-top: 1eM">
+            <div class="row">
+                <div class="col-md-2">
+                      <ul class="nav nav-pills nav-stacked">
+                        <li role="presentation" class="active"><a href="#experiment-config-` + escapeHtml(d.id) + `" data-toggle="pill">Config</a></li>
+                        <li role="presentation"><a href="#captured-output-` + escapeHtml(d.id) + `" data-toggle="pill">Captured output</a></li>
+                        <li role="presentation"><a href="#fragment-3" data-toggle="pill">Three</a></li>
+                      </ul>
+                  </div>
+                  <div class="tab-content col-md-10">
+                      <div id="experiment-config-` + escapeHtml(d.id) + `" class="tab-pane active table-responsive">
+                        <table class="table">
+                        <caption>Run configuration</caption>
+                        __CONFIG_PARAMETERS__
+                        </table>
+                      </div>
+                      <div id="captured-output-` + escapeHtml(d.id) + `" class="tab-pane">
+                        <pre style="overflow: auto; height: 18eM; width: 75eM; background-color: lavender"
+                         class="scrollDown" sacred-content="captured_out">`
+                + escapeHtml(d.object.captured_out) + `</pre>
+                      </div>
+                      <div id="fragment-3-` + escapeHtml(d.id) + `"  class="tab-pane">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                      </div>
+                  </div>
+                </div>
+            </div>
+            `;
+            tabs = tabs.replace(/__CONFIG_PARAMETERS__/g, render_config_parameters(d.object.config));
             return tabs;
 
         }
@@ -91,7 +107,7 @@
                     responsive: false,
 
                     // Scroller:
-                    scrollY: window.innerHeight / 1.3,
+                    scrollY: window.innerHeight / 1.4,
                     deferRender: true,
                     scroller: false,
                     serverSide: true,
@@ -106,8 +122,8 @@
                         {
                             "data": "experiment_name", "name": "experiment.name",
                             "render": function (data, type, row) {
-                              return '<span sacred-content="status-icon" sacred-status="' + row.status +
-                                  '" sacred-is-alive="' + row.is_alive + '">&block;</span>  ' + data;
+                                return '<span sacred-content="status-icon" sacred-status="' + row.status +
+                                    '" sacred-is-alive="' + row.is_alive + '">&block;</span>  ' + data;
                             }
                         },
                         /*{
@@ -148,7 +164,7 @@
                             var detail_view = null;
                             //Show detailed view if not shown yet
                             if (!row.child.isShown()) {
-                                row.child(format(data.data[0])).show();
+                                row.child(run_detail_view(data.data[0])).show();
                                 var detail_view = tr[0].nextSibling;
                             } else {
                                 //udpdate content
