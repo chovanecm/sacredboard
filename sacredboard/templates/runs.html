@@ -39,75 +39,7 @@
 
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/runs.css')}}"/>
 
-    <!-- master-detail view -->
-    <style type="text/css">
-        #runs tr[role="row"] {
-            cursor: pointer;
-        }
-
-        td.details-control:before {
-            /*background: url('../resources/details_open.png') no-repeat center center;*/
-            content: "+";
-            cursor: pointer;
-        }
-
-        tr.shown td.details-control:before {
-            /*background: url('../resources/details_close.png') no-repeat center center;*/
-            content: "-";
-
-        }
-    </style>
     <script type="text/javascript">
-        function render_config_parameters(config, config_prefix = "") {
-            var output = "";
-            for (var key in config) {
-                if (typeof config[key] == "object") {
-                    output += render_config_parameters(config[key], key.toString() + ".");
-                } else {
-                    output += '<tr><td>' + escapeHtml(config_prefix + key) + '</td><td>' + escapeHtml(config[key]) + '</td></tr>\n';
-                }
-
-            }
-            return output;
-        }
-        function run_detail_view(d) {
-            // `d` is the original data object for the row
-            var tabs = `
-            <div class="container-fluid detail-view">
-            <div class="row">
-                <div class="col-md-2">
-                      <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation" class="active"><a href="#experiment-config-` + escapeHtml(d.id) + `" data-toggle="pill">Config</a></li>
-                        <li role="presentation"><a href="#captured-output-` + escapeHtml(d.id) + `" data-toggle="pill">Captured output</a></li>
-                        <li role="presentation"><a href="#fragment-3` + escapeHtml(d.id) + `" data-toggle="pill">Three</a></li>
-                      </ul>
-                  </div>
-                  <div class="tab-content col-md-10">
-                      <div id="experiment-config-` + escapeHtml(d.id) + `" class="tab-pane active table-responsive">
-                      <h4>Run configuration</h4>
-                      <div class="detail-page-box">
-                            <table class="table table-condensed">
-                            <caption style="display: none">Run configuration</caption>
-                            __CONFIG_PARAMETERS__
-                            </table>
-                        </div>
-                      </div>
-                      <div id="captured-output-` + escapeHtml(d.id) + `" class="tab-pane">
-                      <h4>Captured output from the experiment</h4>
-                        <pre class="scrollDown detail-page-box" sacred-content="captured_out">`
-                + escapeHtml(d.object.captured_out) + `</pre>
-                      </div>
-                      <div id="fragment-3-` + escapeHtml(d.id) + `"  class="tab-pane">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                      </div>
-                  </div>
-                </div>
-            </div>
-            `;
-            tabs = tabs.replace(/__CONFIG_PARAMETERS__/g, render_config_parameters(d.object.config));
-            return tabs;
-
-        }
         $(document).ready(function () {
             var table = $('#runs').DataTable(
                 {
@@ -178,7 +110,7 @@
                             var detail_view = null;
                             //Show detailed view if not shown yet
                             if (!row.child.isShown()) {
-                                row.child(run_detail_view(data.data[0])).show();
+                                row.child(generate_detail_view(data.data[0])).show();
                                 var detail_view = tr[0].nextSibling;
                             } else {
                                 //udpdate content
