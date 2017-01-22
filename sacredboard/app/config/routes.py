@@ -1,7 +1,11 @@
-from flask import render_template
+import re
+
 from flask import Blueprint
 from flask import current_app
-from flask import request, Response
+from flask import render_template
+from flask import request, Response, redirect
+
+import sacredboard.app.process.process as proc
 
 routes = Blueprint("routes", __name__)
 
@@ -51,6 +55,17 @@ def api_run(run_id):
     records_filtered = runs.count()
     return Response(render_template("api/runs.js", runs=runs, draw=1, recordsTotal=records_total,
                                     recordsFiltered=records_filtered, full_object=True), mimetype="application/json")
+
+
+@routes.route("/tensorboard/<path:log_dir>")
+def run_tensorboard(log_dir):
+    port = int(proc.run_tensorboard(log_dir))
+    url_root = request.url_root
+    url_parts = re.search("://([^:/]+)", url_root)
+    redirect_to_address = url_parts.group(1)
+    return redirect("http://%s:%d" % (redirect_to_address, port))
+
+
 
 def setup_routes(app):
     app.register_blueprint(routes)
