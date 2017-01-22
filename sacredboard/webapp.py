@@ -2,8 +2,9 @@ import locale
 
 import click
 from flask import Flask
-from sacredboard.app.config import jinja_filters
+from gevent.pywsgi import WSGIServer
 
+from sacredboard.app.config import jinja_filters
 from sacredboard.app.config import routes
 from sacredboard.app.data.mongodb import PyMongoDataAccess
 
@@ -21,7 +22,11 @@ def run(debug, m):
     jinja_filters.setup_filters(app)
     routes.setup_routes(app)
     app.config["data"].connect()
-    app.run(host="0.0.0.0", debug=debug)
+    if debug:
+        app.run(debug=True)
+    else:
+        http_server = WSGIServer(('0.0.0.0', 5000), app)
+        http_server.serve_forever()
 
 
 def add_mongo_config(app, connection_string):
