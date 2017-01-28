@@ -23,7 +23,7 @@ def run(debug, m):
     routes.setup_routes(app)
     app.config["data"].connect()
     if debug:
-        app.run(debug=True)
+        app.run(host="0.0.0.0", debug=True)
     else:
         http_server = WSGIServer(('0.0.0.0', 5000), app)
         http_server.serve_forever()
