@@ -50,10 +50,10 @@ def api_runs():
 @routes.route("/api/run/<run_id>")
 def api_run(run_id):
     data = current_app.config["data"]
-    runs = data.get_run(run_id)
-    records_total = runs.count()
-    records_filtered = runs.count()
-    return Response(render_template("api/runs.js", runs=runs, draw=1, recordsTotal=records_total,
+    run = data.get_run(run_id)
+    records_total = 1 if run is not None else 0
+    records_filtered = records_total
+    return Response(render_template("api/runs.js", runs=[run], draw=1, recordsTotal=records_total,
                                     recordsFiltered=records_filtered, full_object=True), mimetype="application/json")
 
 

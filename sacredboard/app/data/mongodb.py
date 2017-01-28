@@ -23,8 +23,15 @@ class PyMongoDataAccess:
         return cursor
 
     def get_run(self, run_id):
-        cursor = self._db.runs.find({"_id": bson.ObjectId(run_id)})
-        return cursor
+        try:
+            cursor = self._db.runs.find({"_id": int(run_id)})
+        except ValueError:
+            # Probably not a number.
+            cursor = self._db.runs.find({"_id": bson.ObjectId(run_id)})
+        run = None
+        for c in cursor:
+            run = c
+        return run
 
     def _apply_sort(self, cursor, sort_by, sort_direction):
         """
