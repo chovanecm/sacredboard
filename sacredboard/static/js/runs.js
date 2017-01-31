@@ -53,7 +53,10 @@ function generate_detail_view(run) {
 }
 
 
-function render_config_parameters(config, config_prefix = "") {
+function render_config_parameters(config, config_prefix) {
+    if (config_prefix == undefined) {
+        config_prefix = "";
+    }
     var output = "";
     for (var key in config) {
         if (typeof config[key] == "object") {
