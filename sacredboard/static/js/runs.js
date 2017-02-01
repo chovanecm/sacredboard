@@ -72,7 +72,7 @@ function render_config_parameters(config, config_prefix) {
 function render_tensorflow_dirs(tensorflow) {
     tensorflow_dirs = tensorflow.logdirs || [];
     if (tensorflow_dirs.length == 0) {
-        return "<em>No Tensorflow logs found. See #TBD link to Sacred doc for more information.</em>";
+        return "<em>No Tensorflow logs found. See the <a href='http://sacred.readthedocs.io/en/latest/tensorflow.html' title='Integration with Tensorflow'>documantation</a> on integration between Sacred ant Tensorflow doc for more information.</em>";
     }
     var output = `<table class="table table-condensed">
                             <caption style="display: none;">Tensorflow logs</caption>
