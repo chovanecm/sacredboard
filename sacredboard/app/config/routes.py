@@ -57,9 +57,16 @@ def api_run(run_id):
                                     recordsFiltered=records_filtered, full_object=True), mimetype="application/json")
 
 
-@routes.route("/tensorboard/<path:log_dir>")
-def run_tensorboard(log_dir):
-    port = int(proc.run_tensorboard(log_dir))
+@routes.route("/tensorboard/<run_id>/<int:tflog_id>")
+def run_tensorboard(run_id, tflog_id):
+    data = current_app.config["data"]
+    # optimisticaly suppose the run exists...
+    run = data.get_run(run_id);
+    base_dir = run["experiment"]["base_dir"];
+    log_dir = run["info"]["tensorflow"]["logdirs"][tflog_id]
+    # TODO ugly!!!
+    path_to_log_dir = base_dir + "/" + log_dir
+    port = int(proc.run_tensorboard(path_to_log_dir))
     url_root = request.url_root
     url_parts = re.search("://([^:/]+)", url_root)
     redirect_to_address = url_parts.group(1)

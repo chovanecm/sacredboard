@@ -48,7 +48,7 @@ function generate_detail_view(run) {
             </div>
             `;
     tabs = tabs.replace(/__CONFIG_PARAMETERS__/g, render_config_parameters(run.object.config));
-    tabs = tabs.replace(/__TENSORFLOW_LOGDIRS__/g, render_tensorflow_dirs(run.object.info.tensorflow || {}));
+    tabs = tabs.replace(/__TENSORFLOW_LOGDIRS__/g, render_tensorflow_dirs(run.id, run.object.info.tensorflow || {}));
     return tabs;
 }
 
@@ -69,7 +69,7 @@ function render_config_parameters(config, config_prefix) {
     return output;
 }
 
-function render_tensorflow_dirs(tensorflow) {
+function render_tensorflow_dirs(experimentId, tensorflow) {
     tensorflow_dirs = tensorflow.logdirs || [];
     if (tensorflow_dirs.length == 0) {
         return "<em>No Tensorflow logs found. See #TBD link to Sacred doc for more information.</em>";
@@ -78,7 +78,7 @@ function render_tensorflow_dirs(tensorflow) {
                             <caption style="display: none;">Tensorflow logs</caption>
                             <thead><th>Log directory</th><th></th></thead>\n`;
     for (var key in tensorflow_dirs) {
-        output += "<tr><td>" + escapeHtml(tensorflow_dirs[key]) + "</td><td></td></tr>\n";
+        output += "<tr><td>" + escapeHtml(tensorflow_dirs[key]) + "</td><td><a href='/tensorboard/" + experimentId + "/" + key + "' target='_blank'>Run Tensorboard</a></td></tr>\n";
     }
     output += `</table>`;
     return output;
