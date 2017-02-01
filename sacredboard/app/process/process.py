@@ -27,7 +27,7 @@ class Process:
         Process.instances.append(self)
 
     def is_running(self):
-        return self.proc is not None and self.proc.returncode is not None
+        return self.proc is not None and not bool(self.proc.poll())
 
     def read_line(self, time_limit=None):
         if self.proc is not None:
@@ -43,9 +43,10 @@ class Process:
         else:
             return None
 
-    def kill(self, wait=False):
+    def terminate(self, wait=False):
         if self.proc is not None:
-            self.proc.kill()
+            self.proc.stdout.close()
+            self.proc.terminate()
             if wait:
                 self.proc.wait()
 
@@ -66,7 +67,7 @@ class Process:
         """
         for instance in Process.instances:
             if instance.is_running():
-                instance.kill(wait)
+                instance.terminate(wait)
 
 
 # Kill all at exit
@@ -87,6 +88,13 @@ class UnexpectedOutputError(ProcessError):
         self.output = output
 
 
+def stop_all_tensorboards():
+    for process in Process.instances:
+        print("Process '%s', running %d" % (process.command[0], process.is_running()))
+        if process.is_running() and process.command[0] == "tensorboard":
+            process.terminate()
+
+
 def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=[]):
     tensorboard_instance = Process(
         TENSORBOARD_BINARY.split(" ") + ["--logdir", logdir, "--host", listen_on] + tensorboard_args)
@@ -102,5 +110,5 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=[]):
         port = search.group(1)
         return port
     else:
-        tensorboard_instance.kill()
+        tensorboard_instance.terminate()
         raise UnexpectedOutputError(data, expected="The port Tensorboard listens on.")

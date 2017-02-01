@@ -22,6 +22,7 @@ def run(debug, m):
     jinja_filters.setup_filters(app)
     routes.setup_routes(app)
     app.config["data"].connect()
+    print("Starting sacredboard on port 5000")
     if debug:
         app.run(host="0.0.0.0", debug=True)
     else:

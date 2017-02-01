@@ -78,7 +78,7 @@ function render_tensorflow_dirs(experimentId, tensorflow) {
                             <caption style="display: none;">Tensorflow logs</caption>
                             <thead><th>Log directory</th><th></th></thead>\n`;
     for (var key in tensorflow_dirs) {
-        output += "<tr><td>" + escapeHtml(tensorflow_dirs[key]) + "</td><td><a href='/tensorboard/" + experimentId + "/" + key + "' target='_blank'>Run Tensorboard</a></td></tr>\n";
+        output += "<tr><td>" + escapeHtml(tensorflow_dirs[key]) + "</td><td><a href='/tensorboard/start/" + experimentId + "/" + key + "' target='_blank'>Run Tensorboard</a></td></tr>\n";
     }
     output += `</table>`;
     return output;
