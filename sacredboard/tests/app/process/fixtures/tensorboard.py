@@ -1,3 +1,4 @@
+# coding=utf-8
 import sys
 import time
 
@@ -11,7 +12,8 @@ import click
 @click.option("--print-nothing", is_flag=True, default=False)
 @click.option("--address-in-use", is_flag=True, default=False)
 @click.option("--sleep-time", default=20)
-def mock_tensorboard(logdir, host, print_nonsense, print_nothing, address_in_use, sleep_time):
+def mock_tensorboard(logdir, host, print_nonsense, print_nothing,
+                     address_in_use, sleep_time):
     if logdir is None:
         print('A logdir must be specified. Run `tensorboard --help` for '
               'details and examples.')

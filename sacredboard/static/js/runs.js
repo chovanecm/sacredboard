@@ -70,7 +70,7 @@ function render_config_parameters(config, config_prefix) {
 }
 
 function render_tensorflow_dirs(experimentId, tensorflow) {
-    tensorflow_dirs = tensorflow.logdirs || [];
+    var tensorflow_dirs = tensorflow.logdirs || [];
     if (tensorflow_dirs.length == 0) {
         return "<em>No Tensorflow logs found. See #TBD link to Sacred doc for more information.</em>";
     }

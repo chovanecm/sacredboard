@@ -1,9 +1,12 @@
-import sacredboard.webapp as wa
+# coding=utf-8
 import pytest
+
+import sacredboard.webapp as wa
 
 
 @pytest.mark.parametrize("config_string",
-                         ("", "database_name", "789:db_name", "anotherhost:789:db_name", "bla:bla:bla"))
+                         ("", "database_name", "789:db_name",
+                          "anotherhost:789:db_name", "bla:bla:bla"))
 def test_add_mongo_config(config_string):
     app = wa.Flask(__name__)
     if config_string == "bla:bla:bla":

@@ -1,15 +1,15 @@
+# coding=utf-8
 import datetime
+
+from bson.json_util import dumps
 from flask import Blueprint
 
 filters = Blueprint("filters", __name__)
-from bson.json_util import dumps
+
 
 @filters.app_template_filter("format_datetime")
 def format_datetime(value):
     return value.strftime('%X %x')
-
-
-format_datetime
 
 
 @filters.app_template_filter("timediff")
@@ -29,14 +29,14 @@ def last_line(text):
     :return:
     :rtype: str
     """
-    last_line = ""
-    while last_line == "" and len(text) > 0:
+    last_line_of_text = ""
+    while last_line_of_text == "" and len(text) > 0:
         last_line_start = text.rfind("\n")
         # Handle one-line strings (without \n)
         last_line_start = max(0, last_line_start)
-        last_line = text[last_line_start:].strip("\r\n ")
+        last_line_of_text = text[last_line_start:].strip("\r\n ")
         text = text[:last_line_start]
-    return last_line
+    return last_line_of_text
 
 
 @filters.app_template_filter("first_letter")
@@ -55,9 +55,9 @@ def tostr(obj):
 
 
 @filters.app_template_filter("detect_alive_experiment")
-def detect_alive_experiment(timediff):
+def detect_alive_experiment(time_difference):
     """ Decide whether experiment is alive or not """
-    return timediff < 120
+    return time_difference < 120
 
 
 def setup_filters(app):

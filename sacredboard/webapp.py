@@ -1,3 +1,4 @@
+# coding=utf-8
 import locale
 
 import click
@@ -39,7 +40,9 @@ def add_mongo_config(app, connection_string):
         config["port"] = int(split_string[-2])
     if len(split_string) > 2:
         config["host"] = split_string[-3]
-    app.config["data"] = PyMongoDataAccess(config["host"], config["port"], config["db"])
+    app.config["data"] = PyMongoDataAccess(
+        config["host"], config["port"], config["db"])
+
 
 if __name__ == '__main__':
     run()
