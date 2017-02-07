@@ -43,6 +43,7 @@ def test_run_tensorboard_binary_not_found():
 
 @py.mark.timeout(15)
 def test_run_tensorboard_timeout():
+    """ Fails on Windows because of missing "poll" on stdout. """
     with py.raises(TimeoutError) as ex:
         port = p.run_tensorboard("/tmp/logdir",
                                  tensorboard_args=["--print-nothing"])
