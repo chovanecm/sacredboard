@@ -6,7 +6,7 @@ from flask import Blueprint
 from flask import current_app
 from flask import render_template
 from flask import request, Response, redirect
-
+from ..process import process
 import sacredboard.app.process.process as proc
 
 routes = Blueprint("routes", __name__)
@@ -92,6 +92,22 @@ def run_tensorboard(run_id, tflog_id):
 def close_tensorboards():
     proc.stop_all_tensorboards()
     return "Stopping tensorboard"
+
+
+@routes.errorhandler(process.TensorboardNotFoundError)
+def handle_tensorboard_not_found(e):
+    return "Tensorboard not found in your system. Please install tensorflow first. Sorry.", 503
+
+
+@routes.errorhandler(TimeoutError)
+def handle_tensorboard_timeout(e):
+    return "Tensorboard does not respond. Sorry.", 503
+
+
+@routes.errorhandler(process.UnexpectedOutputError)
+def handle_tensorboard_timeout(e : process.UnexpectedOutputError):
+    return "Tensorboard outputted '%s'," \
+           " but the information expected was: '%s'. Sorry." % (e.output, e.expected), 503
 
 
 def setup_routes(app):

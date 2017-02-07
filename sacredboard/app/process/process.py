@@ -73,11 +73,11 @@ class Process:
                 instance.terminate(wait)
 
 
-# Kill all at exit
+# Kill all on exit
 atexit.register(Process.terminate_all)
 
 
-class ProcessError(BaseException):
+class ProcessError(Exception):
     pass
 
 
@@ -120,5 +120,5 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
     else:
         tensorboard_instance.terminate()
         raise UnexpectedOutputError(data,
-                                    expected="The port Tensorboard listens on."
+                                    expected="The port Tensorboard that listens on."
                                     )
