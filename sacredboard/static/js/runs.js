@@ -17,9 +17,15 @@ function generate_detail_view(run) {
             <div class="row">
                 <div class="col-md-2">
                       <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation" class="active"><a href="#experiment-config-` + escapeHtml(run.id) + `" data-toggle="pill">Config</a></li>
-                        <li role="presentation"><a href="#captured-output-` + escapeHtml(run.id) + `" data-toggle="pill">Captured output</a></li>
-                        <li role="presentation"><a href="#tensorflow-` + escapeHtml(run.id) + `" data-toggle="pill">Tensorflow logs</a></li>
+                        <li role="presentation" class="active">
+                            <a href="#experiment-config-` + escapeHtml(run.id) + `" data-toggle="pill">Config</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#captured-output-` + escapeHtml(run.id) + `" data-toggle="pill">Captured output</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tensorflow-` + escapeHtml(run.id) + `" data-toggle="pill">Tensorflow logs</a>
+                        </li>
                       </ul>
                   </div>
                   <div class="tab-content col-md-10">
@@ -72,13 +78,18 @@ function render_config_parameters(config, config_prefix) {
 function render_tensorflow_dirs(experimentId, tensorflow) {
     var tensorflow_dirs = tensorflow.logdirs || [];
     if (tensorflow_dirs.length == 0) {
-        return "<em>No Tensorflow logs found. See the <a href='http://sacred.readthedocs.io/en/latest/tensorflow.html' title='Integration with Tensorflow'>documantation</a> on integration between Sacred ant Tensorflow doc for more information.</em>";
+        return "<em>No Tensorflow logs found. See the "
+        + "<!--<a href='http://sacred.readthedocs.io/en/latest/tensorflow.html' title='Integration with Tensorflow'>-->"
+        + "<a href='https://github.com/IDSIA/sacred/blob/develop/docs/tensorflow.rst' title='Integration with Tensorflow'>"
+        + "documantation</a> on integration between Sacred and Tensorflow for more information.</em>";
     }
     var output = `<table class="table table-condensed">
                             <caption style="display: none;">Tensorflow logs</caption>
                             <thead><th>Log directory</th><th></th></thead>\n`;
     for (var key in tensorflow_dirs) {
-        output += "<tr><td>" + escapeHtml(tensorflow_dirs[key]) + "</td><td><a href='/tensorboard/start/" + experimentId + "/" + key + "' target='_blank'>Run Tensorboard</a></td></tr>\n";
+        output += "<tr><td>" + escapeHtml(tensorflow_dirs[key]) + "</td>"
+        + "<td><a href='/tensorboard/start/" + experimentId + "/" + key + "' target='_blank'>Run Tensorboard</a>"
+        + "</td></tr>\n";
     }
     output += `</table>`;
     return output;
