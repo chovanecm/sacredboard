@@ -72,6 +72,26 @@ class Process:
             if instance.is_running():
                 instance.terminate(wait)
 
+    @staticmethod
+    def create_process(command):
+        if getattr(select, "poll", None) is not None:
+            return Process(command)
+        else:
+            return WindowsProcess(command)
+
+
+class WindowsProcess(Process):
+    def __init__(self, command):
+        Process.__init__(self, command)
+
+    def read_line(self, time_limit=None):
+        """ Time limit has no effect.
+         The operation will always block on Windows."""
+        if self.proc is not None:
+            return self.proc.stdout.readline().decode()
+        else:
+            return None
+
 
 # Kill all on exit
 atexit.register(Process.terminate_all)
@@ -102,7 +122,7 @@ def stop_all_tensorboards():
 def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
     if tensorboard_args is None:
         tensorboard_args = []
-    tensorboard_instance = Process(
+    tensorboard_instance = Process.create_process(
         TENSORBOARD_BINARY.split(" ")
         + ["--logdir", logdir, "--host", listen_on] + tensorboard_args)
     try:
