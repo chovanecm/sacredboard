@@ -5,7 +5,7 @@ from pathlib import Path
 from flask import Blueprint
 from flask import current_app
 from flask import render_template
-from flask import request, Response, redirect
+from flask import request, Response, redirect, url_for
 from ..process import process
 import sacredboard.app.process.process as proc
 
@@ -13,8 +13,8 @@ routes = Blueprint("routes", __name__)
 
 
 @routes.route("/")
-def hello_world():
-    return "Hello world"
+def index():
+    return redirect(url_for("routes.show_runs"))
 
 
 @routes.route("/runs")
