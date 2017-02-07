@@ -41,7 +41,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var table = $('#runs').DataTable(
+            var jqRuns = $('#runs')
+            var table = jqRuns.DataTable(
                 {
                     colReorder: true,
                     responsive: false,
@@ -83,8 +84,8 @@
                 }
             );
             // Add event listener for opening and closing details
-            $('#runs tbody').on('click', 'tr', function () {
-                var tr = $(this)
+            jqRuns.find('tbody').on('click', 'tr', function () {
+                var tr = $(this);
                 var row = table.row(tr);
                 if (row.child.isShown()) {
                     // This row is already open - close it
@@ -96,7 +97,7 @@
                         // Nothing to do here
                         return;
                     }
-                    var id = row.data().id
+                    var id = row.data().id;
                     var f = function () {
                         $.ajax({
                             url: "{{url_for('routes.api_run', run_id='')}}" + id
@@ -111,10 +112,10 @@
                             //Show detailed view if not shown yet
                             if (!row.child.isShown()) {
                                 row.child(generate_detail_view(data.data[0])).show();
-                                var detail_view = tr[0].nextSibling;
+                                detail_view = tr[0].nextSibling;
                             } else {
                                 //udpdate content
-                                var detail_view = tr[0].nextSibling;
+                                detail_view = tr[0].nextSibling;
                                 $(detail_view).find('[sacred-content="captured_out"]').each(function (i, obj) {
                                     obj.innerText = data.data[0].object.captured_out;
                                 });

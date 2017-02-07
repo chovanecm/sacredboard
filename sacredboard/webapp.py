@@ -1,3 +1,4 @@
+# coding=utf-8
 import locale
 
 import click
@@ -22,6 +23,7 @@ def run(debug, m):
     jinja_filters.setup_filters(app)
     routes.setup_routes(app)
     app.config["data"].connect()
+    print("Starting sacredboard on port 5000")
     if debug:
         app.run(host="0.0.0.0", debug=True)
     else:
@@ -38,7 +40,9 @@ def add_mongo_config(app, connection_string):
         config["port"] = int(split_string[-2])
     if len(split_string) > 2:
         config["host"] = split_string[-3]
-    app.config["data"] = PyMongoDataAccess(config["host"], config["port"], config["db"])
+    app.config["data"] = PyMongoDataAccess(
+        config["host"], config["port"], config["db"])
+
 
 if __name__ == '__main__':
     run()
