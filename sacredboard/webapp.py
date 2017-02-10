@@ -1,5 +1,6 @@
 # coding=utf-8
 import locale
+import webbrowser
 
 import click
 from flask import Flask
@@ -15,21 +16,32 @@ app = Flask(__name__)
 
 @click.command()
 @click.option("--debug", is_flag=True, default=False)
+@click.option("--no-browser", is_flag=True, default=False)
 @click.option("-m", default="sacred")
-def run(debug, m):
+def run(debug, no_browser, m):
     add_mongo_config(app, m)
     app.config['DEBUG'] = debug
     app.debug = debug
     jinja_filters.setup_filters(app)
     routes.setup_routes(app)
     app.config["data"].connect()
-    print("Starting sacredboard on port 5000")
-    print("Try to navigate to http://127.0.0.1:5000")
+    #print("Try to navigate to http://127.0.0.1:5000")
     if debug:
         app.run(host="0.0.0.0", debug=True)
     else:
-        http_server = WSGIServer(('0.0.0.0', 5000), app)
-        http_server.serve_forever()
+        for port in range(5000, 5050):
+            http_server = WSGIServer(('0.0.0.0', port), app)
+            try:
+                http_server.start()
+            except OSError as e:
+                if "in use" in str(e):
+                    # try next port
+                    continue
+            print("Starting sacredboard on port %d" % port)
+            if not no_browser:
+                webbrowser.open_new_tab("http://127.0.0.1:%d" % port)
+            http_server.serve_forever()
+            break
 
 
 def add_mongo_config(app, connection_string):
