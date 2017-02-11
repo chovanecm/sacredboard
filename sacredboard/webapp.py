@@ -1,6 +1,5 @@
 # coding=utf-8
 import locale
-import webbrowser
 
 import click
 from flask import Flask
@@ -15,10 +14,35 @@ app = Flask(__name__)
 
 
 @click.command()
-@click.option("--debug", is_flag=True, default=False)
-@click.option("--no-browser", is_flag=True, default=False)
-@click.option("-m", default="sacred")
+@click.option("-m", default="sacred", metavar="CONNECTION_STRING",
+              help="Connect to MongoDB on host:port:database or database. "
+                   "Default: sacred")
+@click.option("--no-browser", is_flag=True, default=False,
+              help="Do not open web browser automatically.")
+@click.option("--debug", is_flag=True, default=False,
+              help="Run the application in Flask debug mode "
+                   "(for development).")
+@click.version_option()
 def run(debug, no_browser, m):
+    """
+    \b
+    Sacredboard is a monitoring dashboard for Sacred.
+    Homepage: http://github.com/chovanecm/sacredboard
+
+    Example usage:
+
+        \b
+        sacredboard -m sacred
+            Starts Sacredboard on default port (5000) and connects to
+            a local MongoDB database called 'sacred'. Opens web browser.
+            Note: MongoDB must be listening on localhost.
+        \b
+        sacredboard -m 192.168.1.1:27017:sacred
+            Starts Sacredboard on default port (5000) and connects to
+            a MongoDB database running on 192.168.1.1 on port 27017
+            to a database called 'sacred'. Opens web browser.
+
+    """
     add_mongo_config(app, m)
     app.config['DEBUG'] = debug
     app.debug = debug
@@ -37,14 +61,26 @@ def run(debug, no_browser, m):
                 if "in use" in str(e):
                     # try next port
                     continue
+                else:
+                    raise e
             print("Starting sacredboard on port %d" % port)
             if not no_browser:
-                webbrowser.open_new_tab("http://127.0.0.1:%d" % port)
+                #webbrowser.open_new_tab("http://127.0.0.1:%d" % port)
+                click.launch("http://127.0.0.1:%d" % port)
             http_server.serve_forever()
             break
 
 
 def add_mongo_config(app, connection_string):
+    """
+    Configure the app to use MongoDB.
+
+    :param app: the Flask Application
+    :type app: Flask
+    :param connection_string: in format host:port:database or database
+            (default: sacred)
+    :type connection_string: str
+    """
     split_string = connection_string.split(":")
     config = {"host": "localhost", "port": 27017, "db": "sacred"}
     if len(split_string) > 0 and len(split_string[-1]) > 0:

@@ -4,6 +4,7 @@ import pymongo
 
 
 class PyMongoDataAccess:
+    """ Access records in MongoDB. """
     def __init__(self, host, port, db):
         self._host = host
         self._port = port
