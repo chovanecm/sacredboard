@@ -58,11 +58,8 @@ def run(debug, no_browser, m):
             try:
                 http_server.start()
             except OSError as e:
-                if "in use" in str(e):
                     # try next port
                     continue
-                else:
-                    raise e
             print("Starting sacredboard on port %d" % port)
             if not no_browser:
                 #webbrowser.open_new_tab("http://127.0.0.1:%d" % port)
