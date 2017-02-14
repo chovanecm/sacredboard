@@ -53,9 +53,8 @@ Sacredboard can be run simply by typing ``sacredboard`` to connect to
  To connect to another machine or database name, specifiy the connection string
  using the `-m host:port:db` option.
  
-
- 
     sacredboard -m sacred
+    
 or
     
     sacredboard -m 192.168.1.1:27017:sacred
