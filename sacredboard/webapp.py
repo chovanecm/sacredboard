@@ -49,7 +49,6 @@ def run(debug, no_browser, m):
     jinja_filters.setup_filters(app)
     routes.setup_routes(app)
     app.config["data"].connect()
-    #print("Try to navigate to http://127.0.0.1:5000")
     if debug:
         app.run(host="0.0.0.0", debug=True)
     else:
@@ -62,7 +61,6 @@ def run(debug, no_browser, m):
                     continue
             print("Starting sacredboard on port %d" % port)
             if not no_browser:
-                #webbrowser.open_new_tab("http://127.0.0.1:%d" % port)
                 click.launch("http://127.0.0.1:%d" % port)
             http_server.serve_forever()
             break

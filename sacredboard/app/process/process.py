@@ -5,7 +5,7 @@ import re
 import select
 import time
 from subprocess import Popen, PIPE
-from typing import List
+
 
 TENSORBOARD_BINARY = "tensorboard"
 
@@ -139,6 +139,7 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
         return port
     else:
         tensorboard_instance.terminate()
-        raise UnexpectedOutputError(data,
-                                    expected="The port Tensorboard that listens on."
-                                    )
+        raise UnexpectedOutputError(
+            data,
+            expected="The port Tensorboard that listens on."
+            )

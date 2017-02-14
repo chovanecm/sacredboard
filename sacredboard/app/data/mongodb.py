@@ -42,8 +42,8 @@ class PyMongoDataAccess:
         :return:
         :rtype: pymongo.Cursor
         """
-        return cursor.sort(sort_by,
-                           pymongo.DESCENDING
-                           if sort_direction is not None
-                              and sort_direction.lower() == "desc"
-                           else pymongo.ASCENDING)
+        if sort_direction is not None and sort_direction.lower() == "desc":
+            sort = pymongo.DESCENDING
+        else:
+            sort = pymongo.ASCENDING
+        return cursor.sort(sort_by, sort)
