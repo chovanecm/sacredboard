@@ -1,0 +1,5 @@
+Sacred is a web dashboard for Sacred.
+
+It connects to the MongoDB database used by Sacred and displays a list of experiments,
+their state, Sacred configuration and the standard output from the running program.
+Python 3.5 and a modern web browser is required to work properly.
