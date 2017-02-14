@@ -57,3 +57,12 @@ The web browser with Sacredboard should open automatically.
 To display help, run
 
     sacredboard --help
+
+
+## References
+
+- [Sacred](http://github.com/IDSIA/sacred) 
+
+
+Feel free to open new issues in case of requests or bugs found.  
+Maintaner / Developer: Martin Chovanec, chovamar@fit.cvut.cz
