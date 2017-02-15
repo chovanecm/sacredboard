@@ -5,16 +5,16 @@ Sacred is a web dashboard for [Sacred](https://github.com/IDSIA/sacred).
 It connects to the MongoDB database used by Sacred
 and displays a list of experiments, their state, Sacred configuration and
 the standard output from the running program.  
-Python 3.5 and a modern web browser is required to work properly.
+Python 3.5 and a modern web browser are  required for it to work properly.
 
 ## Features in version 0.1
 
-- View an overview of running and finished experiments in a table,
+- Get an overview of running and finished experiments in a table,
  such as experiment name, machine on which it runs etc.
-- View detailed information of the experiment,
+- Get detailed information of the experiment,
  such as the text output produced by the experiment.
 - Run [Tensorboard](https://www.tensorflow.org/versions/r0.10/how_tos/summaries_and_tensorboard/) 
-    directly rom the web console in order to see detailed information,
+    directly from the web console in order to see detailed information,
     charts and [Tensorflow](https://www.tensorflow.org) graph visualisations,
     provided that the experiment uses Sacred's 
     [Integration with Tensorflow](https://github.com/IDSIA/sacred/blob/develop/docs/tensorflow.rst)
@@ -25,6 +25,7 @@ Python 3.5 and a modern web browser is required to work properly.
 ### v0.2
 
 - Filtering experiments based on their configuration
+- Displaying the `info` dictionary
 
 ### Further Versions
 
