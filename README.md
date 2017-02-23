@@ -7,7 +7,7 @@ and displays a list of experiments, their state, Sacred configuration and
 the standard output from the running program.  
 Python 3.5 and a modern web browser are  required for it to work properly.
 
-## Features in version 0.1
+## Features in version 0.1.1
 
 - Get an overview of running and finished experiments in a table,
  such as experiment name, machine on which it runs etc.
@@ -19,6 +19,12 @@ Python 3.5 and a modern web browser are  required for it to work properly.
     provided that the experiment uses Sacred's 
     [Integration with Tensorflow](https://github.com/IDSIA/sacred/blob/develop/docs/tensorflow.rst)
      (currently in the development branch of Sacred).
+
+### Changes in 0.1.1 since 0.1
+
+- Added a command line option to specify the MongoDB collection that contains
+the runs. This is useful when using a custom collection name or for
+ [compatibility reasons](https://github.com/chovanecm/sacredboard/issues/20).
 
 ## Roadmap
 
@@ -56,9 +62,11 @@ Sacredboard can be run simply by typing ``sacredboard`` to connect to
  
     sacredboard -m sacred
     
-or
+or, if you wish to connect to another machine and/or use a non-default
+ name of the Sacred *runs* collection (`-mc`):
     
-    sacredboard -m 192.168.1.1:27017:sacred
+    sacredboard -m 192.168.1.1:27017:sacred -mc default.runs
+   
 
 The web browser with Sacredboard should open automatically.
 
