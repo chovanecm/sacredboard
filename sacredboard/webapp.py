@@ -17,13 +17,18 @@ app = Flask(__name__)
 @click.option("-m", default="sacred", metavar="CONNECTION_STRING",
               help="Connect to MongoDB on host:port:database or database. "
                    "Default: sacred")
+@click.option("-mc", default="runs", metavar="COLLECTION",
+              help="The collection containing the Sacred's list of runs. "
+                   "You might need it if you use a custom collection name "
+                   "or Sacred v0.6 (which used default.runs). "
+                   "Default: runs")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
 @click.option("--debug", is_flag=True, default=False,
               help="Run the application in Flask debug mode "
                    "(for development).")
 @click.version_option()
-def run(debug, no_browser, m):
+def run(debug, no_browser, m, mc):
     """
     \b
     Sacredboard is a monitoring dashboard for Sacred.
@@ -42,8 +47,16 @@ def run(debug, no_browser, m):
             a MongoDB database running on 192.168.1.1 on port 27017
             to a database called 'sacred'. Opens web browser.
 
+        \b
+        sacredboard -m sacred -mc default.runs
+            Starts Sacredboard on default port (5000) and connects to
+            a local MongoDB database called 'sacred' and uses the Sacred's 0.6
+            default collection 'default.runs' to search the runs in.
+            Opens web browser.
+            Note: MongoDB must be listening on localhost.
+
     """
-    add_mongo_config(app, m)
+    add_mongo_config(app, m, mc)
     app.config['DEBUG'] = debug
     app.debug = debug
     jinja_filters.setup_filters(app)
@@ -66,15 +79,19 @@ def run(debug, no_browser, m):
             break
 
 
-def add_mongo_config(app, connection_string):
+def add_mongo_config(app, connection_string, collection_name):
     """
     Configure the app to use MongoDB.
+
 
     :param app: the Flask Application
     :type app: Flask
     :param connection_string: in format host:port:database or database
             (default: sacred)
     :type connection_string: str
+
+    :param collection_name: Name of the collection
+    :type collection_name: str
     """
     split_string = connection_string.split(":")
     config = {"host": "localhost", "port": 27017, "db": "sacred"}
@@ -85,7 +102,7 @@ def add_mongo_config(app, connection_string):
     if len(split_string) > 2:
         config["host"] = split_string[-3]
     app.config["data"] = PyMongoDataAccess(
-        config["host"], config["port"], config["db"])
+        config["host"], config["port"], config["db"], collection_name)
 
 
 if __name__ == '__main__':
