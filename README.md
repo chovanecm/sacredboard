@@ -82,4 +82,4 @@ To display help, run
 
 
 Feel free to open new issues in case of requests or bugs found.  
-Maintaner / Developer: Martin Chovanec, chovamar@fit.cvut.cz
+Maintainer / Developer: Martin Chovanec, chovamar@fit.cvut.cz
