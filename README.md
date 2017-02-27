@@ -1,6 +1,6 @@
 # Sacredboard
 
-Sacred is a web dashboard for [Sacred](https://github.com/IDSIA/sacred).
+Sacredboard is a web dashboard for [Sacred](https://github.com/IDSIA/sacred).
  
 It connects to the MongoDB database used by Sacred
 and displays a list of experiments, their state, Sacred configuration and
@@ -82,4 +82,4 @@ To display help, run
 
 
 Feel free to open new issues in case of requests or bugs found.  
-Maintaner / Developer: Martin Chovanec, chovamar@fit.cvut.cz
+Maintainer / Developer: Martin Chovanec, chovamar@fit.cvut.cz
