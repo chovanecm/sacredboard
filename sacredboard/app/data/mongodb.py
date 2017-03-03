@@ -15,8 +15,12 @@ class PyMongoDataAccess:
         self._collection_name = collection_name
 
     def connect(self):
-        self._client = pymongo.MongoClient(host=self._uri)
+        self._client = self._create_client()
         self._db = getattr(self._client, self._db_name)
+
+    def _create_client(self):
+        """ Returns a new Mongo Client """
+        return pymongo.MongoClient(host=self._uri)
 
     def get_runs(self, sort_by=None, sort_direction=None, start=0, limit=None):
         cursor = getattr(self._db, self._collection_name).find()
