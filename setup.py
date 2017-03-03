@@ -38,5 +38,5 @@ setup(
     install_requires=get_requirements(),
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
-    version="0.1.2b"
+    version="0.1.2"
 )
