@@ -57,3 +57,11 @@ tr.shown td.details-control:before {
 }
 
 /* End-master-detail-view*/
+
+
+/* Query filter */
+.query-filter {
+    display: inline-block;
+    background-color: lightgray;
+    padding: 0.5eM;
+}
