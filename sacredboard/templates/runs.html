@@ -36,6 +36,8 @@
     <!-- KnockoutJS -->
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+    <script type="text/javascript"
+            src="{{url_for('static', filename='lib/knockout/knockout.mapping-latest.js')}}"></script>
 
 
     <script type="text/javascript"
@@ -51,9 +53,10 @@
 
 
     <script type="text/javascript">
+        var table = null;
         $(document).ready(function () {
             var jqRuns = $('#runs')
-            var table = jqRuns.DataTable(
+            table = jqRuns.DataTable(
                 {
                     colReorder: true,
                     responsive: false,
@@ -64,7 +67,12 @@
                     deferRender: true,
                     scroller: false,
                     serverSide: true,
-                    ajax: '{{url_for("routes.api_runs")}}',
+                    ajax: {
+                        url: '{{url_for("routes.api_runs")}}',
+                        data: function (d) {
+                            d.queryFilter = ko.mapping.toJSON(viewModel.queryFilters.filters);
+                        }
+                    },
                     "columns": [
                         {
                             "className": 'details-control',
@@ -149,6 +157,8 @@
     </script>
 
     <script>
+        ko.options.deferUpdates = true;
+
         var viewModel = {
             queryFilters: new QueryFilters(),
             filterToAdd: ko.observable(new QueryFilter("", "", "")),
@@ -160,9 +170,10 @@
             },
             filterReadyToAdd: function () {
                 return (this.filterToAdd().field() != "" && this.filterToAdd().operator() != "");
-            }
+            },
         };
         $(document).ready(function () {
+            viewModel.queryFilters.filters.subscribe(function () {table.ajax.reload();});
             ko.applyBindings(viewModel);
         });
     </script>

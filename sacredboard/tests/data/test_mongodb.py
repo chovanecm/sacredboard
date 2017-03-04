@@ -71,6 +71,8 @@ def db_gateway() -> PyMongoDataAccess:
     return db_gw
 
 
+
+
 def test_get_runs(db_gateway : PyMongoDataAccess):
     runs = list(db_gateway.get_runs())
     assert len(runs) == 2
@@ -95,7 +97,19 @@ def test_get_runs_order(db_gateway: PyMongoDataAccess):
     assert runs[0]["host"]["python_version"] == "3.5.2"
     assert runs[1]["host"]["python_version"] == "3.4.3"
 
+filter1 = [{"field": "host.os", "operator": "==", "value": "Linux"},
+            {"field": "host.hostname", "operator": "==", "value": "ntbacer"}]
+
+filter2 = [{"field": "result", "operator": ">", "value": "2000"}]
+
+@pytest.mark.parametrize("query_filter", (filter1, filter2))
+def test_get_runs_filter(db_gateway: PyMongoDataAccess, query_filter):
+    runs = list(db_gateway.get_runs(query=query_filter))
+    assert len(runs) == 1
+    assert runs[0]["host"]["hostname"] == "ntbacer"
+
 
 def test_get_run(db_gateway : PyMongoDataAccess):
     run = dict(db_gateway.get_run("57f9efb2e4b8490d19d7c30e"))
     assert run["host"]["hostname"] == "ntbacer"
+

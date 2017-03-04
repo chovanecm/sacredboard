@@ -2,4 +2,3 @@ flask
 click
 pymongo
 gevent
-
