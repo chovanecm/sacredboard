@@ -74,8 +74,21 @@ class PyMongoDataAccess:
         """
         mongo_query = {}
         for term in query:
+            value = term["value"]
             if term["operator"] == "==":
-                mongo_query[term["field"]] = term["value"]
+                mongo_query[term["field"]] = value
+            elif term["operator"] == ">":
+                mongo_query[term["field"]] = {"$gt": value}
+            elif term["operator"] == ">=":
+                mongo_query[term["field"]] = {"$gte": value}
+            elif term["operator"] == "<":
+                mongo_query[term["field"]] = {"$lt": value}
+            elif term["operator"] == "<=":
+                mongo_query[term["field"]] = {"$lte": value}
+            elif term["operator"] == "!=":
+                mongo_query[term["field"]] = {"$ne": value}
+            elif term["operator"] == "regex":
+                mongo_query[term["field"]] = {"$regex": value}
         return mongo_query
 
     @staticmethod

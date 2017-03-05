@@ -70,7 +70,10 @@
                     ajax: {
                         url: '{{url_for("routes.api_runs")}}',
                         data: function (d) {
-                            d.queryFilter = ko.mapping.toJSON(viewModel.queryFilters.filters);
+                            d.queryFilter = ko.mapping.toJSON($.map(viewModel.queryFilters.filters(),
+                                function (filter) {
+                                    return filter.toDto()
+                                }));
                         }
                     },
                     "columns": [
@@ -161,7 +164,7 @@
 
         var viewModel = {
             queryFilters: new QueryFilters(),
-            filterToAdd: ko.observable(new QueryFilter("", "", "")),
+            filterToAdd: ko.observable(new QueryFilter("", "", "", "string")),
             addFilter: function () {
                 if (this.filterReadyToAdd()) {
                     this.queryFilters.addFilter(this.filterToAdd());
@@ -173,7 +176,9 @@
             },
         };
         $(document).ready(function () {
-            viewModel.queryFilters.filters.subscribe(function () {table.ajax.reload();});
+            viewModel.queryFilters.filters.subscribe(function () {
+                table.ajax.reload();
+            });
             ko.applyBindings(viewModel);
         });
     </script>
@@ -209,6 +214,11 @@
                     <input type="text" class="form-control" id="queryValue" placeholder="value" data-bind="value: filterToAdd().value,
                                                                                                        valueUpdate: 'afterkeydown'">
                 </div>
+                <div class="form-group">
+                    <label class="sr-only" for="queryvalueType">Treat as</label>
+                    <select id="queryvalueType" class="form-control" data-bind="options: queryFilters.valueTypes,
+                                                                           value: filterToAdd().valueType"></select>
+                </div>
                 <button type="submit" class="btn btn-default" data-bind="enable: filterReadyToAdd()">Add filter</button>
             </form>
             <div class="row-fluid clearfix" style="margin-top: 1eM">
@@ -217,7 +227,7 @@
                         <div class="query-filter">
                             <span data-bind="text: field"></span>
                             <span data-bind="text: operator"></span>
-                            <span data-bind="text: value"></span>
+                            <span data-bind="visible: valueType() == 'string'">"</span><span data-bind="text: value"></span><span data-bind="visible: valueType() == 'string'">"</span>
                             <a href="#" data-bind="click: $parent.removeFilter">[X]</a>
                         </div>
                     </div>
