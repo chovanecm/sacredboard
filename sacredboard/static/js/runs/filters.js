@@ -1,6 +1,14 @@
 /**
  * Created by Martin on 4. 3. 2017.
  */
+/**
+ *
+ * @param field
+ * @param operator
+ * @param value
+ * @param {string} valueType optional 'string' or 'number' (default: determined by the value)
+ * @constructor
+ */
 function QueryFilter(field, operator, value, valueType) {
     this.field = ko.observable(field);
     this.operator = ko.observable(operator);
@@ -12,22 +20,40 @@ function QueryFilter(field, operator, value, valueType) {
     };
 
     this.toDto = function () {
-        var targetValue = (this.valueType() == "number") ? Number(this.value()) : this.value();
-        return {"field": this.field(), "operator": this.operator(), "value": targetValue};
+        var targetValue = this.value();
+        if (this.valueType() != undefined) {
+            targetValue = (this.valueType() == "number") ? Number(this.value()) : this.value();
+        }
+        return ko.mapping.toJS({"field": this.field(), "operator": this.operator(), "value": targetValue});
     }
 }
-
-function QueryFilters() {
-    let self = this;
-    this.filters = ko.observableArray([]);
+/**
+ *
+ * @param type either 'and' or 'or'. Default: 'and'
+ * @param filters an array of terms. either
+ * @constructor
+ */
+function QueryFilters(type, filters) {
+    var self = this;
+    this.filters = ko.observableArray(filters == undefined ? [] : filters);
     this.operators = ['==', '!=', '<', '<=', '>', '>=', 'regex'];
     this.valueTypes = ['string', 'number'];
-
+    this.type = ko.observable(type == undefined ? 'and' : type);
     self.addFilter = function (filter) {
         self.filters.push(filter);
     };
     self.removeFilter = function () {
         self.filters.remove(this);
+    };
+    self.toDto = function () {
+        return ko.mapping.toJSON(
+            {
+                type: self.type(),
+                filters: $.map(self.filters(),
+                    function (filter) {
+                        return filter.toDto()
+                    })
+            });
     }
 }
 
@@ -72,6 +98,7 @@ ko.components.register('query-filter', {
                 <div class="col-md-12" data-bind="with: queryFilters">
                     <div data-bind="foreach: filters">
                         <div class="query-filter">
+                        <!-- fails for subqueries -->
                             <span data-bind="text: field"></span>
                             <span data-bind="text: operator"></span>
                             <span data-bind="visible: valueType() == 'string'">"</span><span data-bind="text: value"></span><span data-bind="visible: valueType() == 'string'">"</span>

@@ -70,10 +70,7 @@
                     ajax: {
                         url: '{{url_for("routes.api_runs")}}',
                         data: function (d) {
-                            d.queryFilter = ko.mapping.toJSON($.map(viewModel.queryFilters().filters(),
-                                function (filter) {
-                                    return filter.toDto()
-                                }));
+                            d.queryFilter = viewModel.queryFilters().toDto();
                         }
                     },
                     "columns": [
