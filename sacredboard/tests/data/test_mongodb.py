@@ -34,7 +34,7 @@ def create_mongomock_client():
                                                         ["sacred", "0.6.10"]],
                                        "name": "German nouns"},
                         "heartbeat": {"$date": 1479211200000},
-                        "result": "2403.52", "artifacts": [], "comment": "",
+                        "result": 2403.52, "artifacts": [], "comment": "",
                         "stop_time": {"$date": 1476009883302},
                         "captured_out": "Output: \n"})
 
@@ -97,17 +97,48 @@ def test_get_runs_order(db_gateway: PyMongoDataAccess):
     assert runs[0]["host"]["python_version"] == "3.5.2"
     assert runs[1]["host"]["python_version"] == "3.4.3"
 
-filter1 = [{"field": "host.os", "operator": "==", "value": "Linux"},
-            {"field": "host.hostname", "operator": "==", "value": "ntbacer"}]
+filter1 = {"type": "and", "filters": [{"field": "host.os", "operator": "==", "value": "Linux"},
+            {"field": "host.hostname", "operator": "==", "value": "ntbacer"}]}
+filter2 = {"type": "and", "filters": [{"field": "result", "operator": "==", "value": 2403.52}]}
 
-# MongoMock fails it
-filter2 = [{"field": "result", "operator": ">", "value": 2000}]
 
 @pytest.mark.parametrize("query_filter", (filter1, filter2))
 def test_get_runs_filter(db_gateway: PyMongoDataAccess, query_filter):
     runs = list(db_gateway.get_runs(query=query_filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
+
+
+def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
+    filter = {"type": "and", "filters": [{"field": "host.hostname", "operator": "==", "value": "ntbacer"},
+                                         {"type": "or", "filters": [{"field": "result", "operator": "==", "value": 2403.52},
+                                                                    {"field": "host.python_version", "operator": "==", "value": "3.5.2"}]}]}
+    runs = list(db_gateway.get_runs(query=filter))
+    assert len(runs) == 1
+    assert runs[0]["host"]["hostname"] == "ntbacer"
+    assert runs[0]["result"] == 2403.52
+
+    filter = {"type": "and", "filters": [{"field": "host.hostname", "operator": "==", "value": "martin-virtual-machine"},
+                                         {"type": "or", "filters": [{"field": "result", "operator": "==", "value": 2403.52},
+                                                                    {"field": "host.python_version", "operator": "==",
+                                                                     "value": "3.5.2"}]}]}
+    runs = list(db_gateway.get_runs(query=filter))
+    assert len(runs) == 1
+    assert runs[0]["host"]["hostname"] == "martin-virtual-machine"
+    assert runs[0]["host"]["python_version"] == "3.5.2"
+
+    filter = {"type": "and", "filters": [{"type": "or", "filters": [{"field": "result", "operator": "==", "value": 2403.52},
+                                                                    {"field": "host.python_version", "operator": "==",
+                                                                     "value": "3.5.2"}]}]}
+    runs = list(db_gateway.get_runs(query=filter))
+    assert len(runs) == 2
+
+    assert runs[0]["host"]["hostname"] == "ntbacer"
+    assert runs[0]["host"]["python_version"] == "3.4.3"
+
+    assert runs[1]["host"]["hostname"] == "martin-virtual-machine"
+    assert runs[1]["host"]["python_version"] == "3.5.2"
+
 
 
 def test_get_run(db_gateway : PyMongoDataAccess):

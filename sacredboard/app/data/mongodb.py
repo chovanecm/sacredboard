@@ -22,7 +22,7 @@ class PyMongoDataAccess:
         """ Returns a new Mongo Client """
         return pymongo.MongoClient(host=self._uri)
 
-    def get_runs(self, sort_by=None, sort_direction=None, start=0, limit=None, query=[]):
+    def get_runs(self, sort_by=None, sort_direction=None, start=0, limit=None, query={"type": "and", "filters": []}):
         mongo_query = self._to_mongo_query(query)
         cursor = getattr(self._db, self._collection_name).find(mongo_query)
         if sort_by is not None:
@@ -72,24 +72,41 @@ class PyMongoDataAccess:
         :return:
         :rtype:
         """
-        mongo_query = {}
-        for term in query:
-            value = term["value"]
-            if term["operator"] == "==":
-                mongo_query[term["field"]] = value
-            elif term["operator"] == ">":
-                mongo_query[term["field"]] = {"$gt": value}
-            elif term["operator"] == ">=":
-                mongo_query[term["field"]] = {"$gte": value}
-            elif term["operator"] == "<":
-                mongo_query[term["field"]] = {"$lt": value}
-            elif term["operator"] == "<=":
-                mongo_query[term["field"]] = {"$lte": value}
-            elif term["operator"] == "!=":
-                mongo_query[term["field"]] = {"$ne": value}
-            elif term["operator"] == "regex":
-                mongo_query[term["field"]] = {"$regex": value}
-        return mongo_query
+        mongo_query = []
+        for clause in query["filters"]:
+            if clause.get("type") is None:
+                # It's a regulare clause
+                mongo_clause = {}
+                value = clause["value"]
+                if clause["operator"] == "==":
+                    mongo_clause[clause["field"]] = value
+                elif clause["operator"] == ">":
+                    mongo_clause[clause["field"]] = {"$gt": value}
+                elif clause["operator"] == ">=":
+                    mongo_clause[clause["field"]] = {"$gte": value}
+                elif clause["operator"] == "<":
+                    mongo_clause[clause["field"]] = {"$lt": value}
+                elif clause["operator"] == "<=":
+                    mongo_clause[clause["field"]] = {"$lte": value}
+                elif clause["operator"] == "!=":
+                    mongo_clause[clause["field"]] = {"$ne": value}
+                elif clause["operator"] == "regex":
+                    mongo_clause[clause["field"]] = {"$regex": value}
+            else:
+                # It's a subclause
+                mongo_clause = PyMongoDataAccess._to_mongo_query(clause)
+            mongo_query.append(mongo_clause)
+
+        if len(mongo_query) == 0:
+            return {}
+        if query["type"] == "and":
+            return {"$and": mongo_query}
+        elif query["type"] == "or":
+            return {"$or": mongo_query}
+        else:
+            raise ValueError("Unexpected query type %s" % query.get("type"))
+
+
 
     @staticmethod
     def build_data_access(host, port, database_name, collection_name):

@@ -12,7 +12,8 @@ def parse_query_filter():
     if query_string is None:
         return []
     query = json.loads(query_string)
-    assert type(query) == list
+    assert type(query) == dict
+    assert type(query.get("type")) == str
     return query
 
 
