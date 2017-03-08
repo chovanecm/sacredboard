@@ -166,7 +166,7 @@
                 "run-queued": new QueryFilter("status", "==", "QUEUED"),
                 "run-failed": new QueryFilter("status", "==", "FAILED"),
                 "run-interrupted": new QueryFilter("status", "==", "INTERRUPTED"),
-                "run-dead": new QueryFilter("status", "==", "RUNNING")
+                "run-dead": new QueryFilter("status", "==", "DEAD")
             },
             statusFilters: new QueryFilters("or")
         };
@@ -177,8 +177,13 @@
                viewModel.queryFilters().addFilter(viewModel.statusFilters);
         $(document).ready(function () {
            viewModel.queryFilters().filters.subscribe(function () {
-               console.log("Ahoj svete");
                 table.ajax.reload();
+
+                //ugly:
+               if (viewModel.statusFilters.filters.indexOf(viewModel.predefinedFilters["run-dead"]) < 0) {
+                   // Don't display 'dead' runs:
+                   table.rows
+               }
             });
             //ko.applyBindings(viewModel);
             ko.applyBindings(viewModel);

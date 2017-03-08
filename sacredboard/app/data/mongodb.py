@@ -6,6 +6,8 @@ import pymongo
 class PyMongoDataAccess:
     """ Access records in MongoDB. """
 
+    RUNNING_DEAD_RUN_CLAUSE = {"status": "RUNNING", "$where": "new Date() - this.heartbeat > 120000"}
+    RUNNING_NOT_DEAD_CLAUSE = {"status": "RUNNING", "$where": "new Date() - this.heartbeat <= 120000"}
     def __init__(self, uri, database_name, collection_name):
 
         self._uri = uri
@@ -75,10 +77,19 @@ class PyMongoDataAccess:
         mongo_query = []
         for clause in query["filters"]:
             if clause.get("type") is None:
-                # It's a regulare clause
+                # It's a regular clause
                 mongo_clause = {}
                 value = clause["value"]
-                if clause["operator"] == "==":
+
+                if clause["field"] == "status" and clause["value"] == "DEAD":
+                    mongo_clause = PyMongoDataAccess.RUNNING_DEAD_RUN_CLAUSE
+                    if clause["operator"] == "!=":
+                        mongo_clause = {"$not": mongo_clause}
+                elif clause["field"] == "status" and clause["value"] == "RUNNING":
+                    mongo_clause = PyMongoDataAccess.RUNNING_NOT_DEAD_CLAUSE
+                    if clause["operator"] == "!=":
+                        mongo_clause = {"$not": mongo_clause}
+                elif clause["operator"] == "==":
                     mongo_clause[clause["field"]] = value
                 elif clause["operator"] == ">":
                     mongo_clause[clause["field"]] = {"$gt": value}
@@ -105,7 +116,6 @@ class PyMongoDataAccess:
             return {"$or": mongo_query}
         else:
             raise ValueError("Unexpected query type %s" % query.get("type"))
-
 
 
     @staticmethod
