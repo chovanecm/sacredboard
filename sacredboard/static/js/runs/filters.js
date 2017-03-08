@@ -14,7 +14,6 @@ function QueryFilter(field, operator, value, valueType) {
     this.operator = ko.observable(operator);
     this.value = ko.observable(value);
     this.valueType = ko.observable(valueType);
-
     this.clone = function () {
         return new QueryFilter(this.field(), this.operator(), this.value())
     };
@@ -25,7 +24,7 @@ function QueryFilter(field, operator, value, valueType) {
             targetValue = (this.valueType() == "number") ? Number(this.value()) : this.value();
         }
         return ko.mapping.toJS({"field": this.field(), "operator": this.operator(), "value": targetValue});
-    }
+    };
 }
 /**
  *
@@ -36,17 +35,19 @@ function QueryFilter(field, operator, value, valueType) {
 function QueryFilters(type, filters) {
     var self = this;
     this.filters = ko.observableArray(filters == undefined ? [] : filters);
+    this.filters.extend({ notify: 'always' });
     this.operators = ['==', '!=', '<', '<=', '>', '>=', 'regex'];
     this.valueTypes = ['string', 'number'];
     this.type = ko.observable(type == undefined ? 'and' : type);
     self.addFilter = function (filter) {
         self.filters.push(filter);
     };
-    self.removeFilter = function () {
-        self.filters.remove(this);
+    self.removeFilter = function (filter) {
+        self.filters.remove(filter);
+
     };
     self.toDto = function () {
-        return ko.mapping.toJSON(
+        return ko.mapping.toJS(
             {
                 type: self.type(),
                 filters: $.map(self.filters(),
@@ -54,7 +55,7 @@ function QueryFilters(type, filters) {
                         return filter.toDto()
                     })
             });
-    }
+    };
 }
 
 ko.components.register('query-filter', {
@@ -67,6 +68,7 @@ ko.components.register('query-filter', {
                 this.filterToAdd(this.filterToAdd().clone());
             }
         };
+
         this.filterReadyToAdd = function () {
             return (this.filterToAdd().field() != "" && this.filterToAdd().operator() != "");
         };
@@ -96,14 +98,16 @@ ko.components.register('query-filter', {
             </form>
             <div class="row-fluid clearfix" style="margin-top: 1eM">
                 <div class="col-md-12" data-bind="with: queryFilters">
-                    <div data-bind="foreach: filters">
+                    <div data-bind="foreach: {data: filters, as: 'filter'}">
+                    <!-- ko if: filter['field'] != undefined -->
+                    <!-- this can only display simple filters -->
                         <div class="query-filter">
-                        <!-- fails for subqueries -->
                             <span data-bind="text: field"></span>
                             <span data-bind="text: operator"></span>
                             <span data-bind="visible: valueType() == 'string'">"</span><span data-bind="text: value"></span><span data-bind="visible: valueType() == 'string'">"</span>
                             <a href="#" data-bind="click: $parent.removeFilter">[X]</a>
                         </div>
+                    <!-- /ko -->
                     </div>
                 </div>
             </div>`

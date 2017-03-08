@@ -70,7 +70,7 @@
                     ajax: {
                         url: '{{url_for("routes.api_runs")}}',
                         data: function (d) {
-                            d.queryFilter = viewModel.queryFilters().toDto();
+                            d.queryFilter = JSON.stringify(viewModel.queryFilters().toDto());
                         }
                     },
                     "columns": [
@@ -159,10 +159,32 @@
     <script>
         ko.options.deferUpdates = true;
         var viewModel = {
-          queryFilters : ko.observable(new QueryFilters())
+            queryFilters : ko.observable(new QueryFilters()),
+            predefinedFilters: {
+                "run-alive": new QueryFilter("status", "==", "RUNNING"),
+                "run-completed": new QueryFilter("status", "==", "COMPLETED"),
+                "run-queued": new QueryFilter("status", "==", "QUEUED"),
+                "run-failed": new QueryFilter("status", "==", "FAILED"),
+                "run-interrupted": new QueryFilter("status", "==", "INTERRUPTED"),
+                "run-dead": new QueryFilter("status", "==", "RUNNING")
+            },
+            statusFilters: new QueryFilters("or")
         };
+        for (var key in viewModel.predefinedFilters) {
+            viewModel.statusFilters.addFilter(viewModel.predefinedFilters[key]);
+        }
+
+        /*
+            set the status filter to notify the same subscribers as when the "parent" array (queryFilters)
+            is modified.
+         */
+        viewModel.statusFilters.filters.subscribe(function () { viewModel.queryFilters().filters.notifySubscribers();});
+
+
+        viewModel.queryFilters().addFilter(viewModel.statusFilters);
         $(document).ready(function () {
            viewModel.queryFilters().filters.subscribe(function () {
+               console.log("Ahoj svete");
                 table.ajax.reload();
             });
             //ko.applyBindings(viewModel);
@@ -193,12 +215,13 @@
     <div class="row-fluid">
         <table id="runs" class="table table-striped table-hover">
             <caption>Experiments Run Overview<br>
-                Legend: <span class="run-alive">&block;</span> Running,
-                <span class="run-completed">&block;</span> Completed,
-                <span class="run-failed">&block;</span> Failed,
-                <span class="run-interrupted">&block;</span> Interrupted,
-                <span class="run-dead">&block;</span> Probably dead,
-                <span class="run-queued">&block;</span> Queued
+                Legend:
+                <span class="run-alive">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-alive'], checked: statusFilters.filters"> Running,
+                <span class="run-completed">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-completed'], checked: statusFilters.filters"> Completed,
+                <span class="run-failed">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-failed'], checked: statusFilters.filters"> Failed,
+                <span class="run-interrupted">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters"> Interrupted,
+                <span class="run-dead">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-dead'], checked: statusFilters.filters"> Probably dead,
+                <span class="run-queued">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-queued'], checked: statusFilters.filters"> Queued
             </caption>
             <thead>
             <tr>
