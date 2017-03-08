@@ -25,6 +25,9 @@ function QueryFilter(field, operator, value, valueType) {
         }
         return ko.mapping.toJS({"field": this.field(), "operator": this.operator(), "value": targetValue});
     };
+
+    this.addParentObserver = function (observer) {/* Do nothing, we consider a QueryFilter to be used as immutable object */
+    };
 }
 /**
  *
@@ -35,12 +38,13 @@ function QueryFilter(field, operator, value, valueType) {
 function QueryFilters(type, filters) {
     var self = this;
     this.filters = ko.observableArray(filters == undefined ? [] : filters);
-    this.filters.extend({ notify: 'always' });
+    this.filters.extend({notify: 'always'});
     this.operators = ['==', '!=', '<', '<=', '>', '>=', 'regex'];
     this.valueTypes = ['string', 'number'];
     this.type = ko.observable(type == undefined ? 'and' : type);
     self.addFilter = function (filter) {
         self.filters.push(filter);
+        filter.addParentObserver(self.filters);
     };
     self.removeFilter = function (filter) {
         self.filters.remove(filter);
@@ -55,6 +59,12 @@ function QueryFilters(type, filters) {
                         return filter.toDto()
                     })
             });
+    };
+    self.addParentObserver = function (observer) {
+        //Note: The observer must be set to always notify subscribers even if it doesn't detect a change.
+        self.filters.subscribe(function () {
+            observer.notifySubscribers();
+        });
     };
 }
 

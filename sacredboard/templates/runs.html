@@ -174,14 +174,7 @@
             viewModel.statusFilters.addFilter(viewModel.predefinedFilters[key]);
         }
 
-        /*
-            set the status filter to notify the same subscribers as when the "parent" array (queryFilters)
-            is modified.
-         */
-        viewModel.statusFilters.filters.subscribe(function () { viewModel.queryFilters().filters.notifySubscribers();});
-
-
-        viewModel.queryFilters().addFilter(viewModel.statusFilters);
+               viewModel.queryFilters().addFilter(viewModel.statusFilters);
         $(document).ready(function () {
            viewModel.queryFilters().filters.subscribe(function () {
                console.log("Ahoj svete");
