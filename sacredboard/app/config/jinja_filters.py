@@ -14,7 +14,7 @@ def format_datetime(value):
 
 @filters.app_template_filter("timediff")
 def timediff(time):
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
     diff = now - time
     diff_sec = diff.total_seconds()
     return diff_sec

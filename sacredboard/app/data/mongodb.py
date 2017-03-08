@@ -8,6 +8,7 @@ class PyMongoDataAccess:
 
     RUNNING_DEAD_RUN_CLAUSE = {"status": "RUNNING", "$where": "new Date() - this.heartbeat > 120000"}
     RUNNING_NOT_DEAD_CLAUSE = {"status": "RUNNING", "$where": "new Date() - this.heartbeat <= 120000"}
+
     def __init__(self, uri, database_name, collection_name):
 
         self._uri = uri
