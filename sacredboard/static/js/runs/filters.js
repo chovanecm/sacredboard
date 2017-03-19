@@ -6,29 +6,68 @@
  * @param field
  * @param operator
  * @param value
- * @param {string} valueType optional 'string' or 'number' (default: determined by the value)
  * @constructor
  */
-function QueryFilter(field, operator, value, valueType) {
+function QueryFilter(field, operator, value) {
     this.field = ko.observable(field);
     this.operator = ko.observable(operator);
-    this.value = ko.observable(value);
-    this.valueType = ko.observable(valueType);
+    this.value = ko.observable(value).extend({validateJSONValue: this});
+    this.nativeValue = ko.pureComputed(function () {
+        return  JSON.parse(this.value());
+    }, this);
     this.clone = function () {
         return new QueryFilter(this.field(), this.operator(), this.value())
     };
 
     this.toDto = function () {
-        var targetValue = this.value();
-        if (this.valueType() != undefined) {
-            targetValue = (this.valueType() == "number") ? Number(this.value()) : this.value();
-        }
-        return ko.mapping.toJS({"field": this.field(), "operator": this.operator(), "value": targetValue});
+        return ko.mapping.toJS({"field": this.field(), "operator": this.operator(), "value": this.nativeValue()});
     };
 
     this.addParentObserver = function (observer) {/* Do nothing, we consider a QueryFilter to be used as immutable object */
     };
 }
+
+
+ko.extenders.validateJSONValue = function(target, queryFilter) {
+    //add some sub-observables to our observable
+    target.hasError = ko.observable();
+    target.validationMessage = ko.observable();
+
+    //define a function to do validation
+    function validate(newValue) {
+        var error = false;
+        var messages = [];
+        try {
+            var parsed = JSON.parse(newValue);
+            // only string or numbers
+            if (typeof(parsed) != "string" && typeof(parsed) != "number") {
+                error = true;
+                message = "Enquoted \"string\" or number required.";
+            }
+
+            if (queryFilter.operator() == "regex" && typeof(parsed) != "string") {
+                error = true;
+                message = "Enquoted \"string\" value required for regular expressions";
+            }
+        } catch (ex) {
+            error = true;
+                message = "Enquoted \"string\" or number required.";
+        }
+        target.hasError(error);
+        target.validationMessage(error ? message : "");
+    }
+
+    //initial validation
+    validate(target());
+
+    //validate whenever the value changes
+    target.subscribe(validate);
+    queryFilter.operator.subscribe(function () {validate(target());});
+
+    //return the original observable
+    return target;
+};
+
 /**
  *
  * @param type either 'and' or 'or'. Default: 'and'
@@ -40,7 +79,6 @@ function QueryFilters(type, filters) {
     this.filters = ko.observableArray(filters == undefined ? [] : filters);
     this.filters.extend({notify: 'always'});
     this.operators = ['==', '!=', '<', '<=', '>', '>=', 'regex'];
-    this.valueTypes = ['string', 'number'];
     this.type = ko.observable(type == undefined ? 'and' : type);
     self.addFilter = function (filter) {
         self.filters.push(filter);
@@ -68,6 +106,8 @@ function QueryFilters(type, filters) {
     };
 }
 
+
+
 ko.components.register('query-filter', {
     viewModel: function (params) {
         this.queryFilters = params.value;
@@ -80,7 +120,8 @@ ko.components.register('query-filter', {
         };
 
         this.filterReadyToAdd = function () {
-            return (this.filterToAdd().field() != "" && this.filterToAdd().operator() != "");
+            var fieldAndOperatorSet = (this.filterToAdd().field() != "" && this.filterToAdd().operator() != "");
+            return fieldAndOperatorSet && !this.filterToAdd().value.hasError();
         };
     },
     template: ` <form class="form-inline" data-bind="submit: addFilter">
@@ -94,16 +135,16 @@ ko.components.register('query-filter', {
                     <select id="queryOperator" class="form-control" data-bind="options: queryFilters().operators,
                                                                            value: filterToAdd().operator"></select>
                 </div>
-                <div class="form-group">
+                <div class="form-group " data-bind="css: {'has-error': filterToAdd().value.hasError}">
                     <label class="sr-only" for="queryValue">Query value</label>
-                    <input type="text" class="form-control" id="queryValue" placeholder="value" data-bind="value: filterToAdd().value,
+                    <input type="text" class="form-control" id="queryValue" placeholder='"string" or 123.4' data-bind="value: filterToAdd().value,
                                                                                                        valueUpdate: 'afterkeydown'">
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label class="sr-only" for="queryvalueType">Treat as</label>
                     <select id="queryvalueType" class="form-control" data-bind="options: queryFilters().valueTypes,
                                                                            value: filterToAdd().valueType"></select>
-                </div>
+                </div> -->
                 <button type="submit" class="btn btn-default" data-bind="enable: filterReadyToAdd()">Add filter</button>
             </form>
             <div class="row-fluid clearfix" style="margin-top: 1eM">
@@ -114,7 +155,7 @@ ko.components.register('query-filter', {
                         <div class="query-filter">
                             <span data-bind="text: field"></span>
                             <span data-bind="text: operator"></span>
-                            <span data-bind="visible: valueType() == 'string'">"</span><span data-bind="text: value"></span><span data-bind="visible: valueType() == 'string'">"</span>
+                            <span data-bind="text: value"></span>
                             <a href="#" data-bind="click: $parent.removeFilter">[X]</a>
                         </div>
                     <!-- /ko -->
