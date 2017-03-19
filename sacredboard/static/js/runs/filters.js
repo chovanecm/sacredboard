@@ -138,7 +138,9 @@ ko.components.register('query-filter', {
                 <div class="form-group " data-bind="css: {'has-error': filterToAdd().value.hasError}">
                     <label class="sr-only" for="queryValue">Query value</label>
                     <input type="text" class="form-control" id="queryValue" placeholder='"string" or 123.4' data-bind="value: filterToAdd().value,
-                                                                                                       valueUpdate: 'afterkeydown'">
+                                                                                                       valueUpdate: 'afterkeydown',
+                                                                                                       attr: {title: filterToAdd().value.validationMessage}">
+                <span class="help-block block-over" data-bind="text: filterToAdd().value.validationMessage, visible: filterToAdd().value.hasError() && filterToAdd().value().length > 0"></span>                                                                                           
                 </div>
                 <!--<div class="form-group">
                     <label class="sr-only" for="queryvalueType">Treat as</label>
@@ -147,6 +149,7 @@ ko.components.register('query-filter', {
                 </div> -->
                 <button type="submit" class="btn btn-default" data-bind="enable: filterReadyToAdd()">Add filter</button>
             </form>
+            
             <div class="row-fluid clearfix" style="margin-top: 1eM">
                 <div class="col-md-12" data-bind="with: queryFilters">
                     <div data-bind="foreach: {data: filters, as: 'filter'}">

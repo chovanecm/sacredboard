@@ -65,3 +65,15 @@ tr.shown td.details-control:before {
     background-color: lightgray;
     padding: 0.5eM;
 }
+
+/* Block containing the help message in Query filter */
+.block-over {
+    position: absolute;
+    background-color: white;
+    border: solid;
+    border-color: black;
+    border-radius: 10px;
+    border-width: 1.5px;
+    z-index: 1;
+    padding: 0.5em;
+}
