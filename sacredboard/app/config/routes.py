@@ -19,6 +19,10 @@ def index():
     return redirect(url_for("routes.show_runs"))
 
 
+@routes.route("/_tests")
+def tests():
+    return redirect(url_for("static", filename="tests/index.html"))
+
 @routes.route("/runs")
 def show_runs():
     # return render_template("runs.html", runs=data.runs(), type=type)
