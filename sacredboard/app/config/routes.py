@@ -8,6 +8,7 @@ from flask import render_template
 from flask import request, Response, redirect, url_for
 
 import sacredboard.app.process.process as proc
+from sacredboard.app.controller.runs import get_runs
 from ..process import process
 
 routes = Blueprint("routes", __name__)
@@ -26,34 +27,7 @@ def show_runs():
 
 @routes.route("/api/run")
 def api_runs():
-    data = current_app.config["data"]
-    # TODO: Move the logic somewhere else?
-    draw = request.args.get("draw")
-    draw = int(draw) if draw is not None else 1
-    start = 0 if not request.args.get("start") \
-        else int(request.args.get("start"))
-    length = -1 if not request.args.get("length") \
-        else int(request.args.get("length"))
-    length = length if length >= 0 else None
-
-    # TODO: Make it work with heartbeat_diff
-    order_column = request.args.get("order[0][column]")
-    order_dir = request.args.get("order[0][dir]")
-    if order_column is not None:
-        order_column = \
-            request.args.get("columns[%d][name]" % int(order_column))
-        if order_column == "hostname":
-            order_column = "host.hostname"
-    runs = data.get_runs(start=start, limit=length,
-                         sort_by=order_column, sort_direction=order_dir)
-    # records_total should be the total size of the records in the database,
-    # not what was returned
-    records_total = runs.count()
-    records_filtered = runs.count()
-    return Response(render_template("api/runs.js", runs=runs,
-                                    draw=draw, recordsTotal=records_total,
-                                    recordsFiltered=records_filtered),
-                    mimetype="application/json")
+    return get_runs()
 
 
 @routes.route("/api/run/<run_id>")
