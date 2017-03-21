@@ -81,7 +81,7 @@ function render_tensorflow_dirs(experimentId, tensorflow) {
         return "<em>No Tensorflow logs found. See the "
         + "<!--<a href='http://sacred.readthedocs.io/en/latest/tensorflow.html' title='Integration with Tensorflow'>-->"
         + "<a href='https://github.com/IDSIA/sacred/blob/develop/docs/tensorflow.rst' title='Integration with Tensorflow'>"
-        + "documantation</a> on integration between Sacred and Tensorflow for more information.</em>";
+        + "documentation</a> on integration between Sacred and Tensorflow for more information.</em>";
     }
     var output = `<table class="table table-condensed">
                             <caption style="display: none;">Tensorflow logs</caption>
