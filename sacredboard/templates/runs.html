@@ -6,182 +6,30 @@
 
     <title>Runs</title>
 
-    <!-- jQuery -->
-    <script
-            src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-            crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='scripts/main.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/require.js')}}"></script>
+    <script>
+        requirejs(["runs/viewModel"], function (viewModel) {
+
+        });
+    </script>
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='lib/bootstrap/bootstrap.min.css')}}">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='lib/bootstrap/bootstrap-theme.min.css')}}">
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
 
 
     <!-- DataTables, jQuery and its plugins, debug mode -->
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.datatables.net/v/bs/dt-1.10.13/r-2.1.0/sc-1.4.2/datatables.min.css"/>
-
-    <script type="text/javascript"
-            src="https://cdn.datatables.net/v/bs/dt-1.10.13/r-2.1.0/sc-1.4.2/datatables.min.js"></script>
-
-    <!-- KnockoutJS -->
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
-    <script type="text/javascript"
-            src="{{url_for('static', filename='lib/knockout/knockout.mapping-latest.js')}}"></script>
-
-
-    <script type="text/javascript"
-            src="{{url_for('static', filename='js/utils.js')}}"></script>
-    <script type="text/javascript"
-            src="{{url_for('static', filename='js/runs.js')}}"></script>
-
-    <script type="text/javascript"
-            src="{{url_for('static', filename='js/runs/filters.js')}}"></script>
+          href="https://cdn.datatables.net/v/bs/dt-1.10.13/r-2.1.0/sc-1.4.2/datatables.min.css">
 
     <link rel="stylesheet" type="text/css"
           href="{{url_for('static', filename='css/runs.css')}}"/>
 
-
-    <script type="text/javascript">
-        var table = null;
-        $(document).ready(function () {
-            var jqRuns = $('#runs')
-            table = jqRuns.DataTable(
-                {
-                    colReorder: true,
-                    responsive: false,
-                    bFilter: false,
-
-                    // Scroller:
-                    //scrollY: window.innerHeight / 1.4,
-                    deferRender: true,
-                    scroller: false,
-                    serverSide: true,
-                    ajax: {
-                        url: '{{url_for("routes.api_runs")}}',
-                        data: function (d) {
-                            d.queryFilter = JSON.stringify(viewModel.queryFilters().toDto());
-                        }
-                    },
-                    "columns": [
-                        {
-                            "className": 'details-control',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
-                        },
-                        {
-                            "data": "experiment_name",
-                            "name": "experiment.name",
-                            "render": function (data, type, row) {
-                                return '<span sacred-content="status-icon" sacred-status="' + row.status +
-                                    '" sacred-is-alive="' + row.is_alive + '">&block;</span>  ' + data;
-                            }
-                        },
-                        {"data": "start_time", "name": "start_time"},
-                        {"data": "heartbeat", "name": "heartbeat"},
-                        {"data": "hostname", "name": "hostname"},
-                        {"data": "result", "name": "result"},
-                        {"data": "id", "visible": false}
-                    ],
-                    order: [["5", "desc"]]
-                }
-            );
-            // Add event listener for opening and closing details
-            jqRuns.find('tbody').on('click', 'tr', function () {
-                var tr = $(this);
-                var row = table.row(tr);
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    if (row.data() == undefined) {
-                        // Nothing to do here
-                        return;
-                    }
-                    var id = row.data().id;
-                    var f = function () {
-                        $.ajax({
-                            url: "{{url_for('routes.api_run', run_id='')}}" + id
-                        }).done(function (data) {
-                            if (data.data[0].id != row.data().id) {
-                                /* Before this ajax function was called,
-                                 our parent row has changed (belongs to some other experiment)
-                                 there is nothing to do here. */
-                                return;
-                            }
-                            var detail_view = null;
-                            //Show detailed view if not shown yet
-                            if (!row.child.isShown()) {
-                                row.child(generate_detail_view(data.data[0])).show();
-                                detail_view = tr[0].nextSibling;
-                            } else {
-                                //udpdate content
-                                detail_view = tr[0].nextSibling;
-                                $(detail_view).find('[sacred-content="captured_out"]').each(function (i, obj) {
-                                    obj.innerText = data.data[0].object.captured_out;
-                                });
-                            }
-                            //scroll to the end of captured out
-                            $(detail_view).find(".scrollDown").each(function (i, obj) {
-                                scrollDown(obj);
-                            });
-                            //update parent row with current data:
-                            row.data(data.data[0]);
-                            //set timeOut
-                            setTimeout(function () {
-                                if (row.child.isShown()) {
-                                    f();
-                                }
-                            }, 5000);
-                        });
-                        tr.addClass('shown');
-                    };
-                    f();
-                }
-            });
-        });
-
-    </script>
-
-    <script>
-        ko.options.deferUpdates = true;
-        var viewModel = {
-            queryFilters : ko.observable(new QueryFilters()),
-            predefinedFilters: {
-                "run-alive": new QueryFilter("status", "==", "\"RUNNING\""),
-                "run-completed": new QueryFilter("status", "==", "\"COMPLETED\""),
-                "run-queued": new QueryFilter("status", "==", "\"QUEUED\""),
-                "run-failed": new QueryFilter("status", "==", "\"FAILED\""),
-                "run-interrupted": new QueryFilter("status", "==", "\"INTERRUPTED\""),
-                "run-dead": new QueryFilter("status", "==", "\"DEAD\"")
-            },
-            statusFilters: new QueryFilters("or")
-        };
-        for (var key in viewModel.predefinedFilters) {
-            viewModel.statusFilters.addFilter(viewModel.predefinedFilters[key]);
-        }
-
-               viewModel.queryFilters().addFilter(viewModel.statusFilters);
-        $(document).ready(function () {
-           viewModel.queryFilters().filters.subscribe(function () {
-                table.ajax.reload();
-            });
-            ko.applyBindings(viewModel);
-        });
-    </script>
 
 </head>
 <body>
@@ -207,12 +55,24 @@
         <table id="runs" class="table table-striped table-hover">
             <caption>Experiments Run Overview<br>
                 Legend:
-                <span class="run-alive">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-alive'], checked: statusFilters.filters"> Running,
-                <span class="run-completed">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-completed'], checked: statusFilters.filters"> Completed,
-                <span class="run-failed">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-failed'], checked: statusFilters.filters"> Failed,
-                <span class="run-interrupted">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters"> Interrupted,
-                <span class="run-dead">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-dead'], checked: statusFilters.filters"> Probably dead,
-                <span class="run-queued">&block;</span> <input type="checkbox" data-bind="checkedValue: predefinedFilters['run-queued'], checked: statusFilters.filters"> Queued
+                <span class="run-alive">&block;</span> <input type="checkbox"
+                                                              data-bind="checkedValue: predefinedFilters['run-alive'], checked: statusFilters.filters">
+                Running,
+                <span class="run-completed">&block;</span> <input type="checkbox"
+                                                                  data-bind="checkedValue: predefinedFilters['run-completed'], checked: statusFilters.filters">
+                Completed,
+                <span class="run-failed">&block;</span> <input type="checkbox"
+                                                               data-bind="checkedValue: predefinedFilters['run-failed'], checked: statusFilters.filters">
+                Failed,
+                <span class="run-interrupted">&block;</span> <input type="checkbox"
+                                                                    data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters">
+                Interrupted,
+                <span class="run-dead">&block;</span> <input type="checkbox"
+                                                             data-bind="checkedValue: predefinedFilters['run-dead'], checked: statusFilters.filters">
+                Probably dead,
+                <span class="run-queued">&block;</span> <input type="checkbox"
+                                                               data-bind="checkedValue: predefinedFilters['run-queued'], checked: statusFilters.filters">
+                Queued
             </caption>
             <thead>
             <tr>
