@@ -1,7 +1,7 @@
 /**
  * Returns a function that turns a table into a datatable for displaying experiment runs
  */
-define(["bootstrap", "datatables", "jquery", "runs/detailView"], function (bootstrap, datatables, $, generateDetailView) {
+define(["bootstrap", "datatables", "datatables-bootstrap", "jquery", "runs/detailView"], function (bootstrap, datatables, dtboostrap, $, generateDetailView) {
 
     /**
      * Scrolls down in the element

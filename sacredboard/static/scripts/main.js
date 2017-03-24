@@ -5,11 +5,12 @@ var require = {
         knockout: "../lib/knockout/knockout-min",
         knockoutMapping: "../lib/knockout/knockout.mapping-latest",
         datatables: "../lib/datatables/datatables.min",
+        "datatables.net": "../lib/datatables/DataTables-1.10.13/js/jquery.dataTables",
+        'datatables-bootstrap' : '../lib/datatables/DataTables-1.10.13/js/dataTables.bootstrap',
         bootstrap: "../lib/bootstrap/bootstrap.min"
     },
     shim : {
-        "bootstrap" : { "deps" :["jquery"] },
-        "datatables" : { "deps": ["jquery","bootstrap"]},
+        "bootstrap" : { "deps" :["jquery"]},
         "knockoutMapping" : { "deps": ["knockout"]}
     }
 };
