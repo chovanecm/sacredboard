@@ -15,6 +15,7 @@ function QueryFilter(field, operator, value) {
     this.nativeValue = ko.pureComputed(function () {
         return  JSON.parse(this.value());
     }, this);
+
     this.clone = function () {
         return new QueryFilter(this.field(), this.operator(), this.value())
     };
@@ -114,8 +115,7 @@ ko.components.register('query-filter', {
         this.filterToAdd = ko.observable(new QueryFilter("", "", "", "string"));
         this.addFilter = function () {
             if (this.filterReadyToAdd()) {
-                this.queryFilters().addFilter(this.filterToAdd());
-                this.filterToAdd(this.filterToAdd().clone());
+                this.queryFilters().addFilter(this.filterToAdd().clone());
             }
         };
 
@@ -123,6 +123,12 @@ ko.components.register('query-filter', {
             var fieldAndOperatorSet = (this.filterToAdd().field() != "" && this.filterToAdd().operator() != "");
             return fieldAndOperatorSet && !this.filterToAdd().value.hasError();
         };
+
+        this.filterToAdd().field.subscribe(function () {
+            if (this.filterToAdd().field().startsWith(".")) {
+                this.filterToAdd().field("config" + this.filterToAdd().field());
+            }
+        }, this);
     },
     template: ` <form class="form-inline" data-bind="submit: addFilter">
                 <div class="form-group">
