@@ -11,7 +11,8 @@ var require = {
     },
     shim : {
         "bootstrap" : { "deps" :["jquery"]},
-        "knockoutMapping" : { "deps": ["knockout"]}
+        "knockoutMapping" : { "deps": ["knockout"]},
+        "datatables": { "deps": ["jquery", "datatables.net", "datatables-bootstrap"]}
     }
 };
 

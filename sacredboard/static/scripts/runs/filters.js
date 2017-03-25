@@ -1,4 +1,4 @@
-define(["knockout", "knockoutMapping"], function (ko, knockoutMapping) {
+define("runs/filters", ["knockout", "knockoutMapping", "jquery"], function (ko, knockoutMapping, $) {
     ko.mapping = knockoutMapping;
     /**
      *

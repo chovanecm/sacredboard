@@ -1,4 +1,4 @@
-define(["knockout", "runs/filters", "jquery", "runs/runTable"], function (ko, filters, $, runTable) {
+define("runs/viewModel", ["knockout", "runs/filters", "jquery"], function (ko, filters, $) {
     //Additionaly requires runTable
     var QueryFilters = filters.QueryFilters;
     var QueryFilter = filters.QueryFilter;
@@ -13,26 +13,22 @@ define(["knockout", "runs/filters", "jquery", "runs/runTable"], function (ko, fi
             "run-interrupted": new QueryFilter("status", "==", "\"INTERRUPTED\""),
             "run-dead": new QueryFilter("status", "==", "\"DEAD\"")
         },
-        statusFilters: new QueryFilters("or")
+        statusFilters: new QueryFilters("or"),
+
+        getQueryFilterDto: function () {
+            return this.queryFilters().toDto();
+        },
+        subscribe: function (listener) {
+            this.queryFilters().filters.subscribe(listener);
+        },
+
+        bind: function () {
+            ko.applyBindings(this);
+        }
     };
     for (var key in viewModel.predefinedFilters) {
         viewModel.statusFilters.addFilter(viewModel.predefinedFilters[key]);
     }
-
     viewModel.queryFilters().addFilter(viewModel.statusFilters);
-    $(document).ready(function () {
-        var table = runTable($("#runs"),
-            function (config) {
-                config.ajax.data = function (request) {
-                    request.queryFilter = JSON.stringify(viewModel.queryFilters().toDto());
-                };
-            }
-        );
-        viewModel.queryFilters().filters.subscribe(function () {
-            table.ajax.reload();
-        });
-
-        ko.applyBindings(viewModel);
-    });
     return viewModel;
 });

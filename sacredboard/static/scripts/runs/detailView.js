@@ -1,4 +1,4 @@
-define(["escapeHtml"], function (escapeHtml) {
+define("runs/detailView", ["escapeHtml"], function (escapeHtml) {
     /**
      * Generate detail view for an experiment
      * @param run Run returned via the web service

@@ -9,10 +9,16 @@
     <script src="{{url_for('static', filename='scripts/main.js')}}"></script>
     <script src="{{url_for('static', filename='scripts/require.js')}}"></script>
     <script>
-        requirejs(["runs/viewModel"], function (viewModel) {
-
+        requirejs(["runs/runTable", "runs/viewModel", "bootstrap"], function (runTable, viewModel, bootstrap) {
+            runTable.initTable("#runs");
+            viewModel.bind();
+            viewModel.subscribe(function () {
+                runTable.queryFilter = viewModel.getQueryFilterDto();
+                runTable.reload();
+            });
         });
     </script>
+
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
@@ -22,10 +28,11 @@
     <link rel="stylesheet" href="{{url_for('static', filename='lib/bootstrap/bootstrap-theme.min.css')}}">
 
 
-
     <!-- DataTables, jQuery and its plugins, debug mode -->
     <link rel="stylesheet" type="text/css"
           href="{{url_for('static', filename='lib/datatables/datatables.css')}}">
+        <link rel="stylesheet" type="text/css"
+          href="{{url_for('static', filename='lib/datatables/DataTables-1.10.13/css/dataTables.bootstrap.css')}}">
 
     <link rel="stylesheet" type="text/css"
           href="{{url_for('static', filename='css/runs.css')}}"/>

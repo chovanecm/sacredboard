@@ -1,4 +1,4 @@
-define(function () {
+define("escapeHtml", [], function () {
     var entityMap = {
         '&': '&amp;',
         '<': '&lt;',
