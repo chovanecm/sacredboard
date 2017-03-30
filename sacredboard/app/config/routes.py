@@ -75,7 +75,7 @@ def close_tensorboards():
 
 @routes.errorhandler(process.TensorboardNotFoundError)
 def handle_tensorboard_not_found(e):
-    return "Tensorboard not found in your system." \
+    return "Tensorboard not found on your system." \
            " Please install tensorflow first. Sorry.", 503
 
 
