@@ -64,7 +64,7 @@ define("runs/runTable", ["bootstrap", "datatables", "datatables-bootstrap", "run
                     {"data": "result", "name": "result"},
                     {"data": "id", "visible": false}
                 ],
-                order: [["5", "desc"]]
+                order: [["3", "desc"]]
             };
             var table = jqRuns.DataTable(config);
             createRunTable.table = table;
