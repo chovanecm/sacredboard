@@ -15,6 +15,9 @@ define("runs/detailView", ["escapeHtml"], function (escapeHtml) {
                             <a href="#experiment-config-` + escapeHtml(run.id) + `" data-toggle="pill">Config</a>
                         </li>
                         <li role="presentation">
+                            <a href="#experiment-info-` + escapeHtml(run.id) + `" data-toggle="pill">Run info</a>
+                        </li>
+                        <li role="presentation">
                             <a href="#captured-output-` + escapeHtml(run.id) + `" data-toggle="pill">Captured output</a>
                         </li>
                         <li role="presentation">
@@ -29,6 +32,15 @@ define("runs/detailView", ["escapeHtml"], function (escapeHtml) {
                             <table class="table table-condensed">
                             <caption style="display: none">Run configuration</caption>
                             __CONFIG_PARAMETERS__
+                            </table>
+                        </div>
+                      </div>
+                  <div id="experiment-info-` + escapeHtml(run.id) + `" class="tab-pane table-responsive">
+                      <h4>Run info</h4>
+                      <div class="detail-page-box">
+                            <table class="table table-condensed">
+                            <caption style="display: none">Run info</caption>
+                            __RUN_INFO__
                             </table>
                         </div>
                       </div>
@@ -48,6 +60,7 @@ define("runs/detailView", ["escapeHtml"], function (escapeHtml) {
             </div>
             `;
         tabs = tabs.replace(/__CONFIG_PARAMETERS__/g, render_config_parameters(run.object.config));
+        tabs = tabs.replace(/__RUN_INFO__/g, render_config_parameters(run.object.info));
         tabs = tabs.replace(/__TENSORFLOW_LOGDIRS__/g, render_tensorflow_dirs(run.id, run.object.info.tensorflow || {}));
         return tabs;
     }
