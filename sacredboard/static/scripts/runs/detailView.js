@@ -60,7 +60,7 @@ define("runs/detailView", ["escapeHtml"], function (escapeHtml) {
         var output = "";
         for (var key in config) {
             if (typeof config[key] == "object") {
-                output += render_config_parameters(config[key], key.toString() + ".");
+                output += render_config_parameters(config[key], config_prefix + key.toString() + ".");
             } else {
                 output += "<tr><td>" + escapeHtml(config_prefix + key) + "</td><td>" + escapeHtml(config[key]) + "</td></tr>\n";
             }
