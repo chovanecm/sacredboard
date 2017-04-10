@@ -24,7 +24,7 @@
 }
 
 [sacred-content="status-icon"][sacred-status="INTERRUPTED"], .run-interrupted {
-    color: black;
+    color: orange;
 }
 
 .detail-page-box {
