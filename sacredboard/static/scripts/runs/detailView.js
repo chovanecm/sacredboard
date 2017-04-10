@@ -9,6 +9,11 @@ define("runs/detailView", ["escapeHtml"], function (escapeHtml) {
         var tabs = `
             <div class="container-fluid detail-view">
             <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                <h3>Details for: ` + escapeHtml(run.experiment_name) + ` <small>(id: ` + escapeHtml(run.id) + `)</small></h3>
+            </div>
+            </div>
+            <div class="row">
                 <div class="col-md-2">
                       <ul class="nav nav-pills nav-stacked">
                         <li role="presentation" class="active">
