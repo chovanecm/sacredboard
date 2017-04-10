@@ -10,7 +10,7 @@ def parse_int_arg(name, default):
 def parse_query_filter():
     query_string = request.args.get("queryFilter")
     if query_string is None:
-        return []
+        return {"type": "and", "filters": []}
     query = json.loads(query_string)
     assert type(query) == dict
     assert type(query.get("type")) == str

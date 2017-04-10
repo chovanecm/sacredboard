@@ -19,6 +19,10 @@ def index():
     return redirect(url_for("routes.show_runs"))
 
 
+@routes.route("/_tests")
+def tests():
+    return redirect(url_for("static", filename="tests/index.html"))
+
 @routes.route("/runs")
 def show_runs():
     # return render_template("runs.html", runs=data.runs(), type=type)
@@ -71,7 +75,7 @@ def close_tensorboards():
 
 @routes.errorhandler(process.TensorboardNotFoundError)
 def handle_tensorboard_not_found(e):
-    return "Tensorboard not found in your system." \
+    return "Tensorboard not found on your system." \
            " Please install tensorflow first. Sorry.", 503
 
 
