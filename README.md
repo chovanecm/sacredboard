@@ -88,6 +88,12 @@ To display help, run
 
     sacredboard --help
 
+## Contributing
+
+Contributions to Sacred are welcomed (see issues for inspiration).
+The project tries to follow the git-flow workflow. Therefore,
+contributions of new features should be developed against the `develop` branch. Thank you!
+
 
 ## References
 
