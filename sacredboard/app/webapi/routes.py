@@ -24,6 +24,7 @@ def index():
 def tests():
     return redirect(url_for("static", filename="tests/index.html"))
 
+
 @routes.route("/runs")
 def show_runs():
     # return render_template("runs.html", runs=data.runs(), type=type)
@@ -40,6 +41,14 @@ def api_run(run_id):
     data = current_app.config["data"]
     run = data.get_run(run_id)
     records_total = 1 if run is not None else 0
+    if records_total == 0:
+        return Response(
+            render_template(
+                "api/error.js",
+                error_code=404,
+                error_message="Run %s not found." % run_id),
+            status=404,
+            mimetype="application/json")
     records_filtered = records_total
     return Response(render_template("api/runs.js", runs=[run], draw=1,
                                     recordsTotal=records_total,
@@ -88,7 +97,7 @@ def handle_tensorboard_timeout(e):
 @routes.errorhandler(process.UnexpectedOutputError)
 def handle_tensorboard_unexpected_output(e: process.UnexpectedOutputError):
     return "Tensorboard outputted '%s'," \
-           " but the information expected was: '%s'. Sorry."\
+           " but the information expected was: '%s'. Sorry." \
            % (e.output, e.expected), 503
 
 
