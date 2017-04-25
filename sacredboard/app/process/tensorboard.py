@@ -29,7 +29,7 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
         raise TensorboardNotFoundError(ex)
 
     # Read first line of output from tensorboard - it should contain
-    # the port where it listens
+    # the port where it is listening on
     data = tensorboard_instance.read_line(time_limit=10)
     search = re.search("on port ([0-9]+)", data)
     if search is not None:
@@ -39,5 +39,5 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
         tensorboard_instance.terminate()
         raise UnexpectedOutputError(
             data,
-            expected="The port Tensorboard that listens on."
+            expected="The port that Tensorboard is listening on."
             )
