@@ -77,7 +77,7 @@ def run_tensorboard(run_id, tflog_id):
     return redirect("http://%s:%d" % (redirect_to_address, port))
 
 
-@routes.route("/tensorboard/stop")
+@routes.route("/tensorboard/stop", methods=['GET', 'POST'])
 def close_tensorboards():
     sacredboard.app.process.tensorboard.stop_all_tensorboards()
     return "Stopping tensorboard"

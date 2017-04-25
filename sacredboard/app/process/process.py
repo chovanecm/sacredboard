@@ -38,6 +38,8 @@ class Process:
                 if poll_result:
                     line = self.proc.stdout.readline().decode()
                     return line
+                else:
+                    time.sleep(0.05)
             raise TimeoutError()
         else:
             return None
