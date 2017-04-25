@@ -32,7 +32,7 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "sacredboard = sacredboard.webapp:run"
+            "sacredboard = sacredboard.bootstrap:run"
         ]
     },
     install_requires=get_requirements(),

@@ -1,4 +1,4 @@
 # coding=utf-8
-from sacredboard import webapp
+from sacredboard import bootstrap
 
-__all__ = ("webapp",)
+__all__ = ("bootstrap.py",)

@@ -1,7 +1,7 @@
 # coding=utf-8
 import pytest
 
-import sacredboard.webapp as wa
+import sacredboard.bootstrap as wa
 
 
 @pytest.mark.parametrize("config_string",
