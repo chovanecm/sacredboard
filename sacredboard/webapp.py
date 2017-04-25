@@ -7,8 +7,8 @@ from flask import Flask
 from gevent.pywsgi import WSGIServer
 
 from sacredboard.app.config import jinja_filters
-from sacredboard.app.config import routes
 from sacredboard.app.data.mongodb import PyMongoDataAccess
+from sacredboard.app.webapi import routes
 
 locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)

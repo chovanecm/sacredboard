@@ -7,6 +7,7 @@ from flask import current_app, request, Response, render_template
 def parse_int_arg(name, default):
     return default if request.args.get(name) is None else int(request.args.get(name))
 
+
 def parse_query_filter():
     query_string = request.args.get("queryFilter")
     if query_string is None:

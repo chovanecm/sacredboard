@@ -1,15 +1,16 @@
 # coding=utf-8
 import re
+from pathlib import Path
+
 from flask import Blueprint
 from flask import current_app
 from flask import render_template
 from flask import request, Response, redirect, url_for
-from pathlib import Path
 
 import sacredboard.app.process.process as proc
 import sacredboard.app.process.tensorboard
-from sacredboard.app.controller.runs import get_runs
-from ..process import process
+from sacredboard.app.process import process
+from sacredboard.app.webapi.runs import get_runs
 
 routes = Blueprint("routes", __name__)
 
