@@ -55,7 +55,9 @@ Install sacredboard using `pip`:
 
     pip install sacredboard
 
+To install the latest development version with new features, run:
 
+    pip install https://github.com/chovanecm/sacredboard/archive/develop.zip
 
 ### Running
 
