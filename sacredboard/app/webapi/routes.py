@@ -7,9 +7,10 @@ from flask import current_app
 from flask import render_template
 from flask import request, Response, redirect, url_for
 
-from ..process.tensorboard import TensorboardNotFoundError
-from sacredboard.app.process import process
-from sacredboard.app.webapi.runs import get_runs
+from ..process.tensorboard import TensorboardNotFoundError,\
+                                  stop_all_tensorboards
+from ..process import process, tensorboard
+from ..webapi.runs import get_runs
 
 routes = Blueprint("routes", __name__)
 
@@ -69,8 +70,7 @@ def run_tensorboard(run_id, tflog_id):
     else:
         path_to_log_dir = base_dir.joinpath(log_dir)
 
-    port = int(sacredboard.app.process.
-               tensorboard.run_tensorboard(str(path_to_log_dir)))
+    port = int(tensorboard.run_tensorboard(str(path_to_log_dir)))
     url_root = request.url_root
     url_parts = re.search("://([^:/]+)", url_root)
     redirect_to_address = url_parts.group(1)
@@ -79,7 +79,7 @@ def run_tensorboard(run_id, tflog_id):
 
 @routes.route("/tensorboard/stop", methods=['GET', 'POST'])
 def close_tensorboards():
-    sacredboard.app.process.tensorboard.stop_all_tensorboards()
+    stop_all_tensorboards()
     return "Stopping tensorboard"
 
 
