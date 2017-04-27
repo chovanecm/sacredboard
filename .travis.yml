@@ -1,4 +1,6 @@
 language: python
+before_script:
+- pip install flake8
 python:
 #  - "2.7"
   - "3.4"
