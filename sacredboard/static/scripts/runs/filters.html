@@ -1,8 +1,12 @@
 <form class="form-inline" data-bind="submit: addFilter">
     <div class="form-group">
         <label class="sr-only" for="queryField">Field name</label>
-        <input type="text" class="form-control" id="queryField" placeholder="host.hostname"
-               data-bind='value: filterToAdd().field,  valueUpdate: "afterkeydown"'>
+        <span style="display:inline-block; width: 3.5em" data-bind="text: filterToAdd().fieldScope"></span>
+        <input type="text" class="form-control" id="queryField" placeholder="seed or .host.hostname"
+               data-bind='value: filterToAdd().userInputField,  valueUpdate: "afterkeydown"'>
+        <sup style="cursor: default" title="The run property to be filtered on. Use a config property (e.g. seed) or the full path with a leading dot: .host.hostname">
+            <b>?&nbsp;</b>
+        </sup>
     </div>
     <div class="form-group">
         <label class="sr-only" for="queryOperator">Operator</label>
