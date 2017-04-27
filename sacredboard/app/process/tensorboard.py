@@ -1,6 +1,7 @@
 import re
 
-from sacredboard.app.process.process import Process, ProcessError, UnexpectedOutputError
+from sacredboard.app.process.process \
+    import Process, ProcessError, UnexpectedOutputError
 
 TENSORBOARD_BINARY = "tensorboard"
 
@@ -21,8 +22,8 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
     if tensorboard_args is None:
         tensorboard_args = []
     tensorboard_instance = Process.create_process(
-        TENSORBOARD_BINARY.split(" ")
-        + ["--logdir", logdir, "--host", listen_on] + tensorboard_args)
+        TENSORBOARD_BINARY.split(" ") +
+        ["--logdir", logdir, "--host", listen_on] + tensorboard_args)
     try:
         tensorboard_instance.run()
     except FileNotFoundError as ex:
@@ -40,4 +41,4 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
         raise UnexpectedOutputError(
             data,
             expected="The port that Tensorboard is listening on."
-            )
+        )

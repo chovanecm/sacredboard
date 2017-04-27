@@ -5,7 +5,8 @@ from flask import current_app, request, Response, render_template
 
 
 def parse_int_arg(name, default):
-    return default if request.args.get(name) is None else int(request.args.get(name))
+    return default if request.args.get(name) is None \
+        else int(request.args.get(name))
 
 
 def parse_query_filter():
@@ -35,13 +36,15 @@ def get_runs():
         if order_column == "hostname":
             order_column = "host.hostname"
 
-    runs = data.get_runs(start=start, limit=length,
-                         sort_by=order_column, sort_direction=order_dir, query=query)
+    runs = data.get_runs(
+        start=start, limit=length,
+        sort_by=order_column, sort_direction=order_dir, query=query)
     # records_total should be the total size of the records in the database,
     # not what was returned
     records_total = runs.count()
     records_filtered = runs.count()
-    return Response(render_template("api/runs.js", runs=runs,
-                                    draw=draw, recordsTotal=records_total,
-                                    recordsFiltered=records_filtered),
-                    mimetype="application/json")
+    return Response(render_template(
+        "api/runs.js", runs=runs,
+        draw=draw, recordsTotal=records_total,
+        recordsFiltered=records_filtered),
+        mimetype="application/json")

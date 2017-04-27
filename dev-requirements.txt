@@ -1,3 +1,5 @@
 pytest
 pytest-timeout
 setuptools
+flake8
+mccabe

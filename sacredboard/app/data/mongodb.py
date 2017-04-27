@@ -6,8 +6,10 @@ import pymongo
 class PyMongoDataAccess:
     """ Access records in MongoDB. """
 
-    RUNNING_DEAD_RUN_CLAUSE = {"status": "RUNNING", "$where": "new Date() - this.heartbeat > 120000"}
-    RUNNING_NOT_DEAD_CLAUSE = {"status": "RUNNING", "$where": "new Date() - this.heartbeat <= 120000"}
+    RUNNING_DEAD_RUN_CLAUSE = {
+        "status": "RUNNING", "$where": "new Date() - this.heartbeat > 120000"}
+    RUNNING_NOT_DEAD_CLAUSE = {
+        "status": "RUNNING", "$where": "new Date() - this.heartbeat <= 120000"}
 
     def __init__(self, uri, database_name, collection_name):
 
@@ -25,7 +27,8 @@ class PyMongoDataAccess:
         """ Returns a new Mongo Client """
         return pymongo.MongoClient(host=self._uri)
 
-    def get_runs(self, sort_by=None, sort_direction=None, start=0, limit=None, query={"type": "and", "filters": []}):
+    def get_runs(self, sort_by=None, sort_direction=None,
+                 start=0, limit=None, query={"type": "and", "filters": []}):
         mongo_query = self._to_mongo_query(query)
         cursor = getattr(self._db, self._collection_name).find(mongo_query)
         if sort_by is not None:
@@ -78,32 +81,8 @@ class PyMongoDataAccess:
         mongo_query = []
         for clause in query["filters"]:
             if clause.get("type") is None:
-                # It's a regular clause
-                mongo_clause = {}
-                value = clause["value"]
-
-                if clause["field"] == "status" and clause["value"] == "DEAD":
-                    mongo_clause = PyMongoDataAccess.RUNNING_DEAD_RUN_CLAUSE
-                    if clause["operator"] == "!=":
-                        mongo_clause = {"$not": mongo_clause}
-                elif clause["field"] == "status" and clause["value"] == "RUNNING":
-                    mongo_clause = PyMongoDataAccess.RUNNING_NOT_DEAD_CLAUSE
-                    if clause["operator"] == "!=":
-                        mongo_clause = {"$not": mongo_clause}
-                elif clause["operator"] == "==":
-                    mongo_clause[clause["field"]] = value
-                elif clause["operator"] == ">":
-                    mongo_clause[clause["field"]] = {"$gt": value}
-                elif clause["operator"] == ">=":
-                    mongo_clause[clause["field"]] = {"$gte": value}
-                elif clause["operator"] == "<":
-                    mongo_clause[clause["field"]] = {"$lt": value}
-                elif clause["operator"] == "<=":
-                    mongo_clause[clause["field"]] = {"$lte": value}
-                elif clause["operator"] == "!=":
-                    mongo_clause[clause["field"]] = {"$ne": value}
-                elif clause["operator"] == "regex":
-                    mongo_clause[clause["field"]] = {"$regex": value}
+                mongo_clause = PyMongoDataAccess. \
+                    _simple_clause_to_query(clause)
             else:
                 # It's a subclause
                 mongo_clause = PyMongoDataAccess._to_mongo_query(clause)
@@ -118,6 +97,40 @@ class PyMongoDataAccess:
         else:
             raise ValueError("Unexpected query type %s" % query.get("type"))
 
+    @staticmethod
+    def _simple_clause_to_query(clause):
+        # It's a regular clause
+        mongo_clause = {}
+        value = clause["value"]
+        if clause["field"] == "status" and \
+           clause["value"] in ["DEAD", "RUNNING"]:
+            return PyMongoDataAccess.\
+                _status_filter_to_query(clause)
+        if clause["operator"] == "==":
+            mongo_clause[clause["field"]] = value
+        elif clause["operator"] == ">":
+            mongo_clause[clause["field"]] = {"$gt": value}
+        elif clause["operator"] == ">=":
+            mongo_clause[clause["field"]] = {"$gte": value}
+        elif clause["operator"] == "<":
+            mongo_clause[clause["field"]] = {"$lt": value}
+        elif clause["operator"] == "<=":
+            mongo_clause[clause["field"]] = {"$lte": value}
+        elif clause["operator"] == "!=":
+            mongo_clause[clause["field"]] = {"$ne": value}
+        elif clause["operator"] == "regex":
+            mongo_clause[clause["field"]] = {"$regex": value}
+        return mongo_clause
+
+    @staticmethod
+    def _status_filter_to_query(clause):
+        if clause["value"] == "RUNNING":
+            mongo_clause = PyMongoDataAccess.RUNNING_NOT_DEAD_CLAUSE
+        elif clause["value"] == "DEAD":
+            mongo_clause = PyMongoDataAccess.RUNNING_DEAD_RUN_CLAUSE
+        if clause["operator"] == "!=":
+            mongo_clause = {"$not": mongo_clause}
+        return mongo_clause
 
     @staticmethod
     def build_data_access(host, port, database_name, collection_name):
@@ -148,4 +161,3 @@ class PyMongoDataAccess:
        :type collection_name: str
                """
         return PyMongoDataAccess(uri, database_name, collection_name)
-

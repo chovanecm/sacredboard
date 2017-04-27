@@ -7,8 +7,7 @@ from flask import current_app
 from flask import render_template
 from flask import request, Response, redirect, url_for
 
-import sacredboard.app.process.process as proc
-import sacredboard.app.process.tensorboard
+from ..process.tensorboard import TensorboardNotFoundError
 from sacredboard.app.process import process
 from sacredboard.app.webapi.runs import get_runs
 
@@ -70,7 +69,8 @@ def run_tensorboard(run_id, tflog_id):
     else:
         path_to_log_dir = base_dir.joinpath(log_dir)
 
-    port = int(sacredboard.app.process.tensorboard.run_tensorboard(str(path_to_log_dir)))
+    port = int(sacredboard.app.process.
+               tensorboard.run_tensorboard(str(path_to_log_dir)))
     url_root = request.url_root
     url_parts = re.search("://([^:/]+)", url_root)
     redirect_to_address = url_parts.group(1)
@@ -83,7 +83,7 @@ def close_tensorboards():
     return "Stopping tensorboard"
 
 
-@routes.errorhandler(sacredboard.app.process.tensorboard.TensorboardNotFoundError)
+@routes.errorhandler(TensorboardNotFoundError)
 def handle_tensorboard_not_found(e):
     return "Tensorboard not found on your system." \
            " Please install tensorflow first. Sorry.", 503

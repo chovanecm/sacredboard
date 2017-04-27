@@ -99,10 +99,7 @@ class ProcessError(Exception):
     pass
 
 
-
-
 class UnexpectedOutputError(ProcessError):
     def __init__(self, output, expected=None):
         self.expected = expected
         self.output = output
-

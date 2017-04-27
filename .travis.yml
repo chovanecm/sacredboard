@@ -9,4 +9,4 @@ install: python setup.py install
 # command to run tests
 script:
 - python setup.py test --addopts -v
-- flake8 --exclude tests
+- flake8 --max-complexity 10 --exclude tests
