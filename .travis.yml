@@ -1,5 +1,6 @@
 language: python
-#before_script:
+before_script:
+  - pip install tox
 #- pip install flake8
 #- pip install coveralls
 python:
