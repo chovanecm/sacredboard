@@ -1,9 +1,9 @@
 # coding=utf-8
+"""Fake TensorBoard."""
 import sys
 import time
 
 import click
-
 
 @click.command()
 @click.option("--logdir")
@@ -14,6 +14,7 @@ import click
 @click.option("--sleep-time", default=20)
 def mock_tensorboard(logdir, host, print_nonsense, print_nothing,
                      address_in_use, sleep_time):
+    """Run fake TensorBoard."""
     if logdir is None:
         print('A logdir must be specified. Run `tensorboard --help` for '
               'details and examples.')

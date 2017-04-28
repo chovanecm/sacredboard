@@ -1,14 +1,20 @@
 language: python
-before_script:
-- pip install flake8
+#before_script:
+#- pip install flake8
+#- pip install coveralls
 python:
-#  - "2.7"
-  - "3.4"
   - "3.5"
-  - "3.6"
+env:
+  - TOX_ENV=py34
+  - TOX_ENV=py35
+  - TOX_ENV=flake8
+  - TOX_ENV=coverage
+
 # command to install dependencies
 install: python setup.py install
 # command to run tests
 script:
-- python setup.py test --addopts -v
-- flake8 sacredboard --max-complexity 10 --exclude tests
+  - tox -e $TOX_ENV
+#after_success:
+# not necessary, done by tox
+#  coveralls
