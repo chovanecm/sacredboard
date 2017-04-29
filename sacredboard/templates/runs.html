@@ -12,6 +12,10 @@
         requirejs(["runs/runTable", "runs/viewModel"], function (runTable, viewModel, bootstrap) {
             runTable.initTable("#runs");
             viewModel.bind();
+            /*
+             * Attach a listener to the viewModel to update the query of
+              * runTable and reload.
+             */
             viewModel.subscribe(function () {
                 runTable.queryFilter = viewModel.getQueryFilterDto();
                 runTable.reload();

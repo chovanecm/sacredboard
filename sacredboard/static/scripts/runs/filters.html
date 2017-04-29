@@ -29,7 +29,7 @@
     <div class="col-md-12" data-bind="with: queryFilters">
         <div data-bind="foreach: {data: filters, as: 'filter'}">
             <!-- ko if: filter['field'] != undefined -->
-            <!-- this can only display simple filters -->
+            <!-- this can only display terminal clause filters on the top level of the tree -->
             <div class="query-filter">
                 <span data-bind="text: field"></span>
                 <span data-bind="text: operator"></span>

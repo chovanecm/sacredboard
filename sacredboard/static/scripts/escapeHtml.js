@@ -10,9 +10,17 @@ define("escapeHtml", [], function () {
         '=': '&#x3D;'
     };
 
-    return function (string) {
+    /**
+     * Replaces some characters with their HTML equivalents
+     * @param string
+     * @return {String}
+     * @export escapeHtml
+     */
+    function replace(string) {
         return String(string).replace(/[&<>"'`=\/]/g, function (s) {
             return entityMap[s];
-        });
+        })
     }
-});
+    return replace;
+})
+;
