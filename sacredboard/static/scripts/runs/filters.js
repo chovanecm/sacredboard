@@ -19,6 +19,7 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
          * @constructor
          */
         function QueryFilter(field, operator, value) {
+
             var self = this;
             /* In accordance with https://github.com/chovanecm/sacredboard/issues/8
              the user searches by default in the config scope.
@@ -118,7 +119,7 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
              * @return QueryFilterDto
              */
             this.toDto = function () {
-                return ko.mapping.toJS({
+                return knockoutMapping.toJS({
                     "field": this.field(),
                     "operator": this.operator(),
                     "value": this.nativeValue()
@@ -171,7 +172,7 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
              * @return QueryFiltersDto
              */
             self.toDto = function () {
-                return ko.mapping.toJS(
+                return knockoutMapping.toJS(
                     {
                         type: self.type(),
                         filters: $.map(self.filters(),
