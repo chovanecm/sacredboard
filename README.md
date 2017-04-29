@@ -55,7 +55,9 @@ Install sacredboard using `pip`:
 
     pip install sacredboard
 
+To install the latest development version with new features, run:
 
+    pip install https://github.com/chovanecm/sacredboard/archive/develop.zip
 
 ### Running
 
@@ -87,6 +89,12 @@ The web browser with Sacredboard should open automatically.
 To display help, run
 
     sacredboard --help
+
+## Contributing
+
+Contributions to Sacred are welcomed (see issues for inspiration).
+The project tries to follow the git-flow workflow. Therefore,
+contributions of new features should be developed against the `develop` branch. Thank you!
 
 
 ## References
