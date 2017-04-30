@@ -1,6 +1,7 @@
 # Sacredboard
 
-Sacredboard is a web dashboard for [Sacred](https://github.com/IDSIA/sacred).
+Sacredboard is a web dashboard for the [Sacred](https://github.com/IDSIA/sacred)
+machine learning experiment management tool.
  
 It connects to the MongoDB database used by Sacred
 and displays a list of experiments, their state, Sacred configuration and
@@ -104,3 +105,13 @@ contributions of new features should be developed against the `develop` branch. 
 
 Feel free to open new issues in case of requests or bugs found.  
 Maintainer / Developer: Martin Chovanec, chovamar@fit.cvut.cz
+
+
+Current master branch status:
+[![Build Status](https://travis-ci.org/chovanecm/sacredboard.svg?branch=master)](https://travis-ci.org/chovanecm/sacredboard)
+[![Coverage Status](https://coveralls.io/repos/github/chovanecm/sacredboard/badge.svg?branch=master)](https://coveralls.io/github/chovanecm/sacredboard?branch=master)
+
+
+Current develop branch status:
+[![Build Status](https://travis-ci.org/chovanecm/sacredboard.svg?branch=develop)](https://travis-ci.org/chovanecm/sacredboard)
+[![Coverage Status](https://coveralls.io/repos/github/chovanecm/sacredboard/badge.svg?branch=develop)](https://coveralls.io/github/chovanecm/sacredboard?branch=develop)
