@@ -6,15 +6,15 @@
 
     <title>Runs</title>
 
-    <script src="{{url_for('static', filename='scripts/main.js')}}"></script>
-    <script src="{{url_for('static', filename='scripts/require.js')}}"></script>
+    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/require.js') }}"></script>
     <script>
-        requirejs(["runs/runTable", "runs/viewModel"], function (runTable, viewModel, bootstrap) {
+        requirejs(["runs/runTable", "runs/viewModel"], function (runTable, viewModel) {
             runTable.initTable("#runs");
             viewModel.bind();
             /*
              * Attach a listener to the viewModel to update the query of
-              * runTable and reload.
+             * runTable and reload.
              */
             viewModel.subscribe(function () {
                 runTable.queryFilter = viewModel.getQueryFilterDto();
@@ -27,20 +27,22 @@
     <!-- Bootstrap -->
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{{url_for('static', filename='lib/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.min.css') }}">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="{{url_for('static', filename='lib/bootstrap/css/bootstrap-theme.min.css')}}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap-theme.min.css') }}">
 
 
     <!-- DataTables, jQuery and its plugins, debug mode -->
     <link rel="stylesheet" type="text/css"
-          href="{{url_for('static', filename='lib/datatables/datatables.css')}}">
-        <link rel="stylesheet" type="text/css"
-          href="{{url_for('static', filename='lib/datatables/DataTables-1.10.13/css/dataTables.jqueryui.css')}}">
+          href="{{ url_for('static', filename='lib/datatables/datatables.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='lib/datatables/DataTables-1.10.13/css/dataTables.jqueryui.css') }}">
 
     <link rel="stylesheet" type="text/css"
-          href="{{url_for('static', filename='css/runs.css')}}"/>
+          href="{{ url_for('static', filename='css/runs.css') }}"/>
 
 
 </head>
@@ -70,14 +72,16 @@
                 <span class="run-alive">&block;</span> <input type="checkbox"
                                                               data-bind="checkedValue: predefinedFilters['run-alive'], checked: statusFilters.filters">
                 Running,
-                <span class="run-completed">&block;</span> <input type="checkbox"
-                                                                  data-bind="checkedValue: predefinedFilters['run-completed'], checked: statusFilters.filters">
+                <span class="run-completed">&block;</span> <input
+                        type="checkbox"
+                        data-bind="checkedValue: predefinedFilters['run-completed'], checked: statusFilters.filters">
                 Completed,
                 <span class="run-failed">&block;</span> <input type="checkbox"
                                                                data-bind="checkedValue: predefinedFilters['run-failed'], checked: statusFilters.filters">
                 Failed,
-                <span class="run-interrupted">&block;</span> <input type="checkbox"
-                                                                    data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters">
+                <span class="run-interrupted">&block;</span> <input
+                        type="checkbox"
+                        data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters">
                 Interrupted,
                 <span class="run-dead">&block;</span> <input type="checkbox"
                                                              data-bind="checkedValue: predefinedFilters['run-dead'], checked: statusFilters.filters">
@@ -99,9 +103,9 @@
             </thead>
             <tbody>
             {% for run in runs %}
-            <tr>
+                <tr>
 
-            </tr>
+                </tr>
             {% endfor %}
             </tbody>
         </table>

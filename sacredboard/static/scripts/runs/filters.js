@@ -1,9 +1,10 @@
+"use strict";
 /**
  * Defines the view-model for filters.
  */
-define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filters.html", "enquotedStringOrNumberValidator"],
-    function (ko, knockoutMapping, $, htmlTemplate, stringOrNumberValidator) {
-        ko.mapping = knockoutMapping;
+define("runs/filters", ["knockout", "jquery", "text!runs/filters.html", "enquotedStringOrNumberValidator"],
+    function (ko, $, htmlTemplate, stringOrNumberValidator) {
+
         /**
          * Terminal clause for filters.
          *
@@ -19,7 +20,6 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
          * @constructor
          */
         function QueryFilter(field, operator, value) {
-
             var self = this;
             /* In accordance with https://github.com/chovanecm/sacredboard/issues/8
              the user searches by default in the config scope.
@@ -119,11 +119,11 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
              * @return QueryFilterDto
              */
             this.toDto = function () {
-                return knockoutMapping.toJS({
-                    "field": this.field(),
-                    "operator": this.operator(),
-                    "value": this.nativeValue()
-                });
+                return {
+                    "field": self.field(),
+                    "operator": self.operator(),
+                    "value": self.nativeValue()
+                };
             };
 
             this.addParentObserver = function (observer) {
@@ -150,6 +150,7 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
          */
         function QueryFilters(type, filters) {
             var self = this;
+
             this.filters = ko.observableArray(filters == undefined ? [] : filters);
             this.filters.extend({notify: 'always'});
             this.operators = ['==', '!=', '<', '<=', '>', '>=', 'regex'];
@@ -162,6 +163,7 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
                 self.filters.remove(filter);
 
             };
+
             /**
              * Data Transfer Object for QueryFilters.
              * @typedef {{type: String, filters: Array.(QueryFilterDto|QueryFiltersDto)}} QueryFiltersDto
@@ -172,14 +174,13 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
              * @return QueryFiltersDto
              */
             self.toDto = function () {
-                return knockoutMapping.toJS(
-                    {
-                        type: self.type(),
-                        filters: $.map(self.filters(),
-                            function (filter) {
-                                return filter.toDto()
-                            })
-                    });
+                return {
+                    "type": self.type(),
+                    "filters": $.map(self.filters(),
+                        function (filter) {
+                            return filter.toDto()
+                        })
+                };
             };
             self.addParentObserver = function (observer) {
                 //Note: The observer must be set to always notify subscribers even if it doesn't detect a change.
@@ -191,14 +192,14 @@ define("runs/filters", ["knockout", "knockoutMapping", "jquery", "text!runs/filt
 
         /* Register <query-filter> HTML tag to display the filter form.
 
-            Displays an inline form to add a new filter to the QueryFilters provided
-            as the 'value' parameter. The applied filters are shown in a row
-            below the form. The form itself cannot create or display
-            other than terminal clause filters on the top level of the QueryFilters.
-            (Nested QueryFilters are ignored).
-            Example:
-            <query-filter params="value: queryFilters"></query-filter>
-          */
+         Displays an inline form to add a new filter to the QueryFilters provided
+         as the 'value' parameter. The applied filters are shown in a row
+         below the form. The form itself cannot create or display
+         other than terminal clause filters on the top level of the QueryFilters.
+         (Nested QueryFilters are ignored).
+         Example:
+         <query-filter params="value: queryFilters"></query-filter>
+         */
         ko.components.register('query-filter', {
             viewModel: function (params) {
                 this.queryFilters = params.value;
