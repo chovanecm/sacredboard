@@ -150,7 +150,6 @@ define("runs/filters", ["knockout", "jquery", "text!runs/filters.html", "enquote
          */
         function QueryFilters(type, filters) {
             var self = this;
-
             this.filters = ko.observableArray(filters == undefined ? [] : filters);
             this.filters.extend({notify: 'always'});
             this.operators = ['==', '!=', '<', '<=', '>', '>=', 'regex'];
@@ -163,7 +162,6 @@ define("runs/filters", ["knockout", "jquery", "text!runs/filters.html", "enquote
                 self.filters.remove(filter);
 
             };
-
             /**
              * Data Transfer Object for QueryFilters.
              * @typedef {{type: String, filters: Array.(QueryFilterDto|QueryFiltersDto)}} QueryFiltersDto

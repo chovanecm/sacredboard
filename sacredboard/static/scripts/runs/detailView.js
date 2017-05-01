@@ -1,3 +1,4 @@
+"use strict";
 define("runs/detailView", ["escapeHtml"], function (escapeHtml) {
     /**
      * Generate detail view for an experiment

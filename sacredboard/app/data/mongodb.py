@@ -1,10 +1,11 @@
 # coding=utf-8
+"""Accesses data in Sacred's MongoDB."""
 import bson
 import pymongo
 
 
 class PyMongoDataAccess:
-    """ Access records in MongoDB. """
+    """Access records in MongoDB."""
 
     RUNNING_DEAD_RUN_CLAUSE = {
         "status": "RUNNING", "$where": "new Date() - this.heartbeat > 120000"}
@@ -12,7 +13,12 @@ class PyMongoDataAccess:
         "status": "RUNNING", "$where": "new Date() - this.heartbeat <= 120000"}
 
     def __init__(self, uri, database_name, collection_name):
-
+        """
+        Set up MongoDB access layer, don't connect yet.
+        
+        Better use the static methods build_data_access
+        or build_data_access_with_uri
+        """
         self._uri = uri
         self._db_name = database_name
         self._client = None
@@ -20,15 +26,45 @@ class PyMongoDataAccess:
         self._collection_name = collection_name
 
     def connect(self):
+        """Initialize the database connection."""
         self._client = self._create_client()
         self._db = getattr(self._client, self._db_name)
 
     def _create_client(self):
-        """ Returns a new Mongo Client """
+        """Returns a new Mongo Client."""
         return pymongo.MongoClient(host=self._uri)
 
     def get_runs(self, sort_by=None, sort_direction=None,
                  start=0, limit=None, query={"type": "and", "filters": []}):
+        """
+        Return multiple runs (default all).
+        
+        The query format (optional):
+
+        {"type": "and", "filters": [
+         {"field": "host.hostname", "operator": "==", "value": "ntbacer"},
+         {"type": "or", "filters": [ 
+            {"field": "result", "operator": "==", "value": 2403.52},
+            {"field": "host.python_version", "operator": "==", "value":"3.5.2"}
+            ]}]}
+            
+        The parameter is built from clauses.
+        Each clause is either conjunctive (``"and"``), disjunctive (``"or"``),
+        or a *terminal clause*. Each of the the earlier two types must specify
+        the ``"filters`` array of other clauses to be joined together 
+        by that logical connective (and/or).
+
+        A terminal clause does not specifies its type, instead,
+        it has a different set of fields:
+        the ``field`` to be queried on (based on the MongoDB schema,
+        using dot notation to access nested documents), the ``operator``
+        (one of ``"=="``, ``"!="``, ``"<"``, ``"<="``, ``">``, ``">="``,
+        and ``"regex"`` for regular expressions).
+        The ``value`` field contains the value to be compared with (either a string or a number).
+        Notice that for the ``status`` field, the ``RUNNING`` and ``DEAD`` runs
+        are compared by :func:`~PyMongoDataAccess.RUNNING_DEAD_RUN_CLAUSE` and 
+        :func:`~PyMongoDataAccess.RUNNING_NOT_DEAD_CLAUSE`
+        """
         mongo_query = self._to_mongo_query(query)
         cursor = getattr(self._db, self._collection_name).find(mongo_query)
         if sort_by is not None:
@@ -68,11 +104,13 @@ class PyMongoDataAccess:
     def _to_mongo_query(query):
         """
         Takes a query in format
-        [{field: 'host.hostname', operator: 'contains', value: 'asus'},
-        {field: 'config.seed', operator: '==', value: 123},
-        ]
-        and returns mongo query like
-        {"host.hostname": "asus", "config.seed": 123}
+        {"type": "and", "filters": [
+         {"field": "host.hostname", "operator": "==", "value": "ntbacer"},
+         {"type": "or", "filters": [ 
+            {"field": "result", "operator": "==", "value": 2403.52},
+            {"field": "host.python_version", "operator": "==", "value":"3.5.2"}
+            ]}]}
+        and returns an appropriate MongoDB Query.
         :param query:
         :type query:
         :return:

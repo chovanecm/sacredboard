@@ -1,3 +1,4 @@
+"use strict";
 define("runs/viewModel", ["knockout", "runs/filters", "jquery"], function (ko, filters, $) {
     //Additionaly requires runTable
     var QueryFilters = filters.QueryFilters;

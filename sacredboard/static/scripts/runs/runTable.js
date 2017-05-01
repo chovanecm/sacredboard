@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Returns a function that turns a table into a datatable for displaying experiment runs.
  *

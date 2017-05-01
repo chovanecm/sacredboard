@@ -1,4 +1,9 @@
 # coding=utf-8
+"""
+Bootstrap module parses command line arguments and initializes the app.
+
+Configures the database connection and starts the web application.
+"""
 import locale
 import sys
 
@@ -38,6 +43,8 @@ app = Flask(__name__)
 @click.version_option()
 def run(debug, no_browser, m, mu, mc):
     """
+    Sacredboard.
+
 \b
 Sacredboard is a monitoring dashboard for Sacred.
 Homepage: http://github.com/chovanecm/sacredboard
@@ -95,7 +102,8 @@ sacredboard -m sacred -mc default.runs
 def add_mongo_config(app, simple_connection_string,
                      mongo_uri, collection_name):
     """
-    Configure the application to use MongoDB
+    Configure the application to use MongoDB.
+
     :param app: Flask application
     :param simple_connection_string:
                 Expects host:port:database_name or database_name
@@ -123,7 +131,6 @@ def add_mongo_config_simple(app, connection_string, collection_name):
     """
     Configure the app to use MongoDB.
 
-
     :param app: Flask Application
     :type app: Flask
     :param connection_string: in format host:port:database or database
@@ -147,6 +154,15 @@ def add_mongo_config_simple(app, connection_string, collection_name):
 
 def add_mongo_config_with_uri(app, connection_string_uri,
                               database_name, collection_name):
+    """
+    Configure PyMongo with a MongoDB connection string.
+
+    :param app: Flask application
+    :param connection_string_uri: MongoDB connection string
+    :param database_name: Sacred database name
+    :param collection_name: Sacred's collection with runs
+    :return:
+    """
     app.config["data"] = PyMongoDataAccess.build_data_access_with_uri(
         connection_string_uri, database_name, collection_name
     )

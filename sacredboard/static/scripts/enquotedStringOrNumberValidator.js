@@ -1,3 +1,4 @@
+"use strict";
 define(["knockout"], function (ko) {
     /**
      * Decorator that validates user input in QueryFilter.
@@ -16,7 +17,7 @@ define(["knockout"], function (ko) {
         //define a function to do validation
         function validate(newValue) {
             var error = false;
-            var messages = [];
+            var message;
             try {
                 var parsed = JSON.parse(newValue);
                 // only string or numbers

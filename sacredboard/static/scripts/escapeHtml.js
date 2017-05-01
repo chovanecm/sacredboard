@@ -1,3 +1,4 @@
+"use strict";
 define("escapeHtml", [], function () {
     var entityMap = {
         '&': '&amp;',
