@@ -2,3 +2,5 @@ pytest
 pytest-timeout
 setuptools
 mongomock
+sphinx
+sphinx_rtd_theme
