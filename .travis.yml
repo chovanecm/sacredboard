@@ -1,26 +1,39 @@
+matrix:
+  include:
+    - language: node_js
+      env: TOX_ENV=qunit
+      node_js: "7"
+      before_script:
+        - npm install -g qunitjs
+      script:
+        - cd sacredboard/static/scripts/tests
+        - qunit node_tests.js
 language: python
+python: "3.5"
+git:
+  depth: 3
 cache: pip
 before_script:
   - pip install tox
-  - npm install -g qunit
+env:
+- TOX_ENV=py34
+- TOX_ENV=py35
+- TOX_ENV=flake8
+- TOX_ENV=coverage
+script:
+- tox -e $TOX_ENV
+
+
 #- pip install flake8
 #- pip install coveralls
-python:
-  - "3.5"
-node_js:
-  - "6"
-env:
-  - TOX_ENV=py34
-  - TOX_ENV=py35
-  - TOX_ENV=flake8
-  - TOX_ENV=coverage
-  - TOX_ENV=qunit
+
+
+
 
 # command to install dependencies
-install: python setup.py install
+# install: python setup.py install
 # command to run tests
-script:
-  - tox -e $TOX_ENV
+
 #after_success:
 # not necessary, done by tox
 #  coveralls
