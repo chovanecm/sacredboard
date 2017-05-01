@@ -1,8 +1,7 @@
 "use strict";
-define("runs/viewModel", ["knockout", "runs/filters", "jquery"], function (ko, filters, $) {
+define("runs/viewModel", ["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "runs/filters", "jquery"],
+    function (ko, QueryFilters, QueryFilter, filters, $) {
     //Additionaly requires runTable
-    var QueryFilters = filters.QueryFilters;
-    var QueryFilter = filters.QueryFilter;
     ko.options.deferUpdates = true;
 
     /**

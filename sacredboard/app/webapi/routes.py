@@ -22,7 +22,7 @@ def index():
 
 @routes.route("/_tests")
 def tests():
-    return redirect(url_for("static", filename="tests/index.html"))
+    return redirect(url_for("static", filename="scripts/tests/index.html"))
 
 
 @routes.route("/runs")

@@ -2,15 +2,19 @@ language: python
 cache: pip
 before_script:
   - pip install tox
+  - npm install -g qunit
 #- pip install flake8
 #- pip install coveralls
 python:
   - "3.5"
+node_js:
+  - "6"
 env:
   - TOX_ENV=py34
   - TOX_ENV=py35
   - TOX_ENV=flake8
   - TOX_ENV=coverage
+  - TOX_ENV=qunit
 
 # command to install dependencies
 install: python setup.py install

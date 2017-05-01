@@ -6,7 +6,16 @@
     <title>TESTS Sacredboard QUnit</title>
     <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.2.0.css">
     <script src="https://code.jquery.com/qunit/qunit-2.2.0.js"></script>
-    <script src="test_filters.js"></script>
+    <script src="../main.js"></script>
+    <script>
+        require.baseUrl = "../";
+    </script>
+    <script src="../require.js"></script>
+    <script>
+        require(["test_filters.js"], function(filters) {
+
+        });
+    </script>
 </head>
 <body>
 <div id="qunit"></div>
