@@ -11,7 +11,7 @@ define(["escapeHtml"], function (escapeHtml) {
             <div class="container-fluid detail-view">
             <div class="row">
             <div class="col-md-10 col-md-offset-2">
-                <h3>Details for: ` + escapeHtml(run.experiment_name) + ` <small>(id: ` + escapeHtml(run.id) + `)</small></h3>
+                <h3>Details for: ` + escapeHtml(run.experiment_name) + " <small>(id: " + escapeHtml(run.id) + `)</small></h3>
             </div>
             </div>
             <div class="row">
@@ -104,7 +104,7 @@ define(["escapeHtml"], function (escapeHtml) {
                 + "<td><a href='/tensorboard/start/" + experimentId + "/" + key + "' target='_blank'>Run Tensorboard</a>"
                 + "</td></tr>\n";
         }
-        output += `</table>`;
+        output += "</table>";
         return output;
     }
 

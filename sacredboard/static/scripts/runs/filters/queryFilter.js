@@ -107,7 +107,7 @@ define(["knockout", "enquotedStringOrNumberValidator"],
              * @returns {QueryFilter}
              */
             this.clone = function () {
-                return new QueryFilter(this.field(), this.operator(), this.value())
+                return new QueryFilter(this.field(), this.operator(), this.value());
             };
 
             /**
@@ -125,7 +125,6 @@ define(["knockout", "enquotedStringOrNumberValidator"],
                     "value": self.nativeValue()
                 };
             };
-
             this.addParentObserver = function (observer) {
                 /* Do nothing, we consider a QueryFilter to be used as immutable object */
             };

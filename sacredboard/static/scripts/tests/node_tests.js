@@ -10,7 +10,7 @@ requirejs.config({
         knockout: "../vendors/knockout/knockout-min",
         datatables: "../vendors/datatables/datatables.min",
         "datatables.net": "../vendors/datatables/DataTables-1.10.13/js/jquery.dataTables",
-        'datatables-bootstrap': '../vendors/datatables/DataTables-1.10.13/js/dataTables.bootstrap',
+        "datatables-bootstrap": "../vendors/datatables/DataTables-1.10.13/js/dataTables.bootstrap",
         bootstrap: "../vendors/bootstrap/js/bootstrap.min",
         text: "../vendors/text"
     },
@@ -23,6 +23,7 @@ requirejs.config({
  @typedef {{async:async, equal:equal, deepEqual:deepEqual, notEqual:notEqual, notOk:notOk, ok:ok, throws:throws}} QAssert
  */
 
+/*eslint no-unused-vars: "off"*/ //Disable warnings of unused variables
 // List all test modules to here:
 
 requirejs(["./tests/test_filters"], function (filters) {

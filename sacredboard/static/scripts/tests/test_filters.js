@@ -73,7 +73,7 @@ define(["runs/filters/queryFilter"],
                         nativeValue = filter.nativeValue();
                     },
                     "The input was a string, but was not enquoted. Got " + nativeValue
-                )
+                );
             });
 
 

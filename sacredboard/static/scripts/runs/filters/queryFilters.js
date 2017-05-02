@@ -22,9 +22,9 @@ define(["knockout", "jquery"],
         function QueryFilters(type, filters) {
             var self = this;
             this.filters = ko.observableArray(filters == undefined ? [] : filters);
-            this.filters.extend({notify: 'always'});
-            this.operators = ['==', '!=', '<', '<=', '>', '>=', 'regex'];
-            this.type = ko.observable(type == undefined ? 'and' : type);
+            this.filters.extend({notify: "always"});
+            this.operators = ["==", "!=", "<", "<=", ">", ">=", "regex"];
+            this.type = ko.observable(type == undefined ? "and" : type);
             self.addFilter = function (filter) {
                 self.filters.push(filter);
                 filter.addParentObserver(self.filters);
@@ -47,7 +47,7 @@ define(["knockout", "jquery"],
                     "type": self.type(),
                     "filters": $.map(self.filters(),
                         function (filter) {
-                            return filter.toDto()
+                            return filter.toDto();
                         })
                 };
             };

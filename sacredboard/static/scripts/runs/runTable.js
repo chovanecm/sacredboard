@@ -80,10 +80,10 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                      * expanded to detail view or not.
                      */
                     {
-                        "className": 'details-control',
+                        "className": "details-control",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": ''
+                        "defaultContent": ""
                     },
                     /**
                      * Attach a coloured state icon to the experiment name.
@@ -92,8 +92,8 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                         "data": "experiment_name",
                         "name": "experiment.name",
                         "render": function (data, type, row) {
-                            return '<span sacred-content="status-icon" sacred-status="' + row.status +
-                                '" sacred-is-alive="' + row.is_alive + '">&block;</span>  ' + data;
+                            return "<span sacred-content=\"status-icon\" sacred-status=\"" + row.status +
+                                "\" sacred-is-alive=\"" + row.is_alive + "\">&block;</span>  " + data;
                         }
                     },
                     {"data": "start_time", "name": "start_time"},
@@ -111,13 +111,13 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
             var table = jqRuns.DataTable(config);
             createRunTable.table = table;
             // Add event listener for opening and closing details
-            jqRuns.find('tbody').on('click', 'tr', function () {
+            jqRuns.find("tbody").on("click", "tr", function () {
                 var tr = $(this);
                 var row = table.row(tr);
                 if (row.child.isShown()) {
                     // This row is already open - close it
                     row.child.hide();
-                    tr.removeClass('shown');
+                    tr.removeClass("shown");
                 }
                 else {
                     // open detail view
@@ -145,7 +145,7 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                             } else {
                                 //detail view already shown, update the content.
                                 detail_view = tr[0].nextSibling;
-                                $(detail_view).find('[sacred-content="captured_out"]').each(function (i, obj) {
+                                $(detail_view).find("[sacred-content=\"captured_out\"]").each(function (i, obj) {
                                     obj.innerText = data.data[0].object.captured_out;
                                 });
                             }
@@ -162,7 +162,7 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                                 }
                             }, 5000);
                         });
-                        tr.addClass('shown');
+                        tr.addClass("shown");
                     };
                     loadDetailData();
                 }

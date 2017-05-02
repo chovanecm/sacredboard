@@ -23,7 +23,8 @@ module.exports = {
             "error",
             "always"
         ],
-	"jsdoc/check-param-names": 1,
+        "no-unused-vars": "off",
+        "jsdoc/check-param-names": 1,
         "jsdoc/check-tag-names": 1,
         "jsdoc/check-types": 1,
         "jsdoc/newline-after-description": 1,
@@ -34,12 +35,12 @@ module.exports = {
         "jsdoc/require-param-type": 1,
         "jsdoc/require-returns-description": 1,
         "jsdoc/require-returns-type": 1,
-	    "requirejs/no-invalid-define": 2,
+        "requirejs/no-invalid-define": 2,
         "requirejs/no-multiple-define": 2,
         "requirejs/no-named-define": 2,
         "requirejs/no-commonjs-wrapper": 2,
         "requirejs/no-object-define": 1,
-	"requirejs/amd-function-arity": [2, { "allowExtraDependencies": true }]
+        "requirejs/amd-function-arity": [2, {"allowExtraDependencies": true}]
     },
-   "plugins": ["requirejs", "jsdoc"]
+    "plugins": ["requirejs", "jsdoc"]
 };
