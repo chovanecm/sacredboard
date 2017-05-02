@@ -1,5 +1,5 @@
 "use strict";
-define("escapeHtml", [], function () {
+define([], function () {
     var entityMap = {
         '&': '&amp;',
         '<': '&lt;',

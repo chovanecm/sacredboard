@@ -1,4 +1,5 @@
-define(["./runs/filters/queryFilter"],
+/*global QUnit*/ //for eslint to ignore missing QUnit
+define(["runs/filters/queryFilter"],
     /**
      *
      * @param {QueryFilter} QueryFilter

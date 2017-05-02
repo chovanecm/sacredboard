@@ -7,7 +7,7 @@
     <title>Runs</title>
 
     <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='scripts/require.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/require.js') }}"></script>
     <script>
         requirejs(["runs/runTable", "runs/viewModel"], function (runTable, viewModel) {
             runTable.initTable("#runs");
@@ -28,18 +28,18 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap.min.css') }}">
+          href="{{ url_for('static', filename='vendors/bootstrap/css/bootstrap.min.css') }}">
 
     <!-- Optional theme -->
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='lib/bootstrap/css/bootstrap-theme.min.css') }}">
+          href="{{ url_for('static', filename='vendors/bootstrap/css/bootstrap-theme.min.css') }}">
 
 
     <!-- DataTables, jQuery and its plugins, debug mode -->
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='lib/datatables/datatables.css') }}">
+          href="{{ url_for('static', filename='vendors/datatables/datatables.css') }}">
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='lib/datatables/DataTables-1.10.13/css/dataTables.jqueryui.css') }}">
+          href="{{ url_for('static', filename='vendors/datatables/DataTables-1.10.13/css/dataTables.jqueryui.css') }}">
 
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/runs.css') }}"/>

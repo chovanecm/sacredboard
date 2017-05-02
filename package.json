@@ -1,0 +1,17 @@
+{
+  "name": "sacredboard",
+  "version": "0.1.0",
+  "description": "Sacredboard NPM package file for automatic tests.",
+  "dependencies": {},
+  "devDependencies": [
+    "qunitjs",
+    "requirejs",
+    "eslint",
+    "eslint-plugin-requirejs",
+    "eslint-plugin-jsdoc"
+
+  ],
+  "scripts": {
+    "test": "cd sacredboard/static/scripts/tests && qunit node_tests.js && eslint \"../**/*.js\""
+  }
+}

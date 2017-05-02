@@ -2,7 +2,7 @@
 /**
  * Defines the view-model for filters.
  */
-define("runs/filters", ["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilter",
+define(["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilter",
     "runs/filters/queryFilters"],
     function (ko, $, htmlTemplate, QueryFilter, QueryFilters) {
 

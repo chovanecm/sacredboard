@@ -2,7 +2,7 @@
 /**
  * @module runs/filters/queryFilter
  */
-define("runs/filters/queryFilter", ["knockout", "enquotedStringOrNumberValidator"],
+define(["knockout", "enquotedStringOrNumberValidator"],
     function (ko, stringOrNumberValidator) {
         /**
          * Terminal clause for filters.

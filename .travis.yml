@@ -4,10 +4,9 @@ matrix:
       env: TOX_ENV=qunit
       node_js: "7"
       before_script:
-        - npm install -g qunitjs
+        - npm install
       script:
-        - cd sacredboard/static/scripts/tests
-        - qunit node_tests.js
+        - npm test
 language: python
 python: "3.5"
 git:

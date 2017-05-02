@@ -1,14 +1,18 @@
-var requirejs = require("./r.js");
+var requirejs = require("requirejs");
 requirejs.config({
     baseUrl: __dirname + "/..",
     nodeRequire: require,
+    /**
+     * Paths must be kept in sync with main.js
+     */
     paths: {
-        jquery: "../lib/jquery/jquery-3.1.1.min",
-        knockout: "../lib/knockout/knockout-min",
-        datatables: "../lib/datatables/datatables.min",
-        "datatables.net": "../lib/datatables/DataTables-1.10.13/js/jquery.dataTables",
-        'datatables-bootstrap': '../lib/datatables/DataTables-1.10.13/js/dataTables.bootstrap',
-        bootstrap: "../lib/bootstrap/js/bootstrap.min"
+        jquery: "../vendors/jquery/jquery-3.1.1.min",
+        knockout: "../vendors/knockout/knockout-min",
+        datatables: "../vendors/datatables/datatables.min",
+        "datatables.net": "../vendors/datatables/DataTables-1.10.13/js/jquery.dataTables",
+        'datatables-bootstrap': '../vendors/datatables/DataTables-1.10.13/js/dataTables.bootstrap',
+        bootstrap: "../vendors/bootstrap/js/bootstrap.min",
+        text: "../vendors/text"
     },
     shim: {
         "bootstrap": {"deps": ["jquery"]},
@@ -19,5 +23,8 @@ requirejs.config({
  @typedef {{async:async, equal:equal, deepEqual:deepEqual, notEqual:notEqual, notOk:notOk, ok:ok, throws:throws}} QAssert
  */
 
-requirejs(["test_filters.js"], function (filters) {
+// List all test modules to here:
+
+requirejs(["./tests/test_filters"], function (filters) {
+    //empty, the tests get executed automatically
 });

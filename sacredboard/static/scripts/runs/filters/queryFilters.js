@@ -1,5 +1,5 @@
 "use strict";
-define("runs/filters/queryFilters", ["knockout", "jquery"],
+define(["knockout", "jquery"],
     function (ko, $) {
         /**
          * The QueryFilters object is a set of filters to be applied together.
