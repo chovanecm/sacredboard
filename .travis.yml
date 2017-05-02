@@ -1,12 +1,21 @@
 matrix:
   include:
     - language: node_js
-      env: TOX_ENV=qunit
+      env:
+        - INFO=JavaScriptTests
       node_js: "7"
       before_script:
         - npm install
       script:
         - npm test
+    - language: node_js
+      env:
+        - INFO=JavaScriptStyleCheck
+      node_js: "7"
+      before_script:
+        - npm install
+      script:
+        - npm run lint
 language: python
 python: "3.5"
 git:

@@ -12,6 +12,7 @@
 
   ],
   "scripts": {
-    "test": "cd sacredboard/static/scripts/tests && qunit node_tests.js && eslint \"../**/*.js\""
+    "test": "cd sacredboard/static/scripts/tests && qunit node_tests.js",
+    "lint": "eslint \"sacredboard/static/scripts/**/*.js\""
   }
 }
