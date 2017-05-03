@@ -85,6 +85,7 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                         "data": null,
                         "defaultContent": ""
                     },
+                    {"data": "id", "name": "_id", "visible": true},
                     /**
                      * Attach a coloured state icon to the experiment name.
                      */
@@ -99,13 +100,12 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                     {"data": "start_time", "name": "start_time"},
                     {"data": "heartbeat", "name": "heartbeat"},
                     {"data": "hostname", "name": "hostname"},
-                    {"data": "result", "name": "result"},
-                    {"data": "id", "visible": false}
+                    {"data": "result", "name": "result"}
                 ],
                 /**
                  * Sort by experiment heartbeat
                  */
-                order: [["3", "desc"]]
+                order: [["4", "desc"]]
             };
             // Init DataTables
             var table = jqRuns.DataTable(config);
