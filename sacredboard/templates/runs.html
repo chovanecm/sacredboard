@@ -9,17 +9,9 @@
     <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
     <script src="{{ url_for('static', filename='vendors/require.js') }}"></script>
     <script>
-        requirejs(["runs/runTable", "runs/viewModel"], function (runTable, viewModel) {
-            runTable.initTable("#runs");
+        requirejs(["runs/viewModel"], function (viewModel) {
+            viewModel.initialize("#runs");
             viewModel.bind();
-            /*
-             * Attach a listener to the viewModel to update the query of
-             * runTable and reload.
-             */
-            viewModel.subscribe(function () {
-                runTable.queryFilter = viewModel.getQueryFilterDto();
-                runTable.reload();
-            });
         });
     </script>
 
@@ -89,9 +81,7 @@
                 <span class="run-queued">&block;</span> <input type="checkbox"
                                                                data-bind="checkedValue: predefinedFilters['run-queued'], checked: statusFilters.filters">
                 Queued
-
-
-
+                    &nbsp;&nbsp; <button data-bind="click: reloadTable">Refresh</button>
             </caption>
             <thead>
             <tr>

@@ -1,5 +1,5 @@
 "use strict";
-define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "runs/filters"],
+define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "runs/filters", "runs/runTable"],
     /**
      *
      * @param ko
@@ -8,7 +8,7 @@ define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "ru
      * @param filters
      * @returns {{queryFilters: *, predefinedFilters: {run-alive: *, run-completed: *, run-queued: *, run-failed: *, run-interrupted: *, run-dead: *}, statusFilters: *, getQueryFilterDto: module:runs/viewModel.getQueryFilterDto, subscribe: module:runs/viewModel.subscribe, bind: module:runs/viewModel.bind}}
      */
-    function (ko, QueryFilters, QueryFilter, filters) {
+    function (ko, QueryFilters, QueryFilter, filters, runTable) {
         //Additionaly requires runTable
         ko.options.deferUpdates = true;
         filters.initialize();
@@ -58,17 +58,36 @@ define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "ru
                 this.queryFilters().filters.subscribe(listener);
             },
 
+            reloadTable: function () {
+                runTable.reload();
+            },
+
             bind: function () {
                 ko.applyBindings(this);
+            },
+
+            initialize: function (runTableSelector) {
+                /* By default, runs any state are displayed.
+                 Add them to the statusFilters.
+                 */
+                for (var key in this.predefinedFilters) {
+                    this.statusFilters.addFilter(this.predefinedFilters[key]);
+                }
+                // Apply the statusFilters to the view filter.
+                this.queryFilters().addFilter(this.statusFilters);
+
+
+                runTable.initTable(runTableSelector);
+
+                /*
+                 * Attach a listener to the viewModel to update the query of
+                 * runTable and reload.
+                 */
+                this.subscribe(function () {
+                    runTable.queryFilter = viewModel.getQueryFilterDto();
+                    runTable.reload();
+                });
             }
         };
-        /* By default, runs any state are displayed.
-         Add them to the statusFilters.
-         */
-        for (var key in viewModel.predefinedFilters) {
-            viewModel.statusFilters.addFilter(viewModel.predefinedFilters[key]);
-        }
-        // Apply the statusFilters to the view filter.
-        viewModel.queryFilters().addFilter(viewModel.statusFilters);
         return viewModel;
     });
