@@ -8,6 +8,7 @@
     {
         "id": {{run._id | tostr | default | tojson}},
         "experiment_name": {{run.experiment.name | default | tojson}},
+        "command": {{run.command | default | tojson}},
         "status": {{run.status | default | tojson | safe}},
         "is_alive": {{run.heartbeat | default | timediff  | detect_alive_experiment | tojson }},
         "start_time": {{run.start_time | default | format_datetime | tojson}},

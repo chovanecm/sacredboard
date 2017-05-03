@@ -97,6 +97,7 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                                 "\" sacred-is-alive=\"" + row.is_alive + "\">&block;</span>  " + data;
                         }
                     },
+                    {"data": "command", "name": "command"},
                     {"data": "start_time", "name": "start_time"},
                     {"data": "heartbeat", "name": "heartbeat"},
                     {"data": "hostname", "name": "hostname"},
@@ -105,7 +106,7 @@ define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "j
                 /**
                  * Sort by experiment heartbeat
                  */
-                order: [["4", "desc"]]
+                order: [["5", "desc"]]
             };
             // Init DataTables
             var table = jqRuns.DataTable(config);
