@@ -5,20 +5,20 @@ requirejs.config({
     /**
      * Paths must be kept in sync with main.js
      */
-    paths: {
+ paths: {
         jquery: "../vendors/jquery/jquery-3.1.1.min",
         knockout: "../vendors/knockout/knockout-min",
-        datatables: "../vendors/datatables/datatables.min",
-        "datatables.net": "../vendors/datatables/DataTables-1.10.13/js/jquery.dataTables",
-        "datatables-bootstrap": "../vendors/datatables/DataTables-1.10.13/js/dataTables.bootstrap",
+        "datatable": "../vendors/datatables/datatables.min",
+        "datatables.net": "../vendors/datatables/DataTables-1.10.15/js/jquery.dataTables",
+        "datatables-bootstrap" : "../vendors/datatables/DataTables-1.10.15/js/dataTables.bootstrap",
         bootstrap: "../vendors/bootstrap/js/bootstrap.min",
-        text: "../vendors/text"
+        "text": "../vendors/text"
+
     },
-    shim: {
-        "bootstrap": {"deps": ["jquery"]},
-        "datatables": {"deps": ["jquery", "datatables.net", "datatables-bootstrap"]}
+    shim : {
+        "bootstrap" : { "deps" :["jquery"]},
+        "datatables": { "deps": ["jquery", "datatables.net", "datatables-bootstrap"]}
     }
-});
 /**
  @typedef {{async:async, equal:equal, deepEqual:deepEqual, notEqual:notEqual, notOk:notOk, ok:ok, throws:throws}} QAssert
  */

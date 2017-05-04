@@ -77,3 +77,8 @@ tr.shown td.details-control:before {
     z-index: 1;
     padding: 0.5em;
 }
+
+/* Fix DataTables button padding */
+.dataTables_paginate .paginate_button {
+    padding: 0.1px !important;
+}
