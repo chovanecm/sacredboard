@@ -32,6 +32,12 @@ script:
 - tox -e $TOX_ENV
 
 
+# safelist
+branches:
+  only:
+  - master
+  - develop
+
 #- pip install flake8
 #- pip install coveralls
 
