@@ -92,14 +92,18 @@ define(["runs/dictionaryBrowser/DictEntry"],
                 assert.equal(children.length, 3);
                 for (var i = 0; i < children.length; i++) {
                     assert.equal(children[i].getDisplayName(), i,
-                    "For arrays, each of the children's name must be its index");
+                        "For arrays, each of the children's name must be its index");
                     assert.ok(children[i].contentCollapsed());
                 }
                 assert.equal(children[0].getDisplayValue(), "{...}");
                 assert.equal(children[1].getDisplayValue(), "2");
                 assert.equal(children[2].getDisplayValue(), "str");
 
-                entry = new DictEntry("asdf", {"obj": {}, "arr": [1,2], "str": "string"});
+                entry = new DictEntry("asdf", {
+                    "obj": {},
+                    "arr": [1, 2],
+                    "str": "string"
+                });
                 children = entry.getChildren();
                 assert.ok(children instanceof Array);
                 assert.equal(children.length, 3);
@@ -115,4 +119,35 @@ define(["runs/dictionaryBrowser/DictEntry"],
 
             });
 
+
+        QUnit.test("Test getChildrenKeys (sorted)",
+            function (assert) {
+                var entry = new DictEntry("asdf", {
+                    "obj": {},
+                    "arr": [1, 2],
+                    "str": "string"
+                });
+                var keys = entry.getChildrenKeys(/*sorted */ true);
+                assert.deepEqual(keys, ["arr", "obj", "str"]);
+
+                entry = new DictEntry("asdf", ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven"]);
+                keys = entry.getChildrenKeys(/*sorted */ true);
+                assert.deepEqual(keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]);
+            }
+        );
+        QUnit.test("Test getChildrenKeys (not sorted)",
+            function (assert) {
+                var entry = new DictEntry("asdf", {
+                    "obj": {},
+                    "arr": [1, 2],
+                    "str": "string"
+                });
+                var keys = entry.getChildrenKeys(/*sorted */ false);
+                assert.deepEqual(keys, ["obj", "arr", "str"]);
+
+                entry = new DictEntry("asdf", ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven"]);
+                keys = entry.getChildrenKeys(/*sorted */ true);
+                assert.deepEqual(keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]);
+            }
+        );
     });

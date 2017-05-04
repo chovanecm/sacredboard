@@ -52,12 +52,13 @@ define(["knockout"], function (ko) {
         for (var valKey in this.value) {
             keys.push(valKey);
         }
-        if (sort) {
+        if (sort && !(this.value instanceof Array)) {
+            // Sort only non-array indices (array is indexed from 0 by default).
             keys.sort();
         }
         return keys;
     };
-    
+
     DictEntry.prototype.getDisplayName = function () {
         return this.name;
     };
