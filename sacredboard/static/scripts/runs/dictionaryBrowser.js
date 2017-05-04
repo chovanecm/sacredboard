@@ -16,7 +16,7 @@ define(["knockout", "jquery", "escapeHtml", "text!runs/dictionaryBrowser.html"],
                         }
                     };
                     this.hasChildren = function () {
-                        return typeof value == "object";
+                        return typeof value == "object" && value != null;
                     };
                     this.getChildren = function () {
                         if (self.hasChildren()) {
@@ -36,7 +36,7 @@ define(["knockout", "jquery", "escapeHtml", "text!runs/dictionaryBrowser.html"],
                         if (value instanceof Array) {
                             return "[" + value.join(", ") + "]";
                         } else {
-                            return value.toString();
+                            return "" + value;
                         }
                     };
 
