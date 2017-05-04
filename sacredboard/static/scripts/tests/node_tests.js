@@ -26,6 +26,7 @@ requirejs.config({
 /*eslint no-unused-vars: "off"*/ //Disable warnings of unused variables
 // List all test modules to here:
 
-requirejs(["./tests/test_filters"], function (filters) {
+requirejs(["./tests/test_filters", "./tests/test_dictionaryBrowser"],
+    function (filters, testDictBrowser) {
     //empty, the tests get executed automatically
 });

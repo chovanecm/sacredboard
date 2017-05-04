@@ -1,5 +1,5 @@
 "use strict";
-define(["escapeHtml", "runs/dictionaryBrowser", "jquery", "knockout"], function (escapeHtml, dictionaryBrowser, $, ko) {
+define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"], function (escapeHtml, dictionaryBrowser, $, ko) {
     /**
      * Generate detail view for an experiment
      * @param run Run returned via the web service

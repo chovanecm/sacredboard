@@ -1,4 +1,4 @@
 <table class="table table-condensed" data-bind="foreach: {data: dict.getChildren(), as: 'entry'}">
     <tr data-bind="click: entry.toggleCollapse"><td data-bind="text: entry.getDisplayName()"></td><td data-bind="text: entry.getDisplayValue()"></td></tr>
-    <tr data-bind="visible: !entry.contentCollapsed()"><td colspan="2"><dictionary-browser params="value: entry.content"></dictionary-browser></td></tr>
+    <tr data-bind="visible: !entry.contentCollapsed()"><td colspan="2"><dictionary-browser params="value: entry.value"></dictionary-browser></td></tr>
 </table>
