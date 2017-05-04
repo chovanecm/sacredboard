@@ -41,7 +41,7 @@
 }
 
 /* Master-detail view */
-#runs tr[role="row"] {
+#runs tr[role="row"], .cursor-pointer {
     cursor: pointer;
 }
 
