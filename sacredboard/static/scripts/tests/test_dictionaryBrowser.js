@@ -91,8 +91,8 @@ define(["runs/dictionaryBrowser/DictEntry"],
                 assert.ok(children instanceof Array);
                 assert.equal(children.length, 3);
                 for (var i = 0; i < children.length; i++) {
-                    //For arrays, each of the children's name must be its index
-                    assert.equal(children[i].getDisplayName(), i);
+                    assert.equal(children[i].getDisplayName(), i,
+                    "For arrays, each of the children's name must be its index");
                     assert.ok(children[i].contentCollapsed());
                 }
                 assert.equal(children[0].getDisplayValue(), "{...}");
@@ -103,11 +103,14 @@ define(["runs/dictionaryBrowser/DictEntry"],
                 children = entry.getChildren();
                 assert.ok(children instanceof Array);
                 assert.equal(children.length, 3);
-                assert.equal(children[0].getDisplayName(), "obj");
-                assert.equal(children[1].getDisplayName(), "arr");
-                assert.equal(children[2].getDisplayName(), "str");
-                assert.equal(children[0].getDisplayValue(), "{...}");
-                assert.equal(children[1].getDisplayValue(), "[1, 2]");
+                assert.equal(children[0].getDisplayName(), "arr",
+                    "Children must by sorted by key.");
+                assert.equal(children[1].getDisplayName(), "obj",
+                    "Children must by sorted by key.");
+                assert.equal(children[2].getDisplayName(), "str",
+                    "Children must by sorted by key.");
+                assert.equal(children[0].getDisplayValue(), "[1, 2]");
+                assert.equal(children[1].getDisplayValue(), "{...}");
                 assert.equal(children[2].getDisplayValue(), "string");
 
             });

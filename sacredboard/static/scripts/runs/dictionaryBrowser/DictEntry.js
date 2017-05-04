@@ -30,20 +30,34 @@ define(["knockout"], function (ko) {
         return typeof this.value === "object" && this.value !== null;
     };
     /**
-     * Generate DictEntries for its children.
+     * Generate DictEntries for its children, sorted by key name.
      * @returns {DictEntry[]}
      */
     DictEntry.prototype.getChildren = function () {
         if (this.hasChildren()) {
+            var keys = this.getChildrenKeys(true);
             var arr = [];
-            for (var valKey in this.value) {
-                arr.push(new DictEntry(valKey, this.value[valKey]));
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                arr.push(new DictEntry(key, this.value[key]));
             }
+
             return arr;
         } else {
             return [];
         }
     };
+    DictEntry.prototype.getChildrenKeys = function (sort) {
+        var keys = [];
+        for (var valKey in this.value) {
+            keys.push(valKey);
+        }
+        if (sort) {
+            keys.sort();
+        }
+        return keys;
+    };
+    
     DictEntry.prototype.getDisplayName = function () {
         return this.name;
     };
@@ -82,4 +96,5 @@ define(["knockout"], function (ko) {
 
     DictEntry.prototype.EMPTY = "";
     return DictEntry;
-});
+})
+;
