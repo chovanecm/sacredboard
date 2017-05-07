@@ -12,7 +12,8 @@ requirejs.config({
         "datatables.net": "../vendors/datatables/DataTables-1.10.15/js/jquery.dataTables",
         "datatables-bootstrap": "../vendors/datatables/DataTables-1.10.15/js/dataTables.bootstrap",
         bootstrap: "../vendors/bootstrap/js/bootstrap.min",
-        "text": "../vendors/text"
+        "text": "../vendors/text",
+        "plotly": "../vendors/plotly/plotly-latest.min"
 
     },
     shim: {
