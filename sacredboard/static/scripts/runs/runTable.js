@@ -4,7 +4,7 @@
  *
  * The module is a candidate for rewriting into knockout.js
  */
-define(["bootstrap", "datatables", "datatables-bootstrap", "runs/detailView", "jquery"],
+define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jquery"],
     function (bootstrap, datatables, dtboostrap, generateDetailView, $) {
         /**
          * Scrolls down in the element

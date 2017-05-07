@@ -41,7 +41,7 @@
 }
 
 /* Master-detail view */
-#runs tr[role="row"] {
+#runs tr[role="row"], .cursor-pointer {
     cursor: pointer;
 }
 
@@ -76,4 +76,9 @@ tr.shown td.details-control:before {
     border-width: 1.5px;
     z-index: 1;
     padding: 0.5em;
+}
+
+/* Fix DataTables button padding */
+.dataTables_paginate .paginate_button {
+    padding: 0.1px !important;
 }

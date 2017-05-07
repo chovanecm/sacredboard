@@ -1,5 +1,5 @@
 "use strict";
-define(["escapeHtml"], function (escapeHtml) {
+define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"], function (escapeHtml, dictionaryBrowser, $, ko) {
     /**
      * Generate detail view for an experiment
      * @param run Run returned via the web service
@@ -35,19 +35,13 @@ define(["escapeHtml"], function (escapeHtml) {
                       <div id="experiment-config-` + escapeHtml(run.id) + `" class="tab-pane active table-responsive">
                       <h4>Run configuration</h4>
                       <div class="detail-page-box">
-                            <table class="table table-condensed">
-                            <caption style="display: none">Run configuration</caption>
-                            __CONFIG_PARAMETERS__
-                            </table>
+                            <dictionary-browser params="value: run.object.config"></dictionary-browser>
                         </div>
                       </div>
                   <div id="experiment-info-` + escapeHtml(run.id) + `" class="tab-pane table-responsive">
                       <h4>Run info</h4>
                       <div class="detail-page-box">
-                            <table class="table table-condensed">
-                            <caption style="display: none">Run info</caption>
-                            __RUN_INFO__
-                            </table>
+                            <dictionary-browser params="value: run.object.info"></dictionary-browser>
                         </div>
                       </div>
                       <div id="captured-output-` + escapeHtml(run.id) + `" class="tab-pane">
@@ -65,9 +59,14 @@ define(["escapeHtml"], function (escapeHtml) {
                 </div>
             </div>
             `;
-        tabs = tabs.replace(/__CONFIG_PARAMETERS__/g, render_config_parameters(run.object.config));
-        tabs = tabs.replace(/__RUN_INFO__/g, render_config_parameters(run.object.info));
+        //tabs = tabs.replace(/__CONFIG_PARAMETERS__/g, render_config_parameters(run.object.config));
+        //tabs = tabs.replace(/__CONFIG_PARAMETERS__/g, "<dictionary-browser params=\"value: null\"></dictionary-browser>");
+        //tabs = tabs.replace(/__RUN_INFO__/g, render_config_parameters(run.object.info));
         tabs = tabs.replace(/__TENSORFLOW_LOGDIRS__/g, render_tensorflow_dirs(run.id, run.object.info.tensorflow || {}));
+        tabs = $(tabs);
+        ko.applyBindings({
+            run: run
+        }, tabs[0]);
         return tabs;
     }
 
