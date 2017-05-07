@@ -17,7 +17,7 @@ requirejs.config({
     },
     shim: {
         "bootstrap": {"deps": ["jquery"]},
-        "datatables": {"deps": ["jquery", "datatables.net", "datatables-bootstrap"]}
+        "datatable": {"deps": ["jquery", "datatables.net", "datatables-bootstrap"]}
     }
 });
 /**
