@@ -1,5 +1,6 @@
 "use strict";
-define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"], function (escapeHtml, dictionaryBrowser, $, ko) {
+define(["escapeHtml", "runs/dictionaryBrowser/component", "runs/metricsPlotter/component", "jquery", "knockout"],
+    function (escapeHtml, dictionaryBrowser, metricsPlotter, $, ko) {
     /**
      * Generate detail view for an experiment run.
      *
@@ -35,6 +36,9 @@ define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"],
                         </li>
                         <li role="presentation">
                             <a href="#tensorflow-` + escapeHtml(run.id) + `" data-toggle="pill">Tensorflow logs</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#metrics-` + escapeHtml(run.id) + `" data-toggle="pill">Metrics plots</a>
                         </li>
                       </ul>
                   </div>
@@ -72,6 +76,11 @@ define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"],
                         <h4>Tensorflow logs</h4>
                         <div class="detail-page-box">
                             __TENSORFLOW_LOGDIRS__
+                        </div>
+                      </div>
+                       <div id="metrics-` + escapeHtml(run.id) + `"  class="tab-pane">
+                        <div class="detail-page-box">
+                            <metrics-plot></metrics-plot>
                         </div>
                       </div>
                   </div>
