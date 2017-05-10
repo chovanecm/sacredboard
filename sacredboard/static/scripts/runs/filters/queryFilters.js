@@ -14,8 +14,8 @@ define(["knockout", "jquery"],
          *                                          ])
          *                 ]);
          * </code></pre>
-         * @param {String} type either 'and' or 'or'. Default: 'and'
-         * @param {Array.(QueryFilter|QueryFilters)} filters
+         * @param {String} type - either 'and' or 'or'. Default: 'and'
+         * @param {QueryFilter[]|QueryFilters[]} filters
          * @exports QueryFilters
          * @constructor
          */

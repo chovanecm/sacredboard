@@ -6,7 +6,8 @@ define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "ru
      * @param QueryFilters
      * @param QueryFilter
      * @param filters
-     * @returns {{queryFilters: *, predefinedFilters: {run-alive: *, run-completed: *, run-queued: *, run-failed: *, run-interrupted: *, run-dead: *}, statusFilters: *, getQueryFilterDto: module:runs/viewModel.getQueryFilterDto, subscribe: module:runs/viewModel.subscribe, bind: module:runs/viewModel.bind}}
+     * @param runTable
+     * @returns 
      */
     function (ko, QueryFilters, QueryFilter, filters, runTable) {
         //Additionaly requires runTable

@@ -12,10 +12,9 @@ define(["knockout", "enquotedStringOrNumberValidator"],
          *
          * Example: QueryFilter("host.hostname", "!=", "node1")
          *
-         * @param {String} field The database field to be filtered by.
-         * @param {String} operator The operator to be used.
-         *        {@link QueryFilters.operators)
-         * @param value The value to be applied in the filter (a primitive type).
+         * @param {string} field - The database field to be filtered by.
+         * @param {string} operator - The operator to be used. {@link QueryFilters.operators)
+         * @param {string|Number} value - The value to be applied in the filter (a primitive type).
          * @constructor
          * @alias module:runs/filter/queryFilter
          */
@@ -115,8 +114,9 @@ define(["knockout", "enquotedStringOrNumberValidator"],
              * @typedef {{field: String, operator: String, value: primitive}} QueryFilterDto
              */
             /**
-             * Convert QueryFilter to its Data Transfer Object
-             * @return QueryFilterDto
+             * Convert QueryFilter to its Data Transfer Object.
+             *
+             * @returns QueryFilterDto
              */
             this.toDto = function () {
                 return {

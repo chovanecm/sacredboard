@@ -12,10 +12,11 @@ define([], function () {
     };
 
     /**
-     * Replaces some characters with their HTML equivalents
-     * @param string
-     * @return {String}
-     * @export escapeHtml
+     * Find and replace HTML-invalid characters in a string.
+     *
+     * @param {string} string -  The string to be searched.
+     * @returns {string} HTML-safe string.
+     * @exports escapeHtml
      */
     function replace(string) {
         return String(string).replace(/[&<>"'`=\/]/g, function (s) {

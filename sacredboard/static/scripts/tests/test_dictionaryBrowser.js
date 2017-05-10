@@ -117,6 +117,11 @@ define(["runs/dictionaryBrowser/DictEntry"],
                 assert.equal(children[1].getDisplayValue(), "{...}");
                 assert.equal(children[2].getDisplayValue(), "string");
 
+
+                entry = new DictEntry("asdf", new Date());
+                children = entry.getChildren();
+                assert.ok(children instanceof Array);
+                assert.equal(children.length, 0, "Date should be considered to have no children.");
             });
 
 
@@ -133,6 +138,11 @@ define(["runs/dictionaryBrowser/DictEntry"],
                 entry = new DictEntry("asdf", ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven"]);
                 keys = entry.getChildrenKeys(/*sorted */ true);
                 assert.deepEqual(keys, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]);
+
+                entry = new DictEntry("asf", "string");
+                keys = entry.getChildrenKeys(/*sorted */ true);
+                assert.ok(keys instanceof Array);
+                assert.ok(keys.length, 0, "Keys of native types should be an empty array.");
             }
         );
         QUnit.test("Test getChildrenKeys (not sorted)",

@@ -70,10 +70,8 @@ tr.shown td.details-control:before {
 .block-over {
     position: absolute;
     background-color: white;
-    border: solid;
-    border-color: black;
     border-radius: 10px;
-    border-width: 1.5px;
+    border: 1.5px solid black;
     z-index: 1;
     padding: 0.5em;
 }

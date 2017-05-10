@@ -1,9 +1,10 @@
 "use strict";
 define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"], function (escapeHtml, dictionaryBrowser, $, ko) {
     /**
-     * Generate detail view for an experiment
-     * @param run Run returned via the web service
-     * @returns {string} HTML representation of the detail
+     * Generate detail view for an experiment run.
+     *
+     * @param run {Run} - Run returned via the web service
+     * @returns {string} - HTML representation of the detail
      */
     function generateDetailView(run) {
         // `run` is the original data object for the row
