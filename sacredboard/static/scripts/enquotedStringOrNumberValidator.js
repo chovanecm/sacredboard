@@ -5,9 +5,10 @@ define(["knockout"], function (ko) {
      *
      * Allows only enquoted "string" or 123.4 number to be inputted and
      * prevents the "regex" operator from being used with numbers.
-     * @param target - The target observable (value holder).
+     *
+     * @param {ko.observable} target - The target observable (value holder).
      * @param {QueryFilter} queryFilter - The QueryFilter to be checked.
-     * @returns {*} target
+     * @returns {*} Target.
      */
     ko.extenders.validateJSONValue = function (target, queryFilter) {
 

@@ -10,12 +10,13 @@ define(["knockout", "enquotedStringOrNumberValidator"],
          * A terminal clause is a terminal part of the whole query.
          * It means that it cannot contain subclauses.
          *
-         * Example: QueryFilter("host.hostname", "!=", "node1")
+         * @example
+         * QueryFilter("host.hostname", "!=", "node1")
          *
          * @param {string} field - The database field to be filtered by.
-         * @param {string} operator - The operator to be used. {@link QueryFilters.operators)
+         * @param {string} operator - The operator to be used. {@link QueryFilters.operators).
          * @param {string|Number} value - The value to be applied in the filter (a primitive type).
-         * @constructor
+         * @class
          * @alias module:runs/filter/queryFilter
          */
         function QueryFilter(field, operator, value) {
@@ -103,7 +104,8 @@ define(["knockout", "enquotedStringOrNumberValidator"],
 
             /**
              * Return a copy of the object.
-             * @returns {QueryFilter}
+             *
+             * @returns {QueryFilter} A copy of the current object.
              */
             this.clone = function () {
                 return new QueryFilter(this.field(), this.operator(), this.value());
@@ -111,12 +113,14 @@ define(["knockout", "enquotedStringOrNumberValidator"],
 
             /**
              * A serialiable Data Transfer Object of a QueryFilter.
+             *
              * @typedef {{field: String, operator: String, value: primitive}} QueryFilterDto
              */
             /**
              * Convert QueryFilter to its Data Transfer Object.
              *
-             * @returns QueryFilterDto
+             * @returns {QueryFilterDto} A simple object representing
+             * the filter for serialisation as requested by the Sacredboard API.
              */
             this.toDto = function () {
                 return {

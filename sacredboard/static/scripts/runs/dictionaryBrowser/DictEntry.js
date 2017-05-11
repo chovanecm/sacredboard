@@ -8,8 +8,8 @@ define(["knockout"], function (ko) {
      * dictionary or array. Its display value is calculated based on the
      * actual value type (array, object, native type).
      *
-     * @param {string} name - The display name of this entry
-     * @param {*} value - The value of the entry (object, array, String, Number, Date, null)
+     * @param {string} name - The display name of this entry.
+     * @param {*} value - The value of the entry (object, array, String, Number, Date, null).
      * @class
      */
     function DictEntry(name, value) {
@@ -28,6 +28,7 @@ define(["knockout"], function (ko) {
     };
     /**
      * Check whether the value of the DictEntry is a complex type.
+     *
      * @returns {boolean} True for objects and arrays, false otherwise.
      */
     DictEntry.prototype.hasChildren = function () {
@@ -36,16 +37,19 @@ define(["knockout"], function (ko) {
     /**
      * Generate an array of DictEntries of nested objects.
      *
-     * Examples:
-     *
-     * DictEntry("me", ["hello", "world"]).getChildren() returns
+     * @example <caption>Array.</caption>
+     * DictEntry("me", ["hello", "world"]).getChildren()
+     * // returns
      * [DictEntry("0", "hello"), DictEntry("1", "world")]
      *
-     * DictEntry("me", {"key1": "value1", "key2": ["hello", "world"]}).getChildren() returns
+     * @example <caption>Object.</caption>
+     * DictEntry("me", {"key1": "value1", "key2": ["hello", "world"]}).getChildren()
+     * // returns
      * [DictEntry("key1", "value1"), DictEntry("key2", ["hello", "world"])]
      *
-     * DictEntry("me", "string").getChildren() returns
-     * []
+     * @example <caption>Native type.</caption>.
+     * DictEntry("me", "string").getChildren()
+     * // returns []
      *
      *
      * @returns {DictEntry[]} Array of DictEntries or an empty array for native value types sorted by their keys.
@@ -86,7 +90,8 @@ define(["knockout"], function (ko) {
 
     /**
      * Get the display name of the DictEntry.
-     * @returns {string} Display name
+     *
+     * @returns {string} Display name.
      */
     DictEntry.prototype.getDisplayName = function () {
         return this.name;
@@ -95,10 +100,17 @@ define(["knockout"], function (ko) {
     /**
      * Return the display value for in-line view.
      *
-     * Example:
-     * for DictEntry("hello", "world") returns "world"
-     * for DictEntry("hello", {"key": "value"}) returns "{...}"
-     * for DictEntry("hello", [1,2,3]) returns "[1, 2, 3]"
+     * @example <caption>Native value.</caption>
+     * DictEntry("hello", "world").getDisplayValue()
+     * // returns "world"
+     *
+     * @example <caption>Object.</caption>
+     * DictEntry("hello", {"key": "value"}).getDisplayValue()
+     * // returns "{...}"
+     *
+     * @example <caption>Array.</caption>
+     * DictEntry("hello", [1,2,3]).getDisplayValue()
+     * // returns "[1, 2, 3]"
      *
      * @returns {string} String representation of the value.
      */

@@ -1,14 +1,10 @@
 "use strict";
+/**
+ * The view model for the list of runs.
+ *
+ * @module runs/viewModel
+ */
 define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "runs/filters", "runs/runTable"],
-    /**
-     *
-     * @param ko
-     * @param QueryFilters
-     * @param QueryFilter
-     * @param filters
-     * @param runTable
-     * @returns 
-     */
     function (ko, QueryFilters, QueryFilter, filters, runTable) {
         //Additionaly requires runTable
         ko.options.deferUpdates = true;
@@ -50,26 +46,50 @@ define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "ru
 
             /**
              * Transform the curent filters to their Data Transfer Object.
-             * @returns {QueryFilterDto}
+             *
+             * @returns {QueryFilterDto} The object to be passed to the Sacredboard Web API.
              */
             getQueryFilterDto: function () {
                 return this.queryFilters().toDto();
             },
+            /**
+             * @callback listenerCallback
+             */
+            /**
+             * Subscribe to changes in the list of applied filters.
+             *
+             * @param {listenerCallback} listener - The listener function.
+             */
             subscribe: function (listener) {
                 this.queryFilters().filters.subscribe(listener);
             },
 
+            /**
+             * Reload the whole table from the backend.
+             */
             reloadTable: function () {
                 runTable.reload();
             },
 
+            /**
+             * Bind the view model to the view.
+             * Should be called after {@link module:runs/viewModel.initialize}.
+             */
             bind: function () {
                 ko.applyBindings(this);
             },
 
+            /**
+             * Initialize the view model and the table of runs.
+             *
+             * Do not forget to call {@link bind} after that.
+             *
+             * @param {DOMNode|string} runTableSelector - The HTML <table> element or its selector (e.g. '#run-table')
+             * for the list of runs.
+             */
             initialize: function (runTableSelector) {
                 /* By default, runs any state are displayed.
-                 Add them to the statusFilters.
+                 Add them to the statusFilters.q
                  */
                 for (var key in this.predefinedFilters) {
                     this.statusFilters.addFilter(this.predefinedFilters[key]);

@@ -5,7 +5,7 @@ define(["knockout", "jquery"],
          * The QueryFilters object is a set of filters to be applied together.
          *
          * A query like "(A == 1 AND B < 10) OR (X == 'hello')"
-         * can be constructed in the following way:
+         * can be constructed using the following example.
          * <pre><code>
          * new QueryFilters("or", [ new QueryFilter('X', '==', 'hello'),
          *                          new QueryFilters('and', [
@@ -13,16 +13,21 @@ define(["knockout", "jquery"],
          *                              new QueryFilter('B', '<', 10)
          *                                          ])
          *                 ]);
-         * </code></pre>
-         * @param {String} type - either 'and' or 'or'. Default: 'and'
-         * @param {QueryFilter[]|QueryFilters[]} filters
+         * </code></pre>.
+         *
+         * @param {string} type - Either 'and' or 'or'. Default: 'and'.
+         * @param {QueryFilter[]|QueryFilters[]} filters - An array of clauses to be joined using the "type" operator.
          * @exports QueryFilters
-         * @constructor
+         * @class
          */
         function QueryFilters(type, filters) {
             var self = this;
             this.filters = ko.observableArray(filters == undefined ? [] : filters);
             this.filters.extend({notify: "always"});
+            // Expected operator types:
+            /* TODO: Better to move it to the view or to QueryFilter as it has nothing much to do with QueryFilters
+            Furthermore, it might be necessary to adjust the view so that it does not search for the operator list here.
+             */
             this.operators = ["==", "!=", "<", "<=", ">", ">=", "regex"];
             this.type = ko.observable(type == undefined ? "and" : type);
             self.addFilter = function (filter) {
@@ -39,8 +44,9 @@ define(["knockout", "jquery"],
              */
             /**
              * Transform QueryFilters to its Data Transfer Object that can be
-             * serialized and sent to backend.
-             * @return QueryFiltersDto
+             * serialized and sent to the backend.
+             *
+             * @returns {QueryFiltersDto} A QueryFilter object accepted by the Sacredboard backend API.
              */
             self.toDto = function () {
                 return {

@@ -7,8 +7,9 @@
 define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jquery"],
     function (bootstrap, datatables, dtboostrap, generateDetailView, $) {
         /**
-         * Scrolls down in the element
-         * @param obj
+         * Scroll down in the element.
+         *
+         * @param {DOMNode} obj - The element to be scrolled down.
          */
         function scrollDown(obj) {
             $(obj).scrollTop(obj.scrollHeight);
@@ -18,7 +19,8 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
          * Turn tableElement into dataTable to display runs.
          *
          * Returns the created table.
-         * @param tableElement DOM element representing the <table>
+         *
+         * @param {DOMNode} tableElement - The <table> DOM element representing the table
          * @type {{table: DataTable, reload: function, initTable: function, queryFilter: QueryFiltersDto}}
          */
         var createRunTable = {};
@@ -43,8 +45,9 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
         createRunTable.queryFilter = {type: "and", filters: []};
 
         /**
-         * Initialize DataTable for given element
-         * @param tableElement HTML Table Element
+         * Initialize DataTable for given element.
+         *
+         * @param {DOMNode} tableElement - HTML <table> for placing the DataTable.
          */
         createRunTable.initTable = function (tableElement) {
             var jqRuns = $(tableElement);

@@ -1,9 +1,5 @@
 /*global QUnit*/ //for eslint to ignore missing QUnit
 define(["runs/filters/queryFilter"],
-    /**
-     *
-     * @param {QueryFilter} QueryFilter
-     */
     function (QueryFilter) {
         QUnit.module("QueryFilter");
 
