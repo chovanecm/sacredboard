@@ -20,7 +20,7 @@ define([], function () {
      */
     function replace(string) {
         return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-            return entityMap[s];
+            return entityMap[s]
         });
     }
     return replace;

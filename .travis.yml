@@ -15,7 +15,7 @@ matrix:
       before_script:
         - npm install
       script:
-        - npm run lint
+        - npm run lint -s
 language: python
 python: "3.5"
 git:
