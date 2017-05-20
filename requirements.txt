@@ -2,3 +2,4 @@ flask
 click
 pymongo
 gevent
+simplejson

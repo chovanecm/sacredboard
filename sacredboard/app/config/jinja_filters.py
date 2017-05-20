@@ -8,7 +8,8 @@ It helps writing the frontend templates,
 """
 import datetime
 
-from bson.json_util import dumps
+import simplejson
+from bson import json_util
 from flask import Blueprint
 
 filters = Blueprint("filters", __name__)
@@ -58,7 +59,7 @@ def first_letter(text):
 @filters.app_template_filter("dump_json")
 def dump_json(obj):
     """Dump Python object as JSON string."""
-    return dumps(obj)
+    return simplejson.dumps(obj, ignore_nan=True, default=json_util.default)
 
 
 @filters.app_template_filter("tostr")
