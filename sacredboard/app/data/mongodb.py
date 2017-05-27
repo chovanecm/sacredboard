@@ -3,8 +3,19 @@
 import bson
 import pymongo
 
+from sacredboard.app.data.datastorage import Cursor, DataStorage
 
-class PyMongoDataAccess:
+class MongoDbCursor(Cursor):
+    def __init__(self, mongodb_cursor):
+        self.mongodb_cursor = mongodb_cursor
+
+    def count(self):
+        return self.mongodb_cursor.count()
+
+    def __iter__(self):
+        return self.mongodb_cursor
+
+class PyMongoDataAccess(DataStorage):
     """Access records in MongoDB."""
 
     RUNNING_DEAD_RUN_CLAUSE = {
@@ -19,6 +30,7 @@ class PyMongoDataAccess:
         Better use the static methods build_data_access
         or build_data_access_with_uri
         """
+        super().__init__()
         self._uri = uri
         self._db_name = database_name
         self._client = None
@@ -72,7 +84,8 @@ class PyMongoDataAccess:
         cursor = cursor.skip(start)
         if limit is not None:
             cursor = cursor.limit(limit)
-        return cursor
+
+        return MongoDbCursor(cursor)
 
     def get_run(self, run_id):
         try:
