@@ -80,7 +80,7 @@ define(["escapeHtml", "runs/dictionaryBrowser/component", "runs/metricsPlotter/c
                       </div>
                        <div id="metrics-` + escapeHtml(run.id) + `"  class="tab-pane">
                         <div class="detail-page-box">
-                            <metrics-plot></metrics-plot>
+                            <metrics-plot params="run: run.object"></metrics-plot>
                         </div>
                       </div>
                   </div>
