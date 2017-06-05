@@ -5,6 +5,7 @@ import time
 
 import click
 
+
 @click.command()
 @click.option("--logdir")
 @click.option("--host", default="0.0.0.0")
