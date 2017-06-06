@@ -26,6 +26,12 @@ define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"],
                         </li>
                         <li role="presentation">
                             <a href="#captured-output-` + escapeHtml(run.id) + `" data-toggle="pill">Captured output</a>
+                        </li>                        
+                        <li role="presentation">
+                            <a href="#experiment-experiment-` + escapeHtml(run.id) + `" data-toggle="pill">Experiment</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#experiment-meta-` + escapeHtml(run.id) + `" data-toggle="pill">Meta Info</a>
                         </li>
                         <li role="presentation">
                             <a href="#tensorflow-` + escapeHtml(run.id) + `" data-toggle="pill">Tensorflow logs</a>
@@ -44,7 +50,19 @@ define(["escapeHtml", "runs/dictionaryBrowser/component", "jquery", "knockout"],
                       <div class="detail-page-box">
                             <dictionary-browser params="value: run.object.info"></dictionary-browser>
                         </div>
-                      </div>
+                  </div>
+                  <div id="experiment-experiment-` + escapeHtml(run.id) + `" class="tab-pane table-responsive">
+                      <h4>Experiment</h4>
+                      <div class="detail-page-box">
+                            <dictionary-browser params="value: run.object.experiment"></dictionary-browser>
+                        </div>
+                  </div>
+                  <div id="experiment-meta-` + escapeHtml(run.id) + `" class="tab-pane table-responsive">
+                      <h4>Run Meta Information</h4>
+                      <div class="detail-page-box">
+                            <dictionary-browser params="value: run.object.meta"></dictionary-browser>
+                        </div>
+                  </div>
                       <div id="captured-output-` + escapeHtml(run.id) + `" class="tab-pane">
                       <h4>Captured output from the experiment</h4>
                         <pre class="scrollDown detail-page-box" sacred-content="captured_out">`
