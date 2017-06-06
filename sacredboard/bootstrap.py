@@ -80,7 +80,7 @@ sacredboard -m sacred -mc default.runs
 
     """
 
-    if m or mu:
+    if m or mu != (None, None):
         add_mongo_config(app, m, mu, mc)
         app.config["data"].connect()
     elif f:
