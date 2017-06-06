@@ -86,7 +86,8 @@ sacredboard -m sacred -mc default.runs
     elif f:
         app.config["data"] = FileStorage(f)
     else:
-        print("Must specify either a mongodb instance or a path to a file storage.")
+        print("Must specify either a mongodb instance or \
+                a path to a file storage.")
 
     app.config['DEBUG'] = debug
     app.debug = debug
@@ -108,6 +109,7 @@ sacredboard -m sacred -mc default.runs
                 click.launch("http://127.0.0.1:%d" % port)
             http_server.serve_forever()
             break
+
 
 def add_mongo_config(app, simple_connection_string,
                      mongo_uri, collection_name):

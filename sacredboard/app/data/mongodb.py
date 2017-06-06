@@ -5,6 +5,7 @@ import pymongo
 
 from sacredboard.app.data.datastorage import Cursor, DataStorage
 
+
 class MongoDbCursor(Cursor):
     def __init__(self, mongodb_cursor):
         self.mongodb_cursor = mongodb_cursor
@@ -14,6 +15,7 @@ class MongoDbCursor(Cursor):
 
     def __iter__(self):
         return self.mongodb_cursor
+
 
 class PyMongoDataAccess(DataStorage):
     """Access records in MongoDB."""
@@ -26,7 +28,7 @@ class PyMongoDataAccess(DataStorage):
     def __init__(self, uri, database_name, collection_name):
         """
         Set up MongoDB access layer, don't connect yet.
-        
+
         Better use the static methods build_data_access
         or build_data_access_with_uri
         """
@@ -50,20 +52,20 @@ class PyMongoDataAccess(DataStorage):
                  start=0, limit=None, query={"type": "and", "filters": []}):
         """
         Return multiple runs (default all).
-        
+
         The query format (optional):
 
         {"type": "and", "filters": [
          {"field": "host.hostname", "operator": "==", "value": "ntbacer"},
-         {"type": "or", "filters": [ 
+         {"type": "or", "filters": [
             {"field": "result", "operator": "==", "value": 2403.52},
             {"field": "host.python_version", "operator": "==", "value":"3.5.2"}
             ]}]}
-            
+
         The parameter is built from clauses.
         Each clause is either conjunctive (``"and"``), disjunctive (``"or"``),
         or a *terminal clause*. Each of the the earlier two types must specify
-        the ``"filters`` array of other clauses to be joined together 
+        the ``"filters`` array of other clauses to be joined together
         by that logical connective (and/or).
 
         A terminal clause does not specifies its type, instead,
@@ -72,9 +74,10 @@ class PyMongoDataAccess(DataStorage):
         using dot notation to access nested documents), the ``operator``
         (one of ``"=="``, ``"!="``, ``"<"``, ``"<="``, ``">``, ``">="``,
         and ``"regex"`` for regular expressions).
-        The ``value`` field contains the value to be compared with (either a string or a number).
-        Notice that for the ``status`` field, the ``RUNNING`` and ``DEAD`` runs
-        are compared by :func:`~PyMongoDataAccess.RUNNING_DEAD_RUN_CLAUSE` and 
+        The ``value`` field contains the value to be compared with (either a
+        string or a number). Notice that for the ``status`` field, the
+        ``RUNNING`` and ``DEAD`` runs are compared by
+        :func:`~PyMongoDataAccess.RUNNING_DEAD_RUN_CLAUSE` and
         :func:`~PyMongoDataAccess.RUNNING_NOT_DEAD_CLAUSE`
         """
         mongo_query = self._to_mongo_query(query)
@@ -119,7 +122,7 @@ class PyMongoDataAccess(DataStorage):
         Takes a query in format
         {"type": "and", "filters": [
          {"field": "host.hostname", "operator": "==", "value": "ntbacer"},
-         {"type": "or", "filters": [ 
+         {"type": "or", "filters": [
             {"field": "result", "operator": "==", "value": 2403.52},
             {"field": "host.python_version", "operator": "==", "value":"3.5.2"}
             ]}]}

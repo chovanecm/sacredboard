@@ -8,6 +8,7 @@ class Cursor:
     def __iter__(self):
         raise NotImplemented()
 
+
 class DataStorage:
     def __init__(self):
         pass
