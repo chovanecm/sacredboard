@@ -7,10 +7,13 @@ from sacredboard.app.data.datastorage import Cursor, DataStorage
 
 
 class MongoDbCursor(Cursor):
+    """Implements Cursor for mongodb."""
+
     def __init__(self, mongodb_cursor):
         self.mongodb_cursor = mongodb_cursor
 
     def count(self):
+        """Returns the number of items in this cursor."""
         return self.mongodb_cursor.count()
 
     def __iter__(self):

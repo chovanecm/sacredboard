@@ -79,7 +79,6 @@ sacredboard -m sacred -mc default.runs
     Note: MongoDB must be listening on localhost.
 
     """
-
     if m or mu:
         add_mongo_config(app, m, mu, mc)
         app.config["data"].connect()

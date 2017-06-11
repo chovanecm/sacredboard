@@ -1,3 +1,5 @@
+"""Tests for the file storage backend."""
+
 # coding=utf-8
 import bson
 import pytest
@@ -9,11 +11,13 @@ from sacredboard.app.data.filestorage import FileStorage
 
 
 def create_tmp_datastore():
-    '''
+    """
     Rather than mocking the file system, this actually creates some temporary files that emulate the file store system
     in Sacred. Unfortunately, Sacred and Sacredboard are completely decoupled, which makes it impossible to ensure that
     this standard is upheld throughout the sacred system.
-    '''
+    
+    :return: dict
+    """
     config = {"length": None, "n_input": 255, "batch_size": None,
          "dataset_path": "./german-nouns.hdf5", "validation_ds": "validation",
          "log_dir": "./log/rnn500_dropout0.5_lrate1e-4_minibatch_1000steps",
@@ -59,10 +63,12 @@ def create_tmp_datastore():
 
 @pytest.fixture
 def tmpfilestore() -> FileStorage:
+    """Fixture that prepares a file store in /tmp for dependency injection."""
     dir = create_tmp_datastore()
     return FileStorage(dir)
 
 def test_get_run(tmpfilestore : FileStorage):
+    """Tests the get_run function."""
     run42 = tmpfilestore.get_run(42)
 
     for key in ["info", "resources", "host", "experiment", "result", "artifacts", "comment", "start_time", "stop_time",
@@ -70,6 +76,7 @@ def test_get_run(tmpfilestore : FileStorage):
         assert key in run42
 
 def test_get_runs(tmpfilestore : FileStorage):
+    """Tests the get_runs function."""
     runs = tmpfilestore.get_runs()
     runs = list(runs)
 

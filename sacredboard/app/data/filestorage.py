@@ -1,3 +1,5 @@
+"""Implements backend storage interface for sacred's file store."""
+
 import datetime
 import os
 import json
@@ -33,11 +35,18 @@ def _create_run(runjson, configjson):
 
 
 class FileStoreCursor(Cursor):
+    """Implements the cursor for file stores."""
+
     def __init__(self, count, iterable):
         self.iterable = iterable
         self._count = count
 
     def count(self):
+        """
+        Return the number of runs in this query.
+        
+        :return: int
+        """
         return self._count
 
     def __iter__(self):
@@ -45,18 +54,35 @@ class FileStoreCursor(Cursor):
 
 
 class FileStorage(DataStorage):
+    """Object to interface with one of sacred's file stores."""
+
     def __init__(self, path_to_dir):
         super().__init__()
         self.path_to_dir = os.path.expanduser(path_to_dir)
 
     def get_run(self, run_id):
+        """
+        Return the run associated with a particular `run_id`.
+        
+        :param run_id: 
+        :return: dict
+        """
         config = _read_json(_path_to_config(self.path_to_dir, run_id))
         run = _read_json(_path_to_run(self.path_to_dir, run_id))
         return _create_run(run, config)
 
     def get_runs(self, sort_by=None, sort_direction=None,
                  start=0, limit=None, query={"type": "and", "filters": []}):
-
+        """
+        Return all runs in the file store.
+        
+        :param sort_by: NotImplemented
+        :param sort_direction:  NotImplemented
+        :param start: NotImplemented
+        :param limit: NotImplemented
+        :param query: NotImplemented
+        :return: FileStoreCursor
+        """
         all_run_ids = os.listdir(self.path_to_dir)
 
         def run_iterator():
