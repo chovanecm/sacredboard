@@ -27,7 +27,7 @@ def create_tmp_datastore():
 
     run = {"status": "COMPLETED",
                         "_id": "57f9efb2e4b8490d19d7c30e",
-                        "info": {}, "resources": [],
+                        "resources": [],
                         "host": {"os": "Linux",
                                  "os_info": "Linux-3.16.0-38-generic-x86_64-with-LinuxMint-17.2-rafaela",
                                  "cpu": "Intel(R) Core(TM) i3 CPU       M 370  @ 2.40GHz",
@@ -48,6 +48,7 @@ def create_tmp_datastore():
                         "stop_time": "2017-06-02T07:14:02.455460",
                         "heartbeat": "2017-06-02T07:14:02.452597",
            "captured_out": "Output: \n"}
+    info = {"info": "present"}
 
     experiment_dir = tempfile.mkdtemp()
     experiment42 = os.path.join(experiment_dir, "42") # experiment number 42
@@ -58,6 +59,9 @@ def create_tmp_datastore():
 
     with open(os.path.join(experiment42, "run.json"), 'w') as run_file:
         json.dump(run, run_file)
+
+    with open(os.path.join(experiment42, "info.json"), 'w') as info_file:
+        json.dump(info, info_file)
 
     return experiment_dir
 

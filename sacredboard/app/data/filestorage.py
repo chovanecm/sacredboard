@@ -6,16 +6,25 @@ import json
 
 from sacredboard.app.data.datastorage import Cursor, DataStorage
 
-config_json = "config.json"
-run_json = "run.json"
+CONFIG_JSON = "config.json"
+RUN_JSON = "run.json"
+INFO_JSON = "info.json"
+
+
+def _path_to_file(basepath, run_id, file_name):
+    return os.path.join(basepath, str(run_id), file_name)
 
 
 def _path_to_config(basepath, run_id):
-    return os.path.join(basepath, str(run_id), config_json)
+    return _path_to_file(basepath, str(run_id), CONFIG_JSON)
+
+
+def _path_to_info(basepath, run_id):
+    return _path_to_file(basepath, str(run_id), INFO_JSON)
 
 
 def _path_to_run(basepath, run_id):
-    return os.path.join(basepath, str(run_id), run_json)
+    return os.path.join(basepath, str(run_id), RUN_JSON)
 
 
 def _read_json(path_to_json):
@@ -23,8 +32,10 @@ def _read_json(path_to_json):
         return json.load(f)
 
 
-def _create_run(runjson, configjson):
+def _create_run(run_id, runjson, configjson, infojson):
+    runjson["_id"] = run_id
     runjson["config"] = configjson
+    runjson["info"] = infojson
 
     # TODO probably want a smarter way of detecting
     # which values have type "time."
@@ -70,7 +81,8 @@ class FileStorage(DataStorage):
         """
         config = _read_json(_path_to_config(self.path_to_dir, run_id))
         run = _read_json(_path_to_run(self.path_to_dir, run_id))
-        return _create_run(run, config)
+        info = _read_json(_path_to_info(self.path_to_dir, run_id))
+        return _create_run(run_id, run, config, info)
 
     def get_runs(self, sort_by=None, sort_direction=None,
                  start=0, limit=None, query={"type": "and", "filters": []}):
