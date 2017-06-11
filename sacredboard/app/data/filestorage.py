@@ -66,6 +66,7 @@ class FileStorage(DataStorage):
         
         :param run_id: 
         :return: dict
+        :raises FileNotFoundError
         """
         config = _read_json(_path_to_config(self.path_to_dir, run_id))
         run = _read_json(_path_to_run(self.path_to_dir, run_id))
@@ -74,7 +75,7 @@ class FileStorage(DataStorage):
     def get_runs(self, sort_by=None, sort_direction=None,
                  start=0, limit=None, query={"type": "and", "filters": []}):
         """
-        Return all runs in the file store.
+        Return all runs in the file store. If a run is corrupt -- e.g. missing files --- it is skipped.
         
         :param sort_by: NotImplemented
         :param sort_direction:  NotImplemented
@@ -90,8 +91,11 @@ class FileStorage(DataStorage):
             for id in all_run_ids:
                 if id in blacklist:
                     continue
-
-                yield self.get_run(id)
+                try:
+                    yield self.get_run(id)
+                except FileNotFoundError:
+                    # An incomplete experiment is a corrupt experiment. Skip it for now.
+                    pass
 
         count = len(all_run_ids)
         return FileStoreCursor(count, run_iterator())
