@@ -1,0 +1,9 @@
+checks:
+    python:
+        code_rating: true
+        duplicate_code: true
+    javascript: true
+filter:
+    excluded_paths:
+        - '*/test/*'
+        - '*/vendors/*'
