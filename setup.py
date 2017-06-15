@@ -22,7 +22,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
     ],
-    description="SacredBoard",
+    description="Sacredboard - accessing Sacred data",
     long_description=long_description,
     license="MIT License",
     url="https://github.com/chovanecm/sacredboard",
@@ -32,11 +32,11 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "sacredboard = sacredboard.webapp:run"
+            "sacredboard = sacredboard.bootstrap:run"
         ]
     },
     install_requires=get_requirements(),
     setup_requires=["pytest-runner"],
-    tests_require=["pytest"],
-    version="0.1.2"
+    tests_require=["pytest", "mongomock"],
+    version="0.2"
 )

@@ -1,16 +1,18 @@
 # Sacredboard
 
-Sacredboard is a web dashboard for [Sacred](https://github.com/IDSIA/sacred).
+Sacredboard is a web dashboard for the [Sacred](https://github.com/IDSIA/sacred)
+machine learning experiment management tool.
  
 It connects to the MongoDB database used by Sacred
 and displays a list of experiments, their state, Sacred configuration and
 the standard output from the running program.  
 Python 3.5 and a modern web browser are  required for it to work properly.
 
-## Features in version 0.1.2
+# Features in version 0.2
 
 - Get an overview of running and finished experiments in a table,
  such as experiment name, machine on which it runs etc.
+- Filter experiments
 - Get detailed information of the experiment,
  such as the text output produced by the experiment.
 - Run [Tensorboard](https://www.tensorflow.org/versions/r0.10/how_tos/summaries_and_tensorboard/) 
@@ -20,29 +22,11 @@ Python 3.5 and a modern web browser are  required for it to work properly.
     [Integration with Tensorflow](https://github.com/IDSIA/sacred/blob/develop/docs/tensorflow.rst)
      (currently in the development branch of Sacred).
 
-### Changes in 0.1.2 since 0.1.1
-
-- Added a command line option to specify a custom connection string for MongoDB,
-thus enabling connections to password-protected databases etc.
-
-### Changes in 0.1.1 since 0.1
-
-- Added a command line option to specify the MongoDB collection that contains
-the runs. This is useful when using a custom collection name or for
- [compatibility reasons](https://github.com/chovanecm/sacredboard/issues/20).
 
 ## Roadmap
 
-### v0.2
-
-- Filtering experiments based on their configuration
-- Displaying the `info` dictionary
-
 ### Further Versions
-
-- Filtering experiments based on custom queries on the data produced by experiments. 
-- In addition, to support the users in using Sacredboard features,
- sacred will be enhanced with API to store common experiment information (such as error, accuracy etc).
+- Sacred Metrics API data viewer (currently in Sacred development branch)
 - TBD
 
 ## Screenshots
@@ -104,3 +88,13 @@ contributions of new features should be developed against the `develop` branch. 
 
 Feel free to open new issues in case of requests or bugs found.  
 Maintainer / Developer: Martin Chovanec, chovamar@fit.cvut.cz
+
+
+Current master branch status:
+[![Build Status](https://travis-ci.org/chovanecm/sacredboard.svg?branch=master)](https://travis-ci.org/chovanecm/sacredboard)
+[![Coverage Status](https://coveralls.io/repos/github/chovanecm/sacredboard/badge.svg?branch=master)](https://coveralls.io/github/chovanecm/sacredboard?branch=master)
+
+
+Current develop branch status:
+[![Build Status](https://travis-ci.org/chovanecm/sacredboard.svg?branch=develop)](https://travis-ci.org/chovanecm/sacredboard)
+[![Coverage Status](https://coveralls.io/repos/github/chovanecm/sacredboard/badge.svg?branch=develop)](https://coveralls.io/github/chovanecm/sacredboard?branch=develop)

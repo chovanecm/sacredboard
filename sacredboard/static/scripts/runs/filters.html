@@ -1,0 +1,42 @@
+<form class="form-inline" data-bind="submit: addFilter">
+    <div class="form-group">
+        <label class="sr-only" for="queryField">Field name</label>
+        <span style="display:inline-block; width: 2.8em" data-bind="text: filterToAdd().fieldScope"></span>
+        <sup style="cursor: default"
+             title="The run property to be filtered on. Use a config property (e.g. seed) or the full path with a leading dot: .host.hostname">
+            <b>?&nbsp;</b>
+        </sup>
+        <input type="text" class="form-control" id="queryField" placeholder="seed or .host.hostname"
+               data-bind='value: filterToAdd().userInputField,  valueUpdate: "afterkeydown"'>
+    </div>
+    <div class="form-group">
+        <label class="sr-only" for="queryOperator">Operator</label>
+        <select id="queryOperator" class="form-control" data-bind="options: queryFilters().operators,
+                                                                           value: filterToAdd().operator"></select>
+    </div>
+    <div class="form-group " data-bind="css: {'has-error': filterToAdd().value.hasError}">
+        <label class="sr-only" for="queryValue">Query value</label>
+        <input type="text" class="form-control" id="queryValue" placeholder='"string" or 123.4' data-bind="value: filterToAdd().value,
+                                                                                                       valueUpdate: 'afterkeydown',
+                                                                                                       attr: {title: filterToAdd().value.validationMessage}">
+        <span class="help-block block-over"
+              data-bind="text: filterToAdd().value.validationMessage, visible: filterToAdd().value.hasError() && filterToAdd().value().length > 0"></span>
+    </div>
+    <button type="submit" class="btn btn-default" data-bind="enable: filterReadyToAdd()">Add filter</button>
+</form>
+
+<div class="row-fluid clearfix" style="margin-top: 1eM">
+    <div class="col-md-12" data-bind="with: queryFilters">
+        <div data-bind="foreach: {data: filters, as: 'filter'}">
+            <!-- ko if: filter['field'] != undefined -->
+            <!-- this can only display terminal clause filters on the top level of the tree -->
+            <div class="query-filter">
+                <span data-bind="text: field"></span>
+                <span data-bind="text: operator"></span>
+                <span data-bind="text: value"></span>
+                <a href="#" data-bind="click: $parent.removeFilter">[X]</a>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+</div>

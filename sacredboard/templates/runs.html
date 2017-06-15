@@ -6,173 +6,105 @@
 
     <title>Runs</title>
 
-    <!-- jQuery -->
-    <script
-            src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/require.js') }}"></script>
+    <script>
+        requirejs(["runs/viewModel"], function (viewModel) {
+            viewModel.initialize("#runs");
+            viewModel.bind();
+        });
+    </script>
+
 
     <!-- Bootstrap -->
+
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendors/bootstrap/css/bootstrap.min.css') }}">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendors/bootstrap/css/bootstrap-theme.min.css') }}">
 
 
     <!-- DataTables, jQuery and its plugins, debug mode -->
+   <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendors/datatables/datatables.css') }}">
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.datatables.net/v/bs/dt-1.10.13/r-2.1.0/sc-1.4.2/datatables.min.css"/>
+          href="{{ url_for('static', filename='vendors/datatables/DataTables-1.10.15/css/dataTables.jqueryui.css') }}">
 
-    <script type="text/javascript"
-            src="https://cdn.datatables.net/v/bs/dt-1.10.13/r-2.1.0/sc-1.4.2/datatables.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/runs.css') }}"/>
 
-    <script type="text/javascript" src="{{url_for('static', filename='js/utils.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='js/runs.js')}}"></script>
 
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/runs.css')}}"/>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var jqRuns = $('#runs')
-            var table = jqRuns.DataTable(
-                {
-                    colReorder: true,
-                    responsive: false,
-                    bFilter: false,
-
-                    // Scroller:
-                    scrollY: window.innerHeight / 1.4,
-                    deferRender: true,
-                    scroller: false,
-                    serverSide: true,
-                    ajax: '{{url_for("routes.api_runs")}}',
-                    "columns": [
-                        {
-                            "className": 'details-control',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
-                        },
-                        {
-                            "data": "experiment_name", "name": "experiment.name",
-                            "render": function (data, type, row) {
-                                return '<span sacred-content="status-icon" sacred-status="' + row.status +
-                                    '" sacred-is-alive="' + row.is_alive + '">&block;</span>  ' + data;
-                            }
-                        },
-                        /*{
-                         "data": "status", "name": "status", "render": function (data, row) {
-                         return data[0];
-                         }
-                         },*/
-                        {"data": "start_time", "name": "start_time"},
-                        {"data": "heartbeat", "name": "heartbeat"},
-                        /*{"data": "heartbeat_diff", "name": "heartbeat"},*/
-                        {"data": "hostname", "name": "hostname"},
-                        /*{"data": "captured_out_last_line", "name": "captured_out", "orderable": false},*/
-                        {"data": "result", "name": "result"},
-                        {"data": "id", "visible": false}
-                    ],
-                    order: [["5", "desc"]]
-                }
-            );
-            // Add event listener for opening and closing details
-            jqRuns.find('tbody').on('click', 'tr', function () {
-                var tr = $(this);
-                var row = table.row(tr);
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    if (row.data() == undefined) {
-                        // Nothing to do here
-                        return;
-                    }
-                    var id = row.data().id;
-                    var f = function () {
-                        $.ajax({
-                            url: "{{url_for('routes.api_run', run_id='')}}" + id
-                        }).done(function (data) {
-                            if (data.data[0].id != row.data().id) {
-                                /* Before this ajax function was called,
-                                 our parent row has changed (belongs to some other experiment)
-                                 there is nothing to do here. */
-                                return;
-                            }
-                            var detail_view = null;
-                            //Show detailed view if not shown yet
-                            if (!row.child.isShown()) {
-                                row.child(generate_detail_view(data.data[0])).show();
-                                detail_view = tr[0].nextSibling;
-                            } else {
-                                //udpdate content
-                                detail_view = tr[0].nextSibling;
-                                $(detail_view).find('[sacred-content="captured_out"]').each(function (i, obj) {
-                                    obj.innerText = data.data[0].object.captured_out;
-                                });
-                            }
-                            //scroll to the end of captured out
-                            $(detail_view).find(".scrollDown").each(function (i, obj) {
-                                scrollDown(obj);
-                            });
-                            //update parent row with current data:
-                            row.data(data.data[0]);
-                            //set timeOut
-                            setTimeout(function () {
-                                if (row.child.isShown()) {
-                                    f();
-                                }
-                            }, 5000);
-                        });
-                        tr.addClass('shown');
-                    };
-                    f();
-                }
-            });
-        });
-    </script>
 </head>
 <body>
 <div class="container-fluid">
-    <h1>Sacredboard: Run Viewer</h1>
-    <table id="runs" class="table table-striped table-hover">
-        <caption>Experiments Run Overview<br>
-            Legend: <span class="run-alive">&block;</span> Running,
-            <span class="run-completed">&block;</span> Completed,
-            <span class="run-failed">&block;</span> Failed,
-            <span class="run-interrupted">&block;</span> Interrupted,
-            <span class="run-dead">&block;</span> Probably dead,
-            <span class="run-queued">&block;</span> Queued
-        </caption>
-        <thead>
-        <tr>
-            <th><!-- expand / hide button --></th>
-            <th>Experiment name</th>
-            <th>Start time</th>
-            <th>Last activity</th>
-            <th>Hostname</th>
-            <th>Result</th>
 
-        </tr>
-        </thead>
-        <tbody>
-        {% for run in runs %}
-        <tr>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Sacredboard</a>
+            </div>
+        </div>
+    </nav>
 
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="row-fluid clearfix">
+        <div class="col-md-12">
+            Filter runs:
+            <query-filter params="value: queryFilters"></query-filter>
+        </div>
+    </div>
+
+    <hr>
+    <div class="row-fluid">
+        <table id="runs" class="table table-striped table-hover">
+            <caption>Experiments Run Overview<br>
+                Legend:
+                <span class="run-alive">&block;</span> <input type="checkbox"
+                                                              data-bind="checkedValue: predefinedFilters['run-alive'], checked: statusFilters.filters">
+                Running,
+                <span class="run-completed">&block;</span> <input
+                        type="checkbox"
+                        data-bind="checkedValue: predefinedFilters['run-completed'], checked: statusFilters.filters">
+                Completed,
+                <span class="run-failed">&block;</span> <input type="checkbox"
+                                                               data-bind="checkedValue: predefinedFilters['run-failed'], checked: statusFilters.filters">
+                Failed,
+                <span class="run-interrupted">&block;</span> <input
+                        type="checkbox"
+                        data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters">
+                Interrupted,
+                <span class="run-dead">&block;</span> <input type="checkbox"
+                                                             data-bind="checkedValue: predefinedFilters['run-dead'], checked: statusFilters.filters">
+                Probably dead,
+                <span class="run-queued">&block;</span> <input type="checkbox"
+                                                               data-bind="checkedValue: predefinedFilters['run-queued'], checked: statusFilters.filters">
+                Queued
+                    &nbsp;&nbsp; <button data-bind="click: reloadTable">Refresh</button>
+            </caption>
+            <thead>
+            <tr>
+                <th><!-- expand / hide button --></th>
+                <th>Id</th>
+                <th>Experiment name</th>
+                <th>Command</th>
+                <th>Start time</th>
+                <th>Last activity</th>
+                <th>Hostname</th>
+                <th>Result</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for run in runs %}
+                <tr>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

@@ -1,0 +1,54 @@
+matrix:
+  include:
+    - language: node_js
+      env:
+        - INFO=JavaScriptTests
+      node_js: "7"
+      before_script:
+        - npm install
+      script:
+        - npm test
+    - language: node_js
+      env:
+        - INFO=JavaScriptStyleCheck
+      node_js: "7"
+      before_script:
+        - npm install
+      script:
+        - npm run lint -s
+language: python
+python: "3.5"
+git:
+  depth: 3
+cache: pip
+before_script:
+  - pip install tox
+env:
+- TOX_ENV=py34
+- TOX_ENV=py35
+- TOX_ENV=flake8
+- TOX_ENV=pydocstyle
+- TOX_ENV=coverage
+script:
+- tox -e $TOX_ENV
+
+
+# safelist
+branches:
+  only:
+  - master
+  - develop
+
+#- pip install flake8
+#- pip install coveralls
+
+
+
+
+# command to install dependencies
+# install: python setup.py install
+# command to run tests
+
+#after_success:
+# not necessary, done by tox
+#  coveralls

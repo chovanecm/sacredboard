@@ -1,0 +1,8 @@
+<table class="table table-condensed table-hover"
+       data-bind="foreach: {data: dict.getChildren(), as: 'entry'}"
+        style="border-left: groove">
+    <tr data-bind="click: entry.toggleCollapse,
+                   css: { 'cursor-pointer': entry.hasChildren() }"><td data-bind="text: entry.getDisplayName()"></td><td data-bind="text: entry.getDisplayValue()"></td></tr>
+    <tr data-bind="visible: !entry.contentCollapsed()">
+        <td colspan="2" style="padding-top: 0"><dictionary-browser params="value: entry.value"></dictionary-browser></td></tr>
+</table>

@@ -1,7 +1,7 @@
 # coding=utf-8
 import pytest
 
-import sacredboard.webapp as wa
+import sacredboard.bootstrap as wa
 
 
 @pytest.mark.parametrize("config_string",
@@ -24,7 +24,7 @@ def test_add_mongo_config(config_string):
         elif config_string == "789:db_name":
             assert mongo_client._uri == "mongodb://localhost:789"
             assert (mongo_client._db_name == "db_name")
-        elif config_string == "anotherhost789:db_name":
+        elif config_string == "anotherhost:789:db_name":
             assert mongo_client._uri == "mongodb://anotherhost:789"
             assert (mongo_client._db_name == "db_name")
 

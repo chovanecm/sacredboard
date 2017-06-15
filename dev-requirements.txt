@@ -1,3 +1,8 @@
 pytest
 pytest-timeout
 setuptools
+mongomock
+sphinx
+sphinx_rtd_theme
+flake8
+pydocstyle

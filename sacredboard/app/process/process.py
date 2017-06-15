@@ -1,13 +1,9 @@
 # coding=utf-8
 import atexit
 import os
-import re
 import select
 import time
 from subprocess import Popen, PIPE
-
-
-TENSORBOARD_BINARY = "tensorboard"
 
 
 class Process:
@@ -42,6 +38,8 @@ class Process:
                 if poll_result:
                     line = self.proc.stdout.readline().decode()
                     return line
+                else:
+                    time.sleep(0.05)
             raise TimeoutError()
         else:
             return None
@@ -101,45 +99,7 @@ class ProcessError(Exception):
     pass
 
 
-class TensorboardNotFoundError(ProcessError):
-    pass
-
-
 class UnexpectedOutputError(ProcessError):
     def __init__(self, output, expected=None):
         self.expected = expected
         self.output = output
-
-
-def stop_all_tensorboards():
-    for process in Process.instances:
-        print("Process '%s', running %d" % (process.command[0],
-                                            process.is_running()))
-        if process.is_running() and process.command[0] == "tensorboard":
-            process.terminate()
-
-
-def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
-    if tensorboard_args is None:
-        tensorboard_args = []
-    tensorboard_instance = Process.create_process(
-        TENSORBOARD_BINARY.split(" ")
-        + ["--logdir", logdir, "--host", listen_on] + tensorboard_args)
-    try:
-        tensorboard_instance.run()
-    except FileNotFoundError as ex:
-        raise TensorboardNotFoundError(ex)
-
-    # Read first line of output from tensorboard - it should contain
-    # the port where it listens
-    data = tensorboard_instance.read_line(time_limit=10)
-    search = re.search("on port ([0-9]+)", data)
-    if search is not None:
-        port = search.group(1)
-        return port
-    else:
-        tensorboard_instance.terminate()
-        raise UnexpectedOutputError(
-            data,
-            expected="The port Tensorboard that listens on."
-            )

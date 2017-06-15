@@ -24,7 +24,7 @@
 }
 
 [sacred-content="status-icon"][sacred-status="INTERRUPTED"], .run-interrupted {
-    color: black;
+    color: orange;
 }
 
 .detail-page-box {
@@ -41,7 +41,7 @@
 }
 
 /* Master-detail view */
-#runs tr[role="row"] {
+#runs tr[role="row"], .cursor-pointer {
     cursor: pointer;
 }
 
@@ -57,3 +57,21 @@ tr.shown td.details-control:before {
 }
 
 /* End-master-detail-view*/
+
+
+/* Query filter */
+.query-filter {
+    display: inline-block;
+    background-color: lightgray;
+    padding: 0.5eM;
+}
+
+/* Block containing the help message in Query filter */
+.block-over {
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    border: 1.5px solid black;
+    z-index: 1;
+    padding: 0.5em;
+}
