@@ -12,6 +12,7 @@ from flask import Flask
 from gevent.pywsgi import WSGIServer
 
 from sacredboard.app.config import jinja_filters
+from sacredboard.app.data.filestorage import FileStorage
 from sacredboard.app.data.mongodb import PyMongoDataAccess
 from sacredboard.app.webapi import routes
 
@@ -35,13 +36,15 @@ app = Flask(__name__)
                    "You might need it if you use a custom collection name "
                    "or Sacred v0.6 (which used default.runs). "
                    "Default: runs")
+@click.option("-F", default="",
+              help="Path to directory containing experiments.")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
 @click.option("--debug", is_flag=True, default=False,
               help="Run the application in Flask debug mode "
                    "(for development).")
 @click.version_option()
-def run(debug, no_browser, m, mu, mc):
+def run(debug, no_browser, m, mu, mc, f):
     """
     Sacredboard.
 
@@ -76,12 +79,20 @@ sacredboard -m sacred -mc default.runs
     Note: MongoDB must be listening on localhost.
 
     """
-    add_mongo_config(app, m, mu, mc)
+    if m or mu != (None, None):
+        add_mongo_config(app, m, mu, mc)
+        app.config["data"].connect()
+    elif f:
+        app.config["data"] = FileStorage(f)
+    else:
+        print("Must specify either a mongodb instance or \
+                a path to a file storage.")
+
     app.config['DEBUG'] = debug
     app.debug = debug
     jinja_filters.setup_filters(app)
     routes.setup_routes(app)
-    app.config["data"].connect()
+
     if debug:
         app.run(host="0.0.0.0", debug=True)
     else:
