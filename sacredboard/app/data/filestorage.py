@@ -49,18 +49,20 @@ class FileStoreCursor(Cursor):
     """Implements the cursor for file stores."""
 
     def __init__(self, count, iterable):
+        """Initialize FileStoreCursor with a given iterable."""
         self.iterable = iterable
         self._count = count
 
     def count(self):
         """
         Return the number of runs in this query.
-        
+
         :return: int
         """
         return self._count
 
     def __iter__(self):
+        """Iterate over runs."""
         return iter(self.iterable)
 
 
@@ -68,14 +70,15 @@ class FileStorage(DataStorage):
     """Object to interface with one of sacred's file stores."""
 
     def __init__(self, path_to_dir):
+        """Initialize file storage run accessor."""
         super().__init__()
         self.path_to_dir = os.path.expanduser(path_to_dir)
 
     def get_run(self, run_id):
         """
         Return the run associated with a particular `run_id`.
-        
-        :param run_id: 
+
+        :param run_id:
         :return: dict
         :raises FileNotFoundError
         """
@@ -87,8 +90,10 @@ class FileStorage(DataStorage):
     def get_runs(self, sort_by=None, sort_direction=None,
                  start=0, limit=None, query={"type": "and", "filters": []}):
         """
-        Return all runs in the file store. If a run is corrupt -- e.g. missing files --- it is skipped.
-        
+        Return all runs in the file store.
+
+        If a run is corrupt, e.g. missing files, it is skipped.
+
         :param sort_by: NotImplemented
         :param sort_direction:  NotImplemented
         :param start: NotImplemented
@@ -106,7 +111,9 @@ class FileStorage(DataStorage):
                 try:
                     yield self.get_run(id)
                 except FileNotFoundError:
-                    # An incomplete experiment is a corrupt experiment. Skip it for now.
+                    # An incomplete experiment is a corrupt experiment.
+                    # Skip it for now.
+                    # TODO
                     pass
 
         count = len(all_run_ids)

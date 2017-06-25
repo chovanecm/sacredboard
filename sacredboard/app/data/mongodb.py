@@ -10,13 +10,15 @@ class MongoDbCursor(Cursor):
     """Implements Cursor for mongodb."""
 
     def __init__(self, mongodb_cursor):
+        """Initialize a MongoDB cursor."""
         self.mongodb_cursor = mongodb_cursor
 
     def count(self):
-        """Returns the number of items in this cursor."""
+        """Return the number of items in this cursor."""
         return self.mongodb_cursor.count()
 
     def __iter__(self):
+        """Iterate over runs."""
         return self.mongodb_cursor
 
 

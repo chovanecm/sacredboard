@@ -37,7 +37,8 @@ app = Flask(__name__)
                    "or Sacred v0.6 (which used default.runs). "
                    "Default: runs")
 @click.option("-F", default="",
-              help="Path to directory containing experiments.")
+              help="Path to directory containing experiment results of the"
+                   "File Storage observer.")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
 @click.option("--debug", is_flag=True, default=False,
