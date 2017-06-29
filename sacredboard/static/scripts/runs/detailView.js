@@ -1,5 +1,5 @@
 "use strict";
-define(["escapeHtml", "runs/dictionaryBrowser/component", "runs/metricsPlotter/component", "jquery", "knockout"],
+define(["escapeHtml", "runs/dictionaryBrowser/component", "plot/component", "jquery", "knockout"],
     function (escapeHtml, dictionaryBrowser, metricsPlotter, $, ko) {
     /**
      * Generate detail view for an experiment run.
@@ -80,7 +80,7 @@ define(["escapeHtml", "runs/dictionaryBrowser/component", "runs/metricsPlotter/c
                       </div>
                        <div id="metrics-` + escapeHtml(run.id) + `"  class="tab-pane">
                         <div class="detail-page-box">
-                            <metrics-plot params="run: run.object"></metrics-plot>
+                            <plot params="run: run.object"></plot>
                         </div>
                       </div>
                   </div>

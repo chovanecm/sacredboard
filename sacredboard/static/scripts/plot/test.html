@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Plot</title>
+    <script src="../main.js"></script>
+    <script>
+        require.baseUrl = "/static/scripts";
+    </script>
+    <script src="../../vendors/require.js"></script>
+    <script>
+        requirejs(["plot/component", "knockout"], function (component, ko) {
+            var viewModel = {
+                x: [],
+                y: []
+            };
+            for (var i = 0; i < 20; i++) {
+                viewModel.y.push(i);
+                viewModel.x.push(i*i);
+            }
+            ko.applyBindings(viewModel);
+        });
+    </script>
+</head>
+<body>
+    <plot params="x: x, y:y"></plot>
+</body>
+</html>
