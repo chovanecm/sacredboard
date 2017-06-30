@@ -9,20 +9,37 @@
     </script>
     <script src="../../vendors/require.js"></script>
     <script>
+        "use strict";
+        var viewModel;
         requirejs(["plot/component", "knockout"], function (component, ko) {
-            var viewModel = {
-                x: [],
-                y: []
+            viewModel = {
+                xLabel: ko.observable("steps"),
+                yLabel: ko.observable("value"),
+                /**
+                 * @type
+                 */
+                series1: {
+                    x: ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+                    y: ko.observableArray([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]),
+                    label: ko.observable("2*x")
+                },
+                series2: {
+                    x: ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+                    y: ko.observableArray([0, 1, 4, 9, 16, 32, 64, 128, 256]),
+                    label: ko.observable("x^2")
+                },
+                series: ko.observableArray([])
             };
-            for (var i = 0; i < 20; i++) {
-                viewModel.y.push(i);
-                viewModel.x.push(i*i);
-            }
+            viewModel.series.push(viewModel.series1);
             ko.applyBindings(viewModel);
         });
     </script>
 </head>
 <body>
-    <plot params="x: x, y:y"></plot>
+    <plot params="series: series, xLabel:xLabel, yLabel:yLabel"></plot>
+<input type="checkbox" data-bind="checkedValue: series1, checked: series"> Series1
+<input type="checkbox" data-bind="checkedValue: series2, checked: series"> Series2<br>
+xLabel: <input type="text" data-bind="value: xLabel">
+yLabel: <input type="text" data-bind="value: yLabel">
 </body>
 </html>
