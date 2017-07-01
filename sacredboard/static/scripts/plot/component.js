@@ -7,10 +7,10 @@
  *
  * It can:
  * - plot several series at once
- * - define labels for x and y labels (TODO)
+ * - define labels for x and y labels
  * - show the series' label
  * - dynamically add/remove series.
- *
+ * - The x-axis must support both numerical and date values. (TODO)
  * Usage: see the issue or test.html for example.
  */
 
@@ -27,28 +27,11 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
                 var self = this;
                 this.escape = escapeHtml;
                 this.seriesArray = params.series;
+                this.xLabel = params.xLabel;
+                this.yLabel = params.yLabel;
             },
             template: htmlTemplate
         });
-
-        /**
-         *  Convert an array of series to a trace for Plot.ly.
-         *
-         * @param {Series[]} array - Array of series to be plotted.
-         * @param {string} type - Plot.ly chart type (e.g. scatter).
-         */
-        function seriesToTraces(array, type) {
-            return array.map(function (aSeries) {
-                return {
-                    x: aSeries.x(),
-                    y: aSeries.y(),
-                    name: aSeries.label(),
-                    showlegend: true,
-                    visible: "legendonly",
-                    type: type
-                };
-            });
-        }
 
         ko.bindingHandlers.plot = {
             init: function (element, valueAccessor, allBindings, /*deprecated*/ viewModel, bindingContext) {
@@ -79,7 +62,59 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
 
             },
             update: function (element, valueAccessor, allBindings, /*deprecated*/ viewModel, bindingContext) {
-                /* nothing */
+                // Set x and y axes label
+                var xLabel = bindingContext.$data.xLabel();
+                var yLabel = bindingContext.$data.yLabel();
+                setAxesLabel(element, xLabel, yLabel);
             }
         };
+        /**
+         *  Convert an array of series to a trace for Plot.ly.
+         *
+         * @param {Series[]} array - Array of series to be plotted.
+         * @param {string} type - Plot.ly chart type (e.g. scatter).
+         */
+        function seriesToTraces(array, type) {
+            return array.map(function (aSeries) {
+                return {
+                    x: aSeries.x(),
+                    y: aSeries.y(),
+                    name: aSeries.label(),
+                    showlegend: true,
+                    visible: "legendonly",
+                    type: type
+                };
+            });
+        }
+
+        /**
+         * Generate an object for updating Plot.ly layout based on x and y axis labels.
+         *
+         * @param {string|null} xLabel - Label of the x axis. Null for keeping as is.
+         * @param {string|null} yLabel - Label of the y axis. Null for keeping as is.
+         * @returns {{}} A layout update for Plot.ly's <code>relayout()</code> method.
+         */
+        function createLayoutUpdate(xLabel, yLabel) {
+            var layoutUpdate = {};
+            if (xLabel != null) {
+                layoutUpdate["xaxis.title"] = xLabel;
+            }
+            if (yLabel != null) {
+                layoutUpdate["yaxis.title"] = yLabel;
+            }
+            return layoutUpdate;
+        }
+
+        /**
+         * Set labels for the x and y axis.
+         *
+         * @param {string|null} xLabel - Label of the x axis. Null for keeping as is.
+         * @param {string|null} yLabel - Label of the y axis. Null for keeping as is.
+         * @param element - A DOM element with the chart to update.
+         */
+        function setAxesLabel(element, xLabel, yLabel) {
+            var layoutUpdate = createLayoutUpdate(xLabel, yLabel);
+            Plotly.relayout(element, layoutUpdate);
+        }
+
     });
