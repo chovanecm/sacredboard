@@ -10,7 +10,8 @@
  * - define labels for x and y labels
  * - show the series' label
  * - dynamically add/remove series.
- * - The x-axis must support both numerical and date values. (TODO)
+ * - axes: numerical and date values. (TODO)
+ * - switch linear/log scale.
  * Usage: see the issue or test.html for example.
  */
 
@@ -20,6 +21,7 @@
  *
  * @typedef {{x: array, y: array, label: string}} Series
  */
+
 define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
     function (ko, escapeHtml, htmlTemplate, Plotly) {
         ko.components.register("plot", {
@@ -27,8 +29,10 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
                 var self = this;
                 this.escape = escapeHtml;
                 this.seriesArray = params.series;
-                this.xLabel = params.xLabel;
-                this.yLabel = params.yLabel;
+                this.xLabel = params.xLabel || ko.observable("x");
+                this.yLabel = params.yLabel || ko.observable("y");
+                this.xType = params.xType || ko.observable("-");
+                this.yType = params.yType || ko.observable("-");
             },
             template: htmlTemplate
         });
@@ -49,15 +53,14 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
                      * @param {Array} changes - Array of changes emitted by the array.
                      */
                     function (changes) {
-                        for (var key in changes) {
-                            var change = changes[key];
+                        changes.forEach(function (change) {
                             if (change["status"] == "added") {
                                 var value = seriesToTraces([change["value"]]);
                                 Plotly.addTraces(element, value, change["index"]);
                             } else if (change["status"] == "deleted") {
                                 Plotly.deleteTraces(element, change["index"]);
                             }
-                        }
+                        });
                     }, null, "arrayChange");
 
             },
@@ -66,6 +69,10 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
                 var xLabel = bindingContext.$data.xLabel();
                 var yLabel = bindingContext.$data.yLabel();
                 setAxesLabel(element, xLabel, yLabel);
+
+                var xType = bindingContext.$data.xType();
+                var yType = bindingContext.$data.yType();
+                setAxesType(element, xType, yType);
             }
         };
         /**
@@ -87,23 +94,6 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
             });
         }
 
-        /**
-         * Generate an object for updating Plot.ly layout based on x and y axis labels.
-         *
-         * @param {string|null} xLabel - Label of the x axis. Null for keeping as is.
-         * @param {string|null} yLabel - Label of the y axis. Null for keeping as is.
-         * @returns {{}} A layout update for Plot.ly's <code>relayout()</code> method.
-         */
-        function createLayoutUpdate(xLabel, yLabel) {
-            var layoutUpdate = {};
-            if (xLabel != null) {
-                layoutUpdate["xaxis.title"] = xLabel;
-            }
-            if (yLabel != null) {
-                layoutUpdate["yaxis.title"] = yLabel;
-            }
-            return layoutUpdate;
-        }
 
         /**
          * Set labels for the x and y axis.
@@ -113,8 +103,17 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
          * @param element - A DOM element with the chart to update.
          */
         function setAxesLabel(element, xLabel, yLabel) {
-            var layoutUpdate = createLayoutUpdate(xLabel, yLabel);
-            Plotly.relayout(element, layoutUpdate);
+            Plotly.relayout(element, {
+                "xaxis.title": xLabel,
+                "yaxis.title": yLabel
+            });
+        }
+
+        function setAxesType(element, xType, yType) {
+            Plotly.relayout(element, {
+                "xaxis.type": xType,
+                "yaxis.type": yType
+            });
         }
 
     });
