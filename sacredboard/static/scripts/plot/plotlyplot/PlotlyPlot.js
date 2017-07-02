@@ -66,7 +66,7 @@ define(
                     x: convertDataPoints(x),
                     y: convertDataPoints(y),
                     type: "scatter",
-                    visible: "legendonly",
+                    //visible: "legendonly",
                     name: label
                 };
                 this._traces.push(trace);
