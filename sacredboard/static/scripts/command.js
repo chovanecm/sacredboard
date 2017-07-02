@@ -1,7 +1,7 @@
 /**
  * @module
  */
-define([], function() {
+define([], function () {
     "use strict";
     /**
      * A Command queue can collect functions and execute them later.
@@ -14,9 +14,14 @@ define([], function() {
         }
 
         /**
+         * A function to be called when the command gets executed.
+         *
+         * @callback command
+         */
+        /**
          * Add a new command to the command queue.
          *
-         * @param {function} command - The function to be called.
+         * @param {command} command - The function to be called.
          */
         addCommand(command) {
             this.commandQueue.push(command);
@@ -29,7 +34,7 @@ define([], function() {
             var oldQueue = this.commandQueue;
             this.commandQueue = [];
             oldQueue.forEach(function (command) {
-               command();
+                command();
             });
         }
     }

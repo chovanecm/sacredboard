@@ -1,5 +1,12 @@
 "use strict";
 
+
+
+/**
+ * A numeric series with a label.
+ *
+ * @typedef {{x: array, y: array, label: string}} Series
+ */
 /**
  * The Plot component displays a chart of one or more numerical series.
  *
@@ -10,20 +17,24 @@
  * - define labels for x and y labels
  * - show the series' label
  * - dynamically add/remove series.
- * - axes: numerical and date values. (TODO)
+ * - axes: numerical and date values.
+ *   - Date should be displayed in the local timezone.
  * - switch linear/log scale.
  * Usage: see the issue or test.html for example.
- */
-
-
-/**
- * A numeric series with a label.
  *
- * @typedef {{x: array, y: array, label: string}} Series
+ * @module
  */
 
-define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
-    function (ko, escapeHtml, htmlTemplate, Plotly) {
+define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/PlotlyPlot"],
+    /**
+     * The chart (plot) component.
+     *
+     * @param {Knockout} ko - KnockoutJS.
+     * @param {escapeHtml} escapeHtml - EscapeHTML function.
+     * @param {HTML} htmlTemplate - HTML template.
+     * @param {module:plot/plot} Plot - Implementation of the chart plotter.
+     */
+    function (ko, escapeHtml, htmlTemplate, Plot) {
         ko.components.register("plot", {
             viewModel: function (params) {
                 var self = this;
@@ -33,17 +44,32 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
                 this.yLabel = params.yLabel || ko.observable("y");
                 this.xType = params.xType || ko.observable("-");
                 this.yType = params.yType || ko.observable("-");
+                this.plot = null;
             },
             template: htmlTemplate
         });
 
         ko.bindingHandlers.plot = {
+
+            /**
+             * Initialize the chart.
+             *
+             * @param {DOMElement} element - The DOM element to initialize the chart within.
+             * @param {Object} valueAccessor - See knockout doc.
+             * @param {Object} allBindings - See knockout doc.
+             * @param {Object} viewModel - Deprecated. See knockout doc.
+             * @param {Object} bindingContext - The binding context (and a gateway to the view model).
+             */
             init: function (element, valueAccessor, allBindings, /*deprecated*/ viewModel, bindingContext) {
-                var layout = {
-                    showlegend: true
-                };
-                var data = seriesToTraces(bindingContext.$data.seriesArray(), "scatter");
-                Plotly.newPlot(element, data, layout);
+                // Initialize our plot object
+                var plot = bindingContext.$data.plot = new Plot(element);
+
+                // Add each of the series to the chart.
+                bindingContext.$data.seriesArray().forEach(function (aSeries) {
+                    plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
+                });
+                // Do the actual plot.
+                plot.plot();
 
                 bindingContext.$data.seriesArray.subscribe(
                     /**
@@ -54,66 +80,43 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "plotly"],
                      */
                     function (changes) {
                         changes.forEach(function (change) {
+                            var aSeries;
                             if (change["status"] == "added") {
-                                var value = seriesToTraces([change["value"]]);
-                                Plotly.addTraces(element, value, change["index"]);
+                                aSeries = change["value"];
+                                plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
                             } else if (change["status"] == "deleted") {
-                                Plotly.deleteTraces(element, change["index"]);
+                                aSeries = change["value"];
+                                plot.removeTrace(aSeries.label());
                             }
                         });
                     }, null, "arrayChange");
 
             },
+            /**
+             * Update chart.
+             *
+             * Called automatically when any of the properties in the method
+             * body changes.
+             *
+             * @param {DOMElement} element -  DOM element with Plot.ly chart.
+             * @param {Object} valueAccessor - See knockout doc.
+             * @param {Object} allBindings - See knockout doc.
+             * @param {Object} viewModel - Deprecated. See knockout doc.
+             * @param {Object} bindingContext - The binding context (and a gateway to the view model).
+             */
             update: function (element, valueAccessor, allBindings, /*deprecated*/ viewModel, bindingContext) {
+                var plot = bindingContext.$data.plot;
                 // Set x and y axes label
                 var xLabel = bindingContext.$data.xLabel();
                 var yLabel = bindingContext.$data.yLabel();
-                setAxesLabel(element, xLabel, yLabel);
+                plot.xLabel = xLabel;
+                plot.yLabel = yLabel;
 
                 var xType = bindingContext.$data.xType();
                 var yType = bindingContext.$data.yType();
-                setAxesType(element, xType, yType);
+                plot.xType = xType;
+                plot.yType = yType;
             }
         };
-        /**
-         *  Convert an array of series to a trace for Plot.ly.
-         *
-         * @param {Series[]} array - Array of series to be plotted.
-         * @param {string} type - Plot.ly chart type (e.g. scatter).
-         */
-        function seriesToTraces(array, type) {
-            return array.map(function (aSeries) {
-                return {
-                    x: aSeries.x(),
-                    y: aSeries.y(),
-                    name: aSeries.label(),
-                    showlegend: true,
-                    visible: "legendonly",
-                    type: type
-                };
-            });
-        }
-
-
-        /**
-         * Set labels for the x and y axis.
-         *
-         * @param {string|null} xLabel - Label of the x axis. Null for keeping as is.
-         * @param {string|null} yLabel - Label of the y axis. Null for keeping as is.
-         * @param element - A DOM element with the chart to update.
-         */
-        function setAxesLabel(element, xLabel, yLabel) {
-            Plotly.relayout(element, {
-                "xaxis.title": xLabel,
-                "yaxis.title": yLabel
-            });
-        }
-
-        function setAxesType(element, xType, yType) {
-            Plotly.relayout(element, {
-                "xaxis.type": xType,
-                "yaxis.type": yType
-            });
-        }
 
     });
