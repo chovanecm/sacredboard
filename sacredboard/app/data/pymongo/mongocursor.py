@@ -1,3 +1,8 @@
+"""
+Implementation of cursor for iterating over results.
+
+Backed by pymongo cursor.
+"""
 from sacredboard.app.data.datastorage import Cursor
 
 

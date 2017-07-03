@@ -31,7 +31,7 @@ class GenericDAO:
 
     def find_record(self, collection_name, query):
         """
-        Returns the first record mathing the given Mongo Query.
+        Return the first record mathing the given Mongo query.
 
         :param collection_name: Name of the collection to search in.
         :param query: MongoDB Query, e.g. {_id: 123}
