@@ -37,3 +37,17 @@ class DataStorage:
                  start=0, limit=None, query={"type": "and", "filters": []}):
         """Return all runs that match the query."""
         raise NotImplemented()
+
+
+class NotFoundError(Exception):
+    """Record not found exception."""
+
+    def __init__(self, *args, **kwargs):
+        Exception.__init__(self, *args, **kwargs)
+
+
+class DataSourceError(Exception):
+    """Error when accessing the data source."""
+
+    def __init__(self, *args, **kwargs):
+        Exception.__init__(self, *args, **kwargs)
