@@ -1,6 +1,5 @@
-"""
-Module responsible for accessing the MongoDB database.
-"""
+"""Module responsible for accessing the MongoDB database."""
+from .metricsdao import MongoMetricsDAO
 from .genericdao import GenericDAO
 
-__all__ = ("GenericDAO",)
+__all__ = ["MongoMetricsDAO", "GenericDAO"]
