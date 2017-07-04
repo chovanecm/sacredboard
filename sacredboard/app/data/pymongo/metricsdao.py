@@ -5,6 +5,7 @@ Issue: https://github.com/chovanecm/sacredboard/issues/60
 """
 
 from bson import ObjectId
+from bson.errors import InvalidId
 
 from ..datastorage import NotFoundError
 from .genericdao import GenericDAO
@@ -61,7 +62,12 @@ class MongoMetricsDAO(MetricsDAO):
 
     def _build_query(self, run_id, metric_id):
         # Metrics in MongoDB is always an ObjectId
-        return {"run_id": run_id, "_id": ObjectId(metric_id)}
+        try:
+            id = ObjectId(metric_id)
+            return {"run_id": run_id, "_id": id}
+        except InvalidId as ex:
+            raise NotFoundError("Metric Id %s is invalid "
+                                "ObjectId in MongoDB" % metric_id) from ex
 
     def _to_intermediary_object(self, row):
         return {
