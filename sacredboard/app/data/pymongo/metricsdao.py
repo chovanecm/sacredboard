@@ -7,7 +7,7 @@ Issue: https://github.com/chovanecm/sacredboard/issues/60
 from bson import ObjectId
 from bson.errors import InvalidId
 
-from ..datastorage import NotFoundError
+from sacredboard.app.data import NotFoundError
 from .genericdao import GenericDAO
 from ..metricsdao import MetricsDAO
 
@@ -19,7 +19,7 @@ class MongoMetricsDAO(MetricsDAO):
         """
         Create new metrics accessor for MongoDB.
 
-        :param pymongo_gateway: A configured generic MongoDB data access object
+        :param generic_dao: A configured generic MongoDB data access object
          pointing to an appropriate database.
         """
         self.generic_dao = generic_dao

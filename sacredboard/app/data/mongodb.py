@@ -4,6 +4,7 @@ import bson
 import pymongo
 
 from sacredboard.app.data.datastorage import Cursor, DataStorage
+from sacredboard.app.data.pymongo import GenericDAO, MongoMetricsDAO
 
 
 class MongoDbCursor(Cursor):
@@ -43,11 +44,13 @@ class PyMongoDataAccess(DataStorage):
         self._client = None
         self._db = None
         self._collection_name = collection_name
+        self._generic_dao = None
 
     def connect(self):
         """Initialize the database connection."""
         self._client = self._create_client()
         self._db = getattr(self._client, self._db_name)
+        self._generic_dao = GenericDAO(self._client, self._db_name)
 
     def _create_client(self):
         """Return a new Mongo Client."""
@@ -178,8 +181,8 @@ class PyMongoDataAccess(DataStorage):
         # It's a regular clause
         mongo_clause = {}
         value = clause["value"]
-        if clause["field"] == "status" and \
-           clause["value"] in ["DEAD", "RUNNING"]:
+        if clause["field"] == "status" and clause["value"] in ["DEAD",
+                                                               "RUNNING"]:
             return PyMongoDataAccess. \
                 _status_filter_to_query(clause)
         if clause["operator"] == "==":
@@ -252,3 +255,14 @@ class PyMongoDataAccess(DataStorage):
         :type collection_name: str
         """
         return PyMongoDataAccess(uri, database_name, collection_name)
+
+    def get_metrics_dao(self):
+        """
+        Return a data access object for metrics.
+
+        The method can be called only after a connection to DB is established.
+        Issue: https://github.com/chovanecm/sacredboard/issues/62
+
+        :return MetricsDAO
+        """
+        return MongoMetricsDAO(self._generic_dao)

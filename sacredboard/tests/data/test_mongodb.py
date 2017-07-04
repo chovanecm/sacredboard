@@ -3,7 +3,9 @@ import bson
 import mongomock
 import pytest
 
+from sacredboard.app.data import MetricsDAO
 from sacredboard.app.data.mongodb import PyMongoDataAccess
+from sacredboard.app.data.pymongo import MongoMetricsDAO
 
 
 def create_mongomock_client():
@@ -71,9 +73,7 @@ def db_gateway() -> PyMongoDataAccess:
     return db_gw
 
 
-
-
-def test_get_runs(db_gateway : PyMongoDataAccess):
+def test_get_runs(db_gateway: PyMongoDataAccess):
     runs = list(db_gateway.get_runs())
     assert len(runs) == 2
     assert runs[0]["host"]["hostname"] == "ntbacer"
@@ -92,14 +92,18 @@ def test_get_runs_order(db_gateway: PyMongoDataAccess):
     assert runs[0]["host"]["python_version"] == "3.4.3"
     assert runs[1]["host"]["python_version"] == "3.5.2"
 
-    runs = list(db_gateway.get_runs(sort_by="host.python_version", sort_direction="desc"))
+    runs = list(db_gateway.get_runs(sort_by="host.python_version",
+                                    sort_direction="desc"))
     assert len(runs) == 2
     assert runs[0]["host"]["python_version"] == "3.5.2"
     assert runs[1]["host"]["python_version"] == "3.4.3"
 
-filter1 = {"type": "and", "filters": [{"field": "host.os", "operator": "==", "value": "Linux"},
-            {"field": "host.hostname", "operator": "==", "value": "ntbacer"}]}
-filter2 = {"type": "and", "filters": [{"field": "result", "operator": "==", "value": 2403.52}]}
+
+filter1 = {"type": "and", "filters": [
+    {"field": "host.os", "operator": "==", "value": "Linux"},
+    {"field": "host.hostname", "operator": "==", "value": "ntbacer"}]}
+filter2 = {"type": "and", "filters": [
+    {"field": "result", "operator": "==", "value": 2403.52}]}
 
 
 @pytest.mark.parametrize("query_filter", (filter1, filter2))
@@ -110,26 +114,33 @@ def test_get_runs_filter(db_gateway: PyMongoDataAccess, query_filter):
 
 
 def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
-    filter = {"type": "and", "filters": [{"field": "host.hostname", "operator": "==", "value": "ntbacer"},
-                                         {"type": "or", "filters": [{"field": "result", "operator": "==", "value": 2403.52},
-                                                                    {"field": "host.python_version", "operator": "==", "value": "3.5.2"}]}]}
+    filter = {"type": "and", "filters": [
+        {"field": "host.hostname", "operator": "==", "value": "ntbacer"},
+        {"type": "or",
+         "filters": [{"field": "result", "operator": "==", "value": 2403.52},
+                     {"field": "host.python_version", "operator": "==",
+                      "value": "3.5.2"}]}]}
     runs = list(db_gateway.get_runs(query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
     assert runs[0]["result"] == 2403.52
 
-    filter = {"type": "and", "filters": [{"field": "host.hostname", "operator": "==", "value": "martin-virtual-machine"},
-                                         {"type": "or", "filters": [{"field": "result", "operator": "==", "value": 2403.52},
-                                                                    {"field": "host.python_version", "operator": "==",
-                                                                     "value": "3.5.2"}]}]}
+    filter = {"type": "and", "filters": [
+        {"field": "host.hostname", "operator": "==",
+         "value": "martin-virtual-machine"},
+        {"type": "or",
+         "filters": [{"field": "result", "operator": "==", "value": 2403.52},
+                     {"field": "host.python_version", "operator": "==",
+                      "value": "3.5.2"}]}]}
     runs = list(db_gateway.get_runs(query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "martin-virtual-machine"
     assert runs[0]["host"]["python_version"] == "3.5.2"
 
-    filter = {"type": "and", "filters": [{"type": "or", "filters": [{"field": "result", "operator": "==", "value": 2403.52},
-                                                                    {"field": "host.python_version", "operator": "==",
-                                                                     "value": "3.5.2"}]}]}
+    filter = {"type": "and", "filters": [{"type": "or", "filters": [
+        {"field": "result", "operator": "==", "value": 2403.52},
+        {"field": "host.python_version", "operator": "==",
+         "value": "3.5.2"}]}]}
     runs = list(db_gateway.get_runs(query=filter))
     assert len(runs) == 2
 
@@ -140,8 +151,14 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
     assert runs[1]["host"]["python_version"] == "3.5.2"
 
 
-
-def test_get_run(db_gateway : PyMongoDataAccess):
+def test_get_run(db_gateway: PyMongoDataAccess):
     run = dict(db_gateway.get_run("57f9efb2e4b8490d19d7c30e"))
     assert run["host"]["hostname"] == "ntbacer"
 
+
+def test_get_metrics_dao(db_gateway: PyMongoDataAccess):
+    dao = db_gateway.get_metrics_dao()
+    assert dao is not None
+    assert isinstance(dao, MetricsDAO)
+    assert isinstance(dao, MongoMetricsDAO)
+    assert dao.generic_dao == db_gateway._generic_dao

@@ -6,8 +6,8 @@ Issue: https://github.com/chovanecm/sacredboard/issues/61
 import pymongo
 from pymongo.errors import InvalidName
 
-from sacredboard.app.data.datastorage import DataSourceError
-from sacredboard.app.data.mongodb import MongoDbCursor
+from sacredboard.app.data import DataSourceError
+from .mongocursor import MongoDbCursor
 
 
 class GenericDAO:
