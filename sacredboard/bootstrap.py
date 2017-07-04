@@ -14,7 +14,7 @@ from gevent.pywsgi import WSGIServer
 from sacredboard.app.config import jinja_filters
 from sacredboard.app.data.filestorage import FileStorage
 from sacredboard.app.data.mongodb import PyMongoDataAccess
-from sacredboard.app.webapi import routes
+from sacredboard.app.webapi import routes, metrics
 
 locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
@@ -93,6 +93,7 @@ sacredboard -m sacred -mc default.runs
     app.debug = debug
     jinja_filters.setup_filters(app)
     routes.setup_routes(app)
+    metrics.initialize(app)
 
     if debug:
         app.run(host="0.0.0.0", debug=True)

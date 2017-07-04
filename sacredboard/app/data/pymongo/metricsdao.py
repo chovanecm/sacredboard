@@ -75,5 +75,6 @@ class MongoMetricsDAO(MetricsDAO):
             "run_id": row["run_id"],
             "name": row["name"],
             "steps": row["steps"],
-            "timestamps": row["timestamps"]
+            "timestamps": row["timestamps"],
+            "values": row["values"],
         }
