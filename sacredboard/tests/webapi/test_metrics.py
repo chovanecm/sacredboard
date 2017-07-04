@@ -13,9 +13,9 @@ test_client = None
 
 class FakeMetricsDAO(MetricsDAO):
     def get_metric(self, run_id, metric_id):
-        if metric_id == "58dcfc41263e8cc29ade7a25":
+        if metric_id == "58dcfc41263e8cc29ade7a25" and run_id == 14:
             row = m1
-        elif metric_id == "58dcfc41263e8cc29ade7a26":
+        elif metric_id == "58dcfc41263e8cc29ade7a26" and run_id == 14:
             row = m2
         else:
             raise NotFoundError("Metric %s not found" % metric_id)
@@ -46,7 +46,7 @@ def init_tests():
 
 
 def test_get_metric():
-    response = test_client.get("/api/run/0/metric/58dcfc41263e8cc29ade7a25")
+    response = test_client.get("/api/run/14/metric/58dcfc41263e8cc29ade7a25")
     assert response.status_code == 200
     assert response.mimetype == "application/json"
     metric_json = response.data
@@ -73,5 +73,5 @@ def test_get_metric():
 
 
 def test_get_metric_not_found():
-    response = test_client.get("/api/run/0/metric/BLABLA")
+    response = test_client.get("/api/run/14/metric/BLABLA")
     assert response.status_code == 404
