@@ -35,7 +35,7 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
      * @param {module:plot/plot} Plot - Implementation of the chart plotter.
      */
     function (ko, escapeHtml, htmlTemplate, Plot) {
-        ko.components.register("plot", {
+        ko.components.register("plot-chart", {
             viewModel: function (params) {
                 var self = this;
                 this.escape = escapeHtml;
