@@ -15,7 +15,9 @@ define(["knockout", "text!./template.html", "plot/component", "runs/Metric"],
             /**
              * ViewModel of the metrics-plot component.
              *
-             * It holds all the metrics available,
+             * It holds all the metrics available, the metrics selected by
+             * the user to be plotted and calculates the actual series
+             * for the plot-chart component.
              *
              * @param {{availableMetrics}} params - Parameters of the viewModel.
              * @param {Metric[]} params.availableMetrics - Knockout observable array of {@link Metric}.

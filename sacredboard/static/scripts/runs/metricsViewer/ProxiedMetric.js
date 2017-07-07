@@ -77,14 +77,14 @@ define(["runs/Metric", "knockout", "jquery"], function (Metric, ko, $) {
         /**
          * Trigger when the metric couldn't be loaded.
          *
-         * @param textStatus
-         * @param error
+         * @param {string} textStatus - Status returned by the HTTP request.
+         * @param {string} error - Error type returned by the HTTP request.
          * @param {string} name - Name of the metric that have failed to load.
          */
         onLoadFail(textStatus, error, name)  {
             /* override the method if possible */
             alert("Error when loading metric " + name + ".\nError message: " + textStatus + "\nError:" + error);
-        };
+        }
 
     }
     return ProxiedMetric;
