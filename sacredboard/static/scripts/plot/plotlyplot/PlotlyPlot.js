@@ -29,6 +29,15 @@ define(
 
             plot() {
                 if (!this._plotted) {
+                    if (this._traces == 0) {
+                        // Temporarily add a dummy trace to prevent error in Plotly.
+                        this.addTrace([0],[0], "DEFAULT");
+                        // And remove it after plotting it
+                        var self = this;
+                        this._commandQueue.addCommand(function () {
+                            self.removeTrace("DEFAULT");
+                        });
+                    }
                     var copyOfTraces = Array.from(this._traces);
                     Plotly.newPlot(this._element, copyOfTraces, this._layout);
                     this._plotted = true;
