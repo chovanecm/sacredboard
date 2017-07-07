@@ -35,8 +35,8 @@ define([], function () {
         /**
          * Add a new data series.
          *
-         * @param {Number[]|Date[]]} x - A series of numbers or dates to be plotted against the x axis.
-         * @param {Number[]|Date[]]} y - A series of numbers or dates to be plotted against the y axis.
+         * @param {Number[]|Date[]} x - A series of numbers or dates to be plotted against the x axis.
+         * @param {Number[]|Date[]} y - A series of numbers or dates to be plotted against the y axis.
          * @param {string} label - Label of the data series. Must be unique within the chart.
          * @throws TraceAlreadyPresentException - An exception is thrown if the trace with the same label is already present.
          */
@@ -46,7 +46,7 @@ define([], function () {
         /**
          * Remove the data series with a given label.
          *
-         * If such series is not known, it might trown an exception.
+         * If such series is not known, it might throw an exception.
          *
          * @param {string} label - Label of the data series.
          * @throws TraceNotFoundException - An exception is thrown if the trace with the label has not been found in the chart.

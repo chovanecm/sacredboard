@@ -1,14 +1,7 @@
 "use strict";
 
-
-
 /**
- * A numeric series with a label.
- *
- * @typedef {{x: array, y: array, label: string}} Series
- */
-/**
- * The Plot component displays a chart of one or more numerical series.
+ * The Plot component (<plot-chart>) displays a chart of one or more numerical series.
  *
  * Issue: https://github.com/chovanecm/sacredboard/issues/55
  *
@@ -22,7 +15,7 @@
  * - switch linear/log scale.
  * Usage: see the issue or test.html for example.
  *
- * @module
+ * @module plot/component
  */
 
 define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/PlotlyPlot"],
@@ -31,11 +24,17 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
      *
      * @param {Knockout} ko - KnockoutJS.
      * @param {escapeHtml} escapeHtml - EscapeHTML function.
-     * @param {HTML} htmlTemplate - HTML template.
+     * @param {HTML} htmlTemplate - HTML template of the component.
      * @param {module:plot/plot} Plot - Implementation of the chart plotter.
      */
     function (ko, escapeHtml, htmlTemplate, Plot) {
         ko.components.register("plot-chart", {
+            /**
+             * View model of the plot component.
+             *
+             * @param {{series,xLabel,yLabel,xType,yType}} params - Parameters passed to the <plot-chart params="..."> element.
+             * @constructor
+             */
             viewModel: function (params) {
                 var self = this;
                 this.escape = escapeHtml;
@@ -48,6 +47,13 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
             },
             template: htmlTemplate
         });
+
+
+        /**
+         * A numeric series with a label.
+         *
+         * @typedef {{x: array, y: array, label: string}} Series
+         */
 
         /**
          * Add a new trace to the plot.
@@ -62,11 +68,13 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
                 plot.removeTrace(aSeries.label());
                 plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
             }
+
             aSeries.x.subscribe(replot);
             aSeries.y.subscribe(replot);
             aSeries.label.subscribe(replot);
             plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
         }
+
         ko.bindingHandlers.plot = {
 
             /**
