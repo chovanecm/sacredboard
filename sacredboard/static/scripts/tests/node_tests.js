@@ -36,9 +36,9 @@ requirejs(
         "./tests/plot/test_plot",
         "./tests/test_command"],
     function (filters,
-              testDictBrowser,
-              testEscapeHtml,
-              testPlot,
-              testCommand) {
+        testDictBrowser,
+        testEscapeHtml,
+        testPlot,
+        testCommand) {
         //empty, the tests get executed automatically
     });

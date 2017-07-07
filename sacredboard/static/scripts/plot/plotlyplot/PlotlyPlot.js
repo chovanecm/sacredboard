@@ -11,9 +11,9 @@ define(
         "./convertDataPoints",
         "command"],
     function (Plot,
-              Plotly,
-              convertDataPoints,
-              CommandQueue) {
+        Plotly,
+        convertDataPoints,
+        CommandQueue) {
 
         /**
          * Implementation of the {@link Plot} interface with the Plot.ly library.

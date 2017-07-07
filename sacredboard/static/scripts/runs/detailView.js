@@ -8,7 +8,7 @@ define(
         "knockout",
         "./metricsViewer/component"],
     function (escapeHtml, dictionaryBrowser, metricsPlotter, $, ko,
-              metricsViewer) {
+        metricsViewer) {
         /**
          * Generate detail view for an experiment run.
          *
