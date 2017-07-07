@@ -71,8 +71,20 @@ define(["runs/Metric", "knockout", "jquery"], function (Metric, ko, $) {
                     }));
                     self._fetched = true;
                     self._fetchingInProgress = false;
-                });
+                }).fail(function (jqxhr, textStatus, error) {self.onLoadFail(textStatus, error, self.name());});
         }
+
+        /**
+         * Trigger when the metric couldn't be loaded.
+         *
+         * @param textStatus
+         * @param error
+         * @param {string} name - Name of the metric that have failed to load.
+         */
+        onLoadFail(textStatus, error, name)  {
+            /* override the method if possible */
+            alert("Error when loading metric " + name + ".\nError message: " + textStatus + "\nError:" + error);
+        };
 
     }
     return ProxiedMetric;
