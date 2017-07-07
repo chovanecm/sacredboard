@@ -9,7 +9,7 @@
                         data-bind="text: name"></span></label>
             </div>
             <!-- /ko -->
-            <span data-bind="visible: availableMetrics().length == 0">No metrics to show</span>
+            <div data-bind="visible: availableMetrics().length == 0">No metrics to show</div>
         </div>
         <div class="form-group">
             <label>x-axis type</label>
@@ -19,7 +19,7 @@
             </div>
             <div class="radio">
                 <label><input type="radio" name="x-axis-type" value="date"
-                              data-bind="checked: xType">timestamps</label>
+                              data-bind="checked: xType">time</label>
             </div>
         </div>
 

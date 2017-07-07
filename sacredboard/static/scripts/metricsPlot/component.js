@@ -8,21 +8,14 @@
  * Issue: https://github.com/chovanecm/sacredboard/issues/59
  * @module
  */
-define(["knockout", "text!./template.html", "plot/component"],
-    function (ko, htmlTemplate, plotter) {
+define(["knockout", "text!./template.html", "plot/component", "runs/Metric"],
+    function (ko, htmlTemplate, plotter /* plotter for <plot-chart> HTML element */, Metric) {
 
-        /**
-         * Metric object.
-         *
-         * name - property holding the name of the metric
-         * timestamps - property holding timestamps of the points (JS Date)
-         * steps - property holding step numbers
-         * values - property holding values
-         * @typedef {{name, timestamps, steps, values}} Metric
-         */
         ko.components.register("metrics-plot", {
             /**
              * ViewModel of the metrics-plot component.
+             *
+             * It holds all the metrics available,
              *
              * @param {{availableMetrics}} params - Parameters of the viewModel.
              * @param {Metric[]} params.availableMetrics - Knockout observable array of {@link Metric}.
@@ -44,8 +37,14 @@ define(["knockout", "text!./template.html", "plot/component"],
                  * @memberOf viewModel
                  */
                 this.selectedMetrics = ko.observableArray();
-                //this.axisTypes = ["linear", "log", "date"];
+                //this.axisTypes = ["linear", "log", "date"];.
+                /**
+                 * One of linear, log, date
+                 */
                 this.xType = ko.observable("linear");
+                /**
+                 * One of linear, log, date
+                 */
                 this.yType = ko.observable("linear");
                 this.yLabel = ko.observable("value");
                 /**
@@ -81,12 +80,17 @@ define(["knockout", "text!./template.html", "plot/component"],
                  * @function convertToSeries
                  */
                 this.convertToSeries = function (metric) {
-                    var aSeries = {label: metric.name, y: metric.values};
-                    if (self.seriesType() == "timestamp") {
-                        aSeries["x"] = metric.timestamps;
-                    } else {
-                        aSeries["x"] = metric.steps;
-                    }
+                    var aSeries = {
+                        label: metric.name,
+                        y: metric.values,
+                        x: ko.pureComputed(function () {
+                            if (self.seriesType() == "timestamp") {
+                                return metric.timestamps();
+                            } else {
+                                return metric.steps();
+                            }
+                        })
+                    };
                     return aSeries;
                 };
 
@@ -111,24 +115,6 @@ define(["knockout", "text!./template.html", "plot/component"],
                             }
                         });
                     }, null, "arrayChange");
-
-                this.seriesType.subscribe(
-                    /**
-                     * Change series type.
-                     *
-                     * When a change of the x-axis occurs, remove current series
-                     * from the plot and replace them with the same series but
-                     * with an appropriaate x-axis data (date/number).
-                     *
-                     * @param {string} newValue - New x axis type (step/timestamp).
-                     */
-                    function (newValue) {
-                        self.series.removeAll();
-
-                        self.selectedMetrics().forEach(function (metric) {
-                            self.series.push(self.convertToSeries(metric));
-                        });
-                    }, this);
             },
             template: htmlTemplate
         });

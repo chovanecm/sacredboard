@@ -23,12 +23,12 @@
     <script>
         "use strict";
         var viewModel;
-        requirejs(["metricsPlot/component", "knockout"], function (component, ko) {
+        requirejs(["metricsPlot/component", "knockout", "runs/Metric"], function (component, ko, Metric) {
             viewModel = {
                 metrics: ko.observableArray([
-                    {
-                        name: ko.observable("2*x"),
-                        timestamps: ko.observableArray([new Date("April 7, 2014 11:14:28.540"),
+                    new Metric(ko.observable("2*x"),
+                        ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+                        ko.observableArray([new Date("April 7, 2014 11:14:28.540"),
                             new Date("April 7, 2014 11:14:28.940"),
                             new Date("April 7, 2014 11:14:29.010"),
                             new Date("April 7, 2014 11:14:29.100"),
@@ -39,12 +39,10 @@
                             new Date("April 7, 2014 11:14:31.600"),
                             new Date("April 7, 2014 11:14:32.700"),
                             new Date("April 7, 2014 11:14:32.800")]),
-                        steps: ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-                        values: ko.observableArray([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
-                    },
-                    {
-                        name: ko.observable("x^2"),
-                        timestamps: ko.observableArray([
+                        ko.observableArray([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])),
+                    new Metric(ko.observable("x^2"),
+                        ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+                        ko.observableArray([
                             new Date("April 7, 2014 11:14:28.0"),
                             new Date("April 7, 2014 11:14:28.140"),
                             new Date("April 7, 2014 11:14:28.240"),
@@ -53,11 +51,8 @@
                             new Date("April 7, 2014 11:14:29.540"),
                             new Date("April 7, 2014 11:14:30.640"),
                             new Date("April 7, 2014 11:14:31.740"),
-                            new Date("April 7, 2014 11:14:32.840")
-                        ]),
-                        steps: ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8]),
-                        values: ko.observableArray([0, 1, 4, 9, 16, 32, 64, 128, 256])
-                    }
+                            new Date("April 7, 2014 11:14:32.840")]),
+                        ko.observableArray([0, 1, 4, 9, 16, 32, 64, 128, 256]))
                 ])
             };
             ko.applyBindings(viewModel);

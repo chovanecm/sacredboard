@@ -49,6 +49,24 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
             template: htmlTemplate
         });
 
+        /**
+         * Add a new trace to the plot.
+         *
+         * Also handles changes in underlying data (x, y) and replots them.
+         *
+         * @param {Plot} plot - Plot to use.
+         * @param {{x,y,label}} aSeries - Series to plot.
+         */
+        function addTrace(plot, aSeries) {
+            function replot() {
+                plot.removeTrace(aSeries.label());
+                plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
+            }
+            aSeries.x.subscribe(replot);
+            aSeries.y.subscribe(replot);
+            aSeries.label.subscribe(replot);
+            plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
+        }
         ko.bindingHandlers.plot = {
 
             /**
@@ -66,7 +84,7 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
 
                 // Add each of the series to the chart.
                 bindingContext.$data.seriesArray().forEach(function (aSeries) {
-                    plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
+                    addTrace(plot, aSeries);
                 });
                 // Do the actual plot.
                 plot.plot();
@@ -83,7 +101,7 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
                             var aSeries;
                             if (change["status"] == "added") {
                                 aSeries = change["value"];
-                                plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
+                                addTrace(plot, aSeries);
                             } else if (change["status"] == "deleted") {
                                 aSeries = change["value"];
                                 plot.removeTrace(aSeries.label());
