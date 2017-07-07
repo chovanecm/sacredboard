@@ -4,8 +4,8 @@
  *
  * The module is a candidate for rewriting into knockout.js
  */
-define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jquery"],
-    function (bootstrap, datatables, dtboostrap, generateDetailView, $) {
+define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView/component", "jquery", "knockout"],
+    function (bootstrap, datatables, dtboostrap, detailView, $, ko) {
         /**
          * Scroll down in the element.
          *
@@ -144,8 +144,10 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
                             var detail_view = null;
                             //Show detail view if not shown yet
                             if (!row.child.isShown()) {
-                                row.child(generateDetailView(data.data[0])).show();
+                                var detailComponent = $("<detail-view params='run: run'></detail-view>");
+                                row.child(detailComponent).show();
                                 detail_view = tr[0].nextSibling;
+                                ko.applyBindings({run: data.data[0]}, detail_view);
                             } else {
                                 //detail view already shown, update the content.
                                 detail_view = tr[0].nextSibling;

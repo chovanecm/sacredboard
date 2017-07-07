@@ -1,0 +1,125 @@
+<div class="container-fluid detail-view">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            <h3>Details for: <!--ko text: run.experiment_name--><!--/ko-->
+                <small>(id: <!--ko text: run.id--><!--/ko-->)</small>
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active">
+                    <a data-bind="attr: {href: '#experiment-config-' + run.id}"
+                       data-toggle="pill">Config</a>
+                </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#experiment-info-' + run.id}"
+                       data-toggle="pill">Run info</a>
+                </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#captured-output-' + run.id}"
+                       data-toggle="pill">Captured output</a>
+                </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#experiment-experiment-' + run.id}"
+                       data-toggle="pill">Experiment</a>
+                </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#experiment-meta-' + run.id}"
+                       data-toggle="pill">Meta Info</a>
+                </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#tensorflow-' + run.id}"
+                       data-toggle="pill">Tensorflow logs</a>
+                </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#metrics-' + run.id}"
+                       data-toggle="pill">Metrics plots</a>
+                </li>
+                <li>
+                    <button class="btn btn-block btn-danger"
+                            data-bind="click: deleteRun">
+                        DELETE
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content col-md-10">
+            <div data-bind="attr: {id: 'experiment-config-' + run.id}"
+                 class="tab-pane active table-responsive">
+                <h4>Run configuration</h4>
+                <div class="detail-page-box">
+                    <dictionary-browser
+                            params="value: run.object.config"></dictionary-browser>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'experiment-info-' + run.id}"
+                 class="tab-pane table-responsive">
+                <h4>Run info</h4>
+                <div class="detail-page-box">
+                    <dictionary-browser
+                            params="value: run.object.info"></dictionary-browser>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'experiment-experiment-' + run.id}"
+                 class="tab-pane table-responsive">
+                <h4>Experiment</h4>
+                <div class="detail-page-box">
+                    <dictionary-browser
+                            params="value: run.object.experiment"></dictionary-browser>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'experiment-meta-' + run.id}"
+                 class="tab-pane table-responsive">
+                <h4>Run Meta Information</h4>
+                <div class="detail-page-box">
+                    <dictionary-browser
+                            params="value: run.object.meta"></dictionary-browser>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'captured-output-' + run.id}"
+                 class="tab-pane">
+                <h4>Captured output from the experiment</h4>
+                <pre class="scrollDown detail-page-box"
+                     sacred-content="captured_out"
+                     data-bind="text: run.object.captured_out"></pre>
+            </div>
+            <div data-bind="attr: {id: 'tensorflow-' + run.id}"
+                 class="tab-pane">
+                <h4>Tensorflow logs</h4>
+                <div class="detail-page-box">
+                    <em data-bind="visible: tensorflowDirs.logdirs.length == 0">No
+                        Tensorflow logs found.
+                        See the <a
+                                href='http://sacred.readthedocs.io/en/latest/tensorflow.html'
+                                title='Integration with Tensorflow'>documentation</a>
+                        on integration between Sacred and Tensorflow for more
+                        information.</em>
+                    <table class="table table-condensed"
+                           data-bind="visible: tensorflowDirs.logdirs.length > 0">
+                        <caption style="display: none;">Tensorflow logs
+                        </caption>
+                        <thead>
+                        <th>Log directory</th>
+                        <th></th>
+                        </thead>
+                        <tbody data-bind="foreach: tensorflowDirs.logdirs">
+                        <tr>
+                            <td data-bind="text: $data"></td>
+                            <td>
+                                <a data-bind="attr: {href: '/tensorboard/start/' + $parent.run.id + '/' + $index()}"
+                                   target='_blank'>Run Tensorboard</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'metrics-' + run.id}" class="tab-pane">
+                <div class="detail-page-box">
+                    <metrics-viewer params="run: run.object"></metrics-viewer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
