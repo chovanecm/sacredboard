@@ -2,14 +2,15 @@
 /**
  * A module that defines interface for plotting charts.
  *
+ * Required by {@link module:plot/component} to draw {@link Series}.
  * @module
  */
 define([], function () {
     /**
      * A generic plot class to plot a chart.
      *
-     * @alias module:plot/plot
-     * @constructor
+     * Required by {@link module:plot/component} to draw {@link Series}.
+     * @class
      */
     class Plot {
         /**

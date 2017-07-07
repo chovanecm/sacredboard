@@ -1,19 +1,33 @@
 "use strict";
 
 /**
- * The Plot component (<plot-chart>) displays a chart of one or more numerical series.
- *
- * Issue: https://github.com/chovanecm/sacredboard/issues/55
+ * The Plot component (`<plot-chart>`) displays a chart of one or more numerical series.
+ * This particular module is responsible for definition of the new HTML element.
+ * Issue: [#55](https://github.com/chovanecm/sacredboard/issues/55)
  *
  * It can:
  * - plot several series at once
- * - define labels for x and y labels
- * - show the series' label
+ * - define labels for x and y axes.
+ * - show the series' label.
  * - dynamically add/remove series.
  * - axes: numerical and date values.
  *   - Date should be displayed in the local timezone.
  * - switch linear/log scale.
- * Usage: see the issue or test.html for example.
+ *
+ * ### Usage:
+ * ```html
+ * <plot-chart params="
+ *    series: ko.observableArray([series1, series2, series3]),
+ *    xLabel: ko.observable('x label'),
+ *    yLabel: ko.observable('y label'),
+ *    xType: ko.observable('date'),
+ *    yType: ko.observable('linear')"></plot-chart>
+ * ```
+ * **The values must be Knockout observables.**
+ * - `xType` and `yType` are one of `linear`, `log`, `date`. The corresponding axis
+ * adjusts accordingly.
+ * - Each of the `series` objects is an instance of the {@link Series} class.
+ *   - When a property of the {@link Series} changes, the plot should redraw automatically *(note: this is an expensive operation)*.
  *
  * @module plot/component
  */
@@ -32,8 +46,13 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
             /**
              * View model of the plot component.
              *
-             * @param {{series,xLabel,yLabel,xType,yType}} params - Parameters passed to the <plot-chart params="..."> element.
-             * @constructor
+             * @param {{series,xLabel,yLabel,xType,yType}} params - Parameters passed to the `<plot-chart params="...">` element.
+             * @param {ko.observableArray.Array<Series>} params.series - Array of Series to be plotted.
+             * @param {ko.observable.string} params.xLabel - Arbitrary label of the x axis.
+             * @param {ko.observable.string} params.yLabel - Arbitrary label of the y axis.
+             * @param {ko.observable.string} params.xType - Type of the x axis (linear/log/date).
+             * The {@link Series} object expects {@link Date} objects as x-values if `xType` is `"date"`.
+             * @param {ko.observable.string} params.yType - Type of the y axis (linear/log/date).
              */
             viewModel: function (params) {
                 var self = this;
@@ -50,18 +69,12 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
 
 
         /**
-         * A numeric series with a label.
-         *
-         * @typedef {{x: array, y: array, label: string}} Series
-         */
-
-        /**
          * Add a new trace to the plot.
          *
          * Also handles changes in underlying data (x, y) and replots them.
          *
          * @param {Plot} plot - Plot to use.
-         * @param {{x,y,label}} aSeries - Series to plot.
+         * @param {Series} aSeries - Series to plot.
          */
         function addTrace(plot, aSeries) {
             function replot() {
@@ -75,6 +88,12 @@ define(["knockout", "escapeHtml", "text!plot/template.html", "./plotlyplot/Plotl
             plot.addTrace(aSeries.x(), aSeries.y(), aSeries.label());
         }
 
+        /**
+         * Tell Knockout to run the following code on elements with `data-bind="plot: null" attribute`.
+         *
+         * This will initialize the plotter on a particular HTML element.
+         * @type {{init: init, update: update}}
+         */
         ko.bindingHandlers.plot = {
 
             /**
