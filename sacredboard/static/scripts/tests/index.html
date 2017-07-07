@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>TESTS Sacredboard QUnit</title>
-    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.2.0.css">
+    <link rel="stylesheet"
+          href="https://code.jquery.com/qunit/qunit-2.2.0.css">
     <script src="https://code.jquery.com/qunit/qunit-2.2.0.js"></script>
     <script src="../main.js"></script>
     <script>
@@ -12,10 +13,19 @@
     </script>
     <script src="../../vendors/require.js"></script>
     <script>
-        require(["test_filters.js","test_dictionaryBrowser.js", "test_escapeHtml.js"],
-            function(filters, testDictBrowser, testEscapeHtml) {
+        "use strict";
+        require(["test_filters.js",
+                "test_dictionaryBrowser.js",
+                "test_escapeHtml.js",
+                "plot/test_plot.js",
+            "test_command.js"],
+            function (filters,
+                      testDictBrowser,
+                      testEscapeHtml,
+                      testPlot,
+                      testCommand) {
 
-        });
+            });
     </script>
 </head>
 <body>

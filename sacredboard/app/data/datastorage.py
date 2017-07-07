@@ -1,4 +1,6 @@
 """Interfaces for data storage."""
+from .errors import NotFoundError
+from .metricsdao import MetricsDAO
 
 
 class Cursor:
@@ -37,3 +39,26 @@ class DataStorage:
                  start=0, limit=None, query={"type": "and", "filters": []}):
         """Return all runs that match the query."""
         raise NotImplemented()
+
+    def get_metrics_dao(self):
+        """
+        Return a data access object for metrics.
+
+        By default, returns a dummy Data Access Object if not overridden.
+        Issue: https://github.com/chovanecm/sacredboard/issues/62
+
+        :return MetricsDAO
+        """
+        return DummyMetricsDAO()
+
+
+class DummyMetricsDAO(MetricsDAO):
+    """Dummy Metrics DAO that does not find any metric."""
+
+    def get_metric(self, run_id, metric_id):
+        """
+        Raise NotFoundError. Always.
+
+        :raise NotFoundError
+        """
+        raise NotFoundError("Metrics not supported by this backend.")

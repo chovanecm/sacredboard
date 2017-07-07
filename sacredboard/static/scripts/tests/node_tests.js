@@ -12,7 +12,8 @@ requirejs.config({
         "datatables.net": "../vendors/datatables/DataTables-1.10.15/js/jquery.dataTables",
         "datatables-bootstrap": "../vendors/datatables/DataTables-1.10.15/js/dataTables.bootstrap",
         bootstrap: "../vendors/bootstrap/js/bootstrap.min",
-        "text": "../vendors/text"
+        "text": "../vendors/text",
+        "plotly": "../vendors/plotly/plotly-latest.min"
 
     },
     shim: {
@@ -27,7 +28,17 @@ requirejs.config({
 /*eslint no-unused-vars: "off"*/ //Disable warnings of unused variables
 // List all test modules to here:
 
-requirejs(["./tests/test_filters", "./tests/test_dictionaryBrowser", "./tests/test_escapeHtml"],
-    function (filters, testDictBrowser, testEscapeHtml) {
+requirejs(
+    [
+        "./tests/test_filters",
+        "./tests/test_dictionaryBrowser",
+        "./tests/test_escapeHtml",
+        "./tests/plot/test_plot",
+        "./tests/test_command"],
+    function (filters,
+              testDictBrowser,
+              testEscapeHtml,
+              testPlot,
+              testCommand) {
         //empty, the tests get executed automatically
     });
