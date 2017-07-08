@@ -156,7 +156,7 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView/compo
                                         }).done(function (msg) {
                                             table.row(row).remove().draw();
                                         }).fail(function (jqXHR, textStatus, errorThrown) {
-                                            alert("ERROR: Couldn't remove run " + id + "\nText status: " + textStatus + "\nError thrown: " + errorThrown);
+                                            alert("ERROR: Couldn't remove run " + id + "\nDetails: " + jqXHR.responseText + "\nError thrown: " + errorThrown);
                                         });
                                     }
                                 }, detail_view);

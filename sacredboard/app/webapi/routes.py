@@ -6,12 +6,12 @@ from pathlib import Path
 from flask import Blueprint
 from flask import current_app
 from flask import render_template
-from flask import request, Response, redirect, url_for
+from flask import request, redirect, url_for
 
-from ..process.tensorboard import TensorboardNotFoundError,\
-                                  stop_all_tensorboards
+from sacredboard.app.data import DataSourceError
+from ..process.tensorboard import TensorboardNotFoundError, \
+    stop_all_tensorboards
 from ..process import process, tensorboard
-from ..webapi.runs import get_runs
 
 routes = Blueprint("routes", __name__)
 
@@ -33,34 +33,6 @@ def show_runs():
     """Render the main page with a list of experiment runs."""
     # return render_template("runs.html", runs=data.runs(), type=type)
     return render_template("runs.html", runs=[], type=type)
-
-
-@routes.route("/api/run")
-def api_runs():
-    """Return a list of runs as a JSON object."""
-    return get_runs()
-
-
-@routes.route("/api/run/<run_id>")
-def api_run(run_id):
-    """Return a single run as a JSON object."""
-    data = current_app.config["data"]
-    run = data.get_run(run_id)
-    records_total = 1 if run is not None else 0
-    if records_total == 0:
-        return Response(
-            render_template(
-                "api/error.js",
-                error_code=404,
-                error_message="Run %s not found." % run_id),
-            status=404,
-            mimetype="application/json")
-    records_filtered = records_total
-    return Response(render_template("api/runs.js", runs=[run], draw=1,
-                                    recordsTotal=records_total,
-                                    recordsFiltered=records_filtered,
-                                    full_object=True),
-                    mimetype="application/json")
 
 
 @routes.route("/tensorboard/start/<run_id>/<int:tflog_id>")
@@ -112,6 +84,6 @@ def handle_tensorboard_unexpected_output(e: process.UnexpectedOutputError):
            % (e.output, e.expected), 503
 
 
-def setup_routes(app):
+def initialize(app):
     """Register all HTTP endpoints defined in this file."""
     app.register_blueprint(routes)

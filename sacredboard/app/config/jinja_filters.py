@@ -74,6 +74,6 @@ def detect_alive_experiment(time_difference):
     return time_difference < 120
 
 
-def setup_filters(app):
+def initialize(app):
     """Register the filters in a Flask application."""
     app.register_blueprint(filters)
