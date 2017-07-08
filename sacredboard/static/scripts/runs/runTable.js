@@ -144,10 +144,22 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView/compo
                             var detail_view = null;
                             //Show detail view if not shown yet
                             if (!row.child.isShown()) {
-                                var detailComponent = $("<detail-view params='run: run'></detail-view>");
+                                var detailComponent = $("<detail-view params='run: run, deleteRunHandler: deleteRunHandler'></detail-view>");
                                 row.child(detailComponent).show();
                                 detail_view = tr[0].nextSibling;
-                                ko.applyBindings({run: data.data[0]}, detail_view);
+                                ko.applyBindings({
+                                    run: data.data[0],
+                                    deleteRunHandler: function (id) {
+                                        $.ajax({
+                                            method: "DELETE",
+                                            url: "/api/run/" + id
+                                        }).done(function (msg) {
+                                            table.row(row).remove().draw();
+                                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                                            alert("ERROR: Couldn't remove run " + id + "\nText status: " + textStatus + "\nError thrown: " + errorThrown);
+                                        });
+                                    }
+                                }, detail_view);
                             } else {
                                 //detail view already shown, update the content.
                                 detail_view = tr[0].nextSibling;

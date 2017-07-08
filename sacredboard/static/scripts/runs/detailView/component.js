@@ -16,10 +16,26 @@ define(
         "jquery"],
     function (ko, escapeHtml, htmlTemplate, dictionaryBrowser, metricsViewer, $) {
         ko.components.register("detail-view", {
+            /**
+             * Remove run.
+             *
+             * @callback deleteRunHandler
+             */
+            /**
+             *
+             * @param {{run,deleteRunHandler}} params - Parameters of the component.
+             * @param {{object, id}} params.run  - The object from the /api/run/<id> resource.
+             * @param {deleteRunHandler} params.deleteRunHandler  - The logic to remove the run.
+             *
+             */
             viewModel: function (params) {
                 var self = this;
                 this.escape = escapeHtml;
                 this.run = params.run;
+                this._deleteFunction = params.deleteRunHandler ||
+                    function (id) {
+                        throw "Not Implemented";
+                    };
                 this.tensorflowDirs = this.run.object.info.tensorflow || {logdirs: []};
 
                 /**
@@ -33,12 +49,7 @@ define(
                     if (!confirm("Are you sure to delete run id " + self.run.id + "?")) {
                         return;
                     }
-                    $.ajax({
-                        method: "DELETE",
-                        url: "/api/run/" + self.run.id
-                    }).done(function (msg) {
-                        alert("Data Saved: " + msg);
-                    });
+                    this._deleteFunction(self.run.id);
                 };
             },
             template: htmlTemplate
