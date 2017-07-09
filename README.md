@@ -8,7 +8,7 @@ and displays a list of experiments, their state, Sacred configuration and
 the standard output from the running program.  
 Python 3.5 and a modern web browser are  required for it to work properly.
 
-# Features in version 0.2
+# Features in version 0.3
 
 - Get an overview of running and finished experiments in a table,
  such as experiment name, machine on which it runs etc.
@@ -19,14 +19,15 @@ Python 3.5 and a modern web browser are  required for it to work properly.
     directly from the web console in order to see detailed information,
     charts and [Tensorflow](https://www.tensorflow.org) graph visualisations,
     provided that the experiment uses Sacred's 
-    [Integration with Tensorflow](https://github.com/IDSIA/sacred/blob/develop/docs/tensorflow.rst)
-     (currently in the development branch of Sacred).
-
+    [Integration with Tensorflow](http://sacred.readthedocs.io/en/latest/tensorflow.html)
+     (does not work with TensorFlow 1.2 now)
+- Visualise [Metrics](http://sacred.readthedocs.io/en/latest/collected_information.html#metrics-api) in a chart.
+- Use the MongoDB and newly also FileStorage backend (experimental, thanks to [Gideon Dresdner](https://github.com/gideonite))
 
 ## Roadmap
 
 ### Further Versions
-- Sacred Metrics API data viewer (currently in Sacred development branch)
+- Deleting experiments
 - TBD
 
 ## Screenshots
