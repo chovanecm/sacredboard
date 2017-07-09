@@ -1,3 +1,4 @@
+"""Module for managing TensorBoard processes."""
 import re
 
 from sacredboard.app.process.process \
@@ -7,6 +8,7 @@ TENSORBOARD_BINARY = "tensorboard"
 
 
 def stop_all_tensorboards():
+    """Terminate all TensorBoard instances."""
     for process in Process.instances:
         print("Process '%s', running %d" % (process.command[0],
                                             process.is_running()))
@@ -15,10 +17,22 @@ def stop_all_tensorboards():
 
 
 class TensorboardNotFoundError(ProcessError):
+    """TensorBoard binary not found."""
+
     pass
 
 
 def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
+    """
+    Launch a new TensorBoard instance.
+
+    :param logdir: Path to a TensorFlow summary directory
+    :param listen_on: The IP address TensorBoard should listen on.
+    :param tensorboard_args: Additional TensorBoard arguments.
+    :return: Returns the port TensorBoard is listening on.
+    :raise UnexpectedOutputError
+    :raise TensorboardNotFoundError
+    """
     if tensorboard_args is None:
         tensorboard_args = []
     tensorboard_instance = Process.create_process(

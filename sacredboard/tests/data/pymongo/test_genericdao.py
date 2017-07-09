@@ -1,14 +1,13 @@
-# coding=utf-8
 import bson
 import mongomock
 import pytest
 
-from sacredboard.app.data import MetricsDAO
-from sacredboard.app.data.mongodb import PyMongoDataAccess
-from sacredboard.app.data.pymongo import MongoMetricsDAO
+from sacredboard.app.data.datastorage import Cursor
+from sacredboard.app.data.pymongo.genericdao import GenericDAO
 
 
-def create_mongomock_client():
+@pytest.fixture
+def mongo_client():
     client = mongomock.MongoClient()
     db = client.testdb
     db.runs.insert_one({"status": "COMPLETED", "config":
@@ -64,101 +63,68 @@ def create_mongomock_client():
     return client
 
 
-@pytest.fixture
-def db_gateway() -> PyMongoDataAccess:
-    db_gw = PyMongoDataAccess.build_data_access("n/a", 0, "testdb", "runs")
-    # Use MongoMockClient with MongoMock
-    db_gw._create_client = create_mongomock_client
-    db_gw.connect()
-    return db_gw
+def test_find_record(mongo_client):
+    generic_dao = GenericDAO(mongo_client, "testdb")
+    r = generic_dao.find_record("runs", {"_id": "NON_EXISTING_ID"})
+    assert r is None
+
+    r = generic_dao.find_record("runs",
+                                {"_id": bson.ObjectId(
+                                    "58163443b1758523257c69ca")})
+    assert r is not None
+    assert r["config"] is not None
+    assert r["config"]["seed"] == 185616783
+
+    r = generic_dao.find_record("runs", {"config.learning_rate": 0.0001})
+    assert r is not None
+    assert r["config"] is not None
+    assert r["config"]["seed"] == 144363069
 
 
-def test_get_runs(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs())
+def test_find_records(mongo_client):
+    generic_dao = GenericDAO(mongo_client, "testdb")
+    r = generic_dao.find_records("EMPTY_COLLECTION")
+    assert isinstance(r, Cursor)
+    assert r.count() == 0
+    assert len(list(r)) == 0
+
+    # Existing collection
+    generic_dao = GenericDAO(mongo_client, "testdb")
+    runs = list(generic_dao.find_records("runs"))
     assert len(runs) == 2
     assert runs[0]["host"]["hostname"] == "ntbacer"
     assert runs[1]["host"]["hostname"] == "martin-virtual-machine"
 
 
-def test_get_runs_limit(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs(limit=1))
-    assert len(runs) == 1
+def test_find_records_limit(mongo_client):
+    generic_dao = GenericDAO(mongo_client, "testdb")
+    runs = list(generic_dao.find_records("runs", limit=1))
+    assert len(runs) == 1, ""
     assert runs[0]["host"]["hostname"] == "ntbacer"
 
 
-def test_get_runs_order(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs(sort_by="host.python_version"))
+def test_find_records_order(mongo_client):
+    generic_dao = GenericDAO(mongo_client, "testdb")
+    runs = list(
+        generic_dao.find_records("runs", sort_by="host.python_version"))
     assert len(runs) == 2
     assert runs[0]["host"]["python_version"] == "3.4.3"
     assert runs[1]["host"]["python_version"] == "3.5.2"
 
-    runs = list(db_gateway.get_runs(sort_by="host.python_version",
-                                    sort_direction="desc"))
+    runs = list(generic_dao.find_records("runs", sort_by="host.python_version",
+                                         sort_direction="desc"))
     assert len(runs) == 2
     assert runs[0]["host"]["python_version"] == "3.5.2"
     assert runs[1]["host"]["python_version"] == "3.4.3"
 
 
-filter1 = {"type": "and", "filters": [
-    {"field": "host.os", "operator": "==", "value": "Linux"},
-    {"field": "host.hostname", "operator": "==", "value": "ntbacer"}]}
-filter2 = {"type": "and", "filters": [
-    {"field": "result", "operator": "==", "value": 2403.52}]}
+filter1 = {"host.os": "Linux", "host.hostname": "ntbacer"}
+filter2 = {"result": 2403.52}
 
 
-@pytest.mark.parametrize("query_filter", (filter1, filter2))
-def test_get_runs_filter(db_gateway: PyMongoDataAccess, query_filter):
-    runs = list(db_gateway.get_runs(query=query_filter))
+@pytest.mark.parametrize("filter", (filter1, filter2))
+def test_find_records_filter(mongo_client, filter):
+    generic_dao = GenericDAO(mongo_client, "testdb")
+    runs = list(generic_dao.find_records("runs", query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
-
-
-def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
-    filter = {"type": "and", "filters": [
-        {"field": "host.hostname", "operator": "==", "value": "ntbacer"},
-        {"type": "or",
-         "filters": [{"field": "result", "operator": "==", "value": 2403.52},
-                     {"field": "host.python_version", "operator": "==",
-                      "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
-    assert len(runs) == 1
-    assert runs[0]["host"]["hostname"] == "ntbacer"
-    assert runs[0]["result"] == 2403.52
-
-    filter = {"type": "and", "filters": [
-        {"field": "host.hostname", "operator": "==",
-         "value": "martin-virtual-machine"},
-        {"type": "or",
-         "filters": [{"field": "result", "operator": "==", "value": 2403.52},
-                     {"field": "host.python_version", "operator": "==",
-                      "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
-    assert len(runs) == 1
-    assert runs[0]["host"]["hostname"] == "martin-virtual-machine"
-    assert runs[0]["host"]["python_version"] == "3.5.2"
-
-    filter = {"type": "and", "filters": [{"type": "or", "filters": [
-        {"field": "result", "operator": "==", "value": 2403.52},
-        {"field": "host.python_version", "operator": "==",
-         "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
-    assert len(runs) == 2
-
-    assert runs[0]["host"]["hostname"] == "ntbacer"
-    assert runs[0]["host"]["python_version"] == "3.4.3"
-
-    assert runs[1]["host"]["hostname"] == "martin-virtual-machine"
-    assert runs[1]["host"]["python_version"] == "3.5.2"
-
-
-def test_get_run(db_gateway: PyMongoDataAccess):
-    run = dict(db_gateway.get_run("57f9efb2e4b8490d19d7c30e"))
-    assert run["host"]["hostname"] == "ntbacer"
-
-
-def test_get_metrics_dao(db_gateway: PyMongoDataAccess):
-    dao = db_gateway.get_metrics_dao()
-    assert dao is not None
-    assert isinstance(dao, MetricsDAO)
-    assert isinstance(dao, MongoMetricsDAO)
-    assert dao.generic_dao == db_gateway._generic_dao

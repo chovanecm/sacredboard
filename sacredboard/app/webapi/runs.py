@@ -1,15 +1,18 @@
 # coding=utf-8
+"""WebAPI module for handling run-related requests."""
 import json
 
 from flask import current_app, request, Response, render_template
 
 
 def parse_int_arg(name, default):
+    """Return a given URL parameter as int or return the default value."""
     return default if request.args.get(name) is None \
         else int(request.args.get(name))
 
 
 def parse_query_filter():
+    """Parse the Run query filter from the URL as a dictionary."""
     query_string = request.args.get("queryFilter")
     if query_string is None:
         return {"type": "and", "filters": []}
@@ -20,6 +23,7 @@ def parse_query_filter():
 
 
 def get_runs():
+    """Get all runs, sort it and return a response."""
     data = current_app.config["data"]
     draw = parse_int_arg("draw", 1)
     start = parse_int_arg("start", 0)

@@ -19,7 +19,7 @@ define([], function () {
      * @exports escapeHtml
      */
     function replace(string) {
-        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return String(string).replace(/[&<>"'`=/]/g, function (s) {
             return entityMap[s];
         });
     }

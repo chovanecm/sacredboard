@@ -1,0 +1,43 @@
+<div class="row-fluid">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>Metrics</label>
+            <!-- ko foreach: availableMetrics  -->
+            <div class="checkbox">
+                <label><input type="checkbox"
+                              data-bind="value: name, checkedValue: $data, checked: $parent.selectedMetrics"><span
+                        data-bind="text: name"></span></label>
+            </div>
+            <!-- /ko -->
+            <div data-bind="visible: availableMetrics().length == 0">No metrics to show</div>
+        </div>
+        <div class="form-group">
+            <label>x-axis type</label>
+            <div class="radio">
+                <label><input type="radio" name="x-axis-type" value="linear"
+                              data-bind="checked: xType">steps</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="x-axis-type" value="date"
+                              data-bind="checked: xType">time</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>y-axis type</label>
+            <div class="radio">
+                <label><input type="radio" name="y-axis-type" value="linear"
+                              data-bind="checked: yType">linear</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="y-axis-type" value="log"
+                              data-bind="checked: yType">logarithmic</label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-10">
+    <plot-chart
+            params="series: series, xLabel: xLabel, yLabel: yLabel, xType:xType, yType: yType"></plot-chart>
+</div>
+</div>

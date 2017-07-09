@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test MetricsPlot</title>
+
+    <!-- Bootstrap -->
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+          href="/static/vendors/bootstrap/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet"
+          href="/static/vendors/bootstrap/css/bootstrap-theme.min.css">
+
+
+    <script src="../main.js"></script>
+    <script>
+        require.baseUrl = "/static/scripts";
+    </script>
+    <script src="../../vendors/require.js"></script>
+    <script>
+        "use strict";
+        var viewModel;
+        requirejs(["metricsPlot/component", "knockout", "runs/Metric"], function (component, ko, Metric) {
+            viewModel = {
+                metrics: ko.observableArray([
+                    new Metric(ko.observable("2*x"),
+                        ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+                        ko.observableArray([new Date("April 7, 2014 11:14:28.540"),
+                            new Date("April 7, 2014 11:14:28.940"),
+                            new Date("April 7, 2014 11:14:29.010"),
+                            new Date("April 7, 2014 11:14:29.100"),
+                            new Date("April 7, 2014 11:14:30.200"),
+                            new Date("April 7, 2014 11:14:30.300"),
+                            new Date("April 7, 2014 11:14:31.400"),
+                            new Date("April 7, 2014 11:14:31.500"),
+                            new Date("April 7, 2014 11:14:31.600"),
+                            new Date("April 7, 2014 11:14:32.700"),
+                            new Date("April 7, 2014 11:14:32.800")]),
+                        ko.observableArray([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20])),
+                    new Metric(ko.observable("x^2"),
+                        ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+                        ko.observableArray([
+                            new Date("April 7, 2014 11:14:28.0"),
+                            new Date("April 7, 2014 11:14:28.140"),
+                            new Date("April 7, 2014 11:14:28.240"),
+                            new Date("April 7, 2014 11:14:28.340"),
+                            new Date("April 7, 2014 11:14:28.440"),
+                            new Date("April 7, 2014 11:14:29.540"),
+                            new Date("April 7, 2014 11:14:30.640"),
+                            new Date("April 7, 2014 11:14:31.740"),
+                            new Date("April 7, 2014 11:14:32.840")]),
+                        ko.observableArray([0, 1, 4, 9, 16, 32, 64, 128, 256]))
+                ])
+            };
+            ko.applyBindings(viewModel);
+        });
+    </script>
+
+
+</head>
+<body>
+<metrics-plot params="availableMetrics: metrics"></metrics-plot>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Plot</title>
+    <script src="../main.js"></script>
+    <script>
+        require.baseUrl = "/static/scripts";
+    </script>
+    <script src="../../vendors/require.js"></script>
+    <script>
+        "use strict";
+        var viewModel;
+        requirejs(["plot/component", "knockout"], function (component, ko) {
+            viewModel = {
+                xLabel: ko.observable("steps"),
+                yLabel: ko.observable("value"),
+                xType: ko.observable("linear"),
+                yType: ko.observable("linear"),
+                types: ["linear", "log", "date"],
+                /**
+                 * @type
+                 */
+                series1: {
+                    x: ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+                    y: ko.observableArray([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]),
+                    label: ko.observable("2*x")
+                },
+                series2: {
+                    x: ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+                    y: ko.observableArray([0, 1, 4, 9, 16, 32, 64, 128, 256]),
+                    label: ko.observable("x^2")
+                },
+                dateSeries1: {
+                    x: ko.observableArray([
+                        new Date("April 7, 2014 11:14:28.540"),
+                        new Date("April 7, 2014 11:14:28.940"),
+                        new Date("April 7, 2014 11:14:29.010"),
+                        new Date("April 7, 2014 11:14:29.100"),
+                        new Date("April 7, 2014 11:14:30.200"),
+                        new Date("April 7, 2014 11:14:30.300"),
+                        new Date("April 7, 2014 11:14:31.400"),
+                        new Date("April 7, 2014 11:14:31.500"),
+                        new Date("April 7, 2014 11:14:31.600"),
+                        new Date("April 7, 2014 11:14:32.700"),
+                        new Date("April 7, 2014 11:14:32.800")
+                    ]),
+                    y: ko.observableArray([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]),
+                    label: ko.observable("2*x")
+                },
+                dateSeries2: {
+                    x: ko.observableArray([
+                        new Date("April 7, 2014 11:14:28.0"),
+                        new Date("April 7, 2014 11:14:28.140"),
+                        new Date("April 7, 2014 11:14:28.240"),
+                        new Date("April 7, 2014 11:14:28.340"),
+                        new Date("April 7, 2014 11:14:28.440"),
+                        new Date("April 7, 2014 11:14:29.540"),
+                        new Date("April 7, 2014 11:14:30.640"),
+                        new Date("April 7, 2014 11:14:31.740"),
+                        new Date("April 7, 2014 11:14:32.840")
+                    ]),
+                    y: ko.observableArray([0, 1, 4, 9, 16, 32, 64, 128, 256]),
+                    label: ko.observable("x^2")
+                },
+                series: ko.observableArray([])
+            };
+
+            //viewModel.series.push(viewModel.dateSeries1);
+            ko.applyBindings(viewModel);
+        });
+    </script>
+</head>
+<body>
+<plot-chart params="series: series, xLabel:xLabel, yLabel:yLabel, xType:xType, yType:yType"></plot-chart>
+<input type="checkbox" data-bind="checkedValue: series1, checked: series">
+Series1
+<input type="checkbox" data-bind="checkedValue: series2, checked: series">
+Series2<br>
+
+<input type="checkbox" data-bind="checkedValue: dateSeries1, checked: series">
+Series1 (date)
+<input type="checkbox" data-bind="checkedValue: dateSeries2, checked: series">
+Series2 (date)<br>
+
+
+xLabel: <input type="text" data-bind="value: xLabel">, Type:  <select data-bind="options: types, value: xType"></select><br>
+yLabel: <input type="text" data-bind="value: yLabel">, Type:  <select data-bind="options: types, value: yType"></select>
+</body>
+</html>
