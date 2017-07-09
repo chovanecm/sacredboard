@@ -86,8 +86,10 @@ sacredboard -m sacred -mc default.runs
     elif f:
         app.config["data"] = FileStorage(f)
     else:
-        print("Must specify either a mongodb instance or \
-                a path to a file storage.")
+        print("Must specify either a mongodb instance or " +
+              "a path to a file storage.\nRun sacredboard --help "
+              "for more information.", file=sys.stderr)
+        sys.exit(1)
 
     app.config['DEBUG'] = debug
     app.debug = debug
