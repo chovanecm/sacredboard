@@ -21,6 +21,7 @@ app = Flask(__name__)
 
 webapi_modules = [routes, metrics, runs, jinja_filters]
 
+
 @click.command()
 @click.option("-m", default=None, metavar="HOST:PORT:DATABASE",
               help="Connect to MongoDB using the format"

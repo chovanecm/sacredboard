@@ -4,7 +4,7 @@ import json
 
 from flask import current_app, request, Response, render_template, Blueprint
 
-from sacredboard.app.data import DataStorage, DataSourceError
+from sacredboard.app.data import DataSourceError
 
 runs = Blueprint("runs", __name__)
 
@@ -18,7 +18,8 @@ def api_runs():
 @runs.route("/api/run/<run_id>", methods=["DELETE"])
 def api_run_delete(run_id):
     data = current_app.config["data"]  # type: DataStorage
-    data.delete_run(run_id)
+    data.get_run_dao().delete_run(run_id)
+    return "DELETED run %s" % run_id
 
 
 @runs.route("/api/run/<run_id>", methods=["GET"])
@@ -94,8 +95,16 @@ def get_runs():
 
 @runs.errorhandler(DataSourceError)
 def handle_data_source_error(e: DataSourceError):
-    """Handle Exception: TensorBoard has produced an unexpected output."""
+    """Handle Exception: DataSource Error"""
     return "Data source error: %s" \
+           % e, 500
+
+
+@runs.errorhandler(NotImplementedError)
+def handle_not_implemented_error(e: NotImplementedError):
+    """Raise exception: not implemented error when the operation is not supported
+    by the backend."""
+    return "Not Implemented: %s" \
            % e, 510
 
 

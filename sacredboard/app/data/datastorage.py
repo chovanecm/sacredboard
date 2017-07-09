@@ -1,5 +1,5 @@
 """Interfaces for data storage."""
-from .errors import NotFoundError, DataSourceError
+from .errors import NotFoundError
 from .metricsdao import MetricsDAO
 
 
@@ -32,26 +32,23 @@ class DataStorage:
         pass
 
     def get_run(self, run_id):
-        """Return the run associated with the id."""
+        """
+        Return the run associated with the id.
+
+        .. deprecated:: 0.3
+        Use get_run_dao().get_run() instead.
+        """
         raise NotImplementedError()
 
     def get_runs(self, sort_by=None, sort_direction=None,
                  start=0, limit=None, query={"type": "and", "filters": []}):
-        """Return all runs that match the query."""
+        """
+        Return all runs that match the query.
+
+        .. deprecated:: 0.3
+        Use get_run_dao().get_runs() instead.
+        """
         raise NotImplementedError()
-
-    def delete_run(self, run_id, run_only=False):
-        """
-        Delete run with the given id from the backend.
-
-        :param run_id: Id of the run to delete.
-        :param run_only: If true, only the run object is deleted. If false, the
-        backend may delete additional related records as well.
-        :type bool
-        :raise NotImplementedError If not supported by the backend.
-        """
-        raise DataSourceError("This database data source does not currently "
-                              "support this operation.")
 
     def get_metrics_dao(self):
         """
@@ -63,6 +60,15 @@ class DataStorage:
         :return MetricsDAO
         """
         return DummyMetricsDAO()
+
+    def get_run_dao(self):
+        """
+        Return a data access object for Runs.
+
+        :return: RunDAO
+        """
+        raise NotImplementedError(
+            "Run Data Access Object must be implemented.")
 
 
 class DummyMetricsDAO(MetricsDAO):

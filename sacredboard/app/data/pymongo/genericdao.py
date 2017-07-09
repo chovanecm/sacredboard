@@ -69,6 +69,10 @@ class GenericDAO:
             cursor = cursor.limit(limit)
         return MongoDbCursor(cursor)
 
+    def delete_record(self, collection_name, query):
+        """Delete record matching the given MongoDB query."""
+        return self._get_collection(collection_name).remove(query)
+
     def _get_database(self, database_name):
         """
         Get PyMongo client pointing to the current database.

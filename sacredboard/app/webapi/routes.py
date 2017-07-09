@@ -8,7 +8,6 @@ from flask import current_app
 from flask import render_template
 from flask import request, redirect, url_for
 
-from sacredboard.app.data import DataSourceError
 from ..process.tensorboard import TensorboardNotFoundError, \
     stop_all_tensorboards
 from ..process import process, tensorboard
