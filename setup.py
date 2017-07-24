@@ -38,5 +38,5 @@ setup(
     install_requires=get_requirements(),
     setup_requires=["pytest-runner"],
     tests_require=["pytest", "mongomock"],
-    version="0.3"
+    version="0.3.1"
 )
