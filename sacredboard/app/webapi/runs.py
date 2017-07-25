@@ -17,6 +17,7 @@ def api_runs():
 
 @runs.route("/api/run/<run_id>", methods=["DELETE"])
 def api_run_delete(run_id):
+    """Delete the given run and corresponding entities."""
     data = current_app.config["data"]  # type: DataStorage
     data.get_run_dao().delete_run(run_id)
     return "DELETED run %s" % run_id
@@ -95,17 +96,18 @@ def get_runs():
 
 @runs.errorhandler(DataSourceError)
 def handle_data_source_error(e: DataSourceError):
-    """Handle Exception: DataSource Error"""
-    return "Data source error: %s" \
-           % e, 500
+    """Handle Exception: DataSource Error."""
+    return "Data source error: %s" % e, 500
 
 
 @runs.errorhandler(NotImplementedError)
 def handle_not_implemented_error(e: NotImplementedError):
-    """Raise exception: not implemented error when the operation is not supported
-    by the backend."""
-    return "Not Implemented: %s" \
-           % e, 510
+    """
+    Raise exception: not implemented error.
+
+    Raise an exception if the operation is not supported by the backend.
+    """
+    return "Not Implemented: %s" % e, 510
 
 
 def initialize(app):

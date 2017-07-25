@@ -4,8 +4,8 @@ import mongomock
 import pytest
 
 from sacredboard.app.data import MetricsDAO
-from sacredboard.app.data.mongodb import PyMongoDataAccess
 from sacredboard.app.data.pymongo import MongoMetricsDAO
+from sacredboard.app.data.pymongo.mongodb import PyMongoDataAccess
 
 
 def create_mongomock_client():

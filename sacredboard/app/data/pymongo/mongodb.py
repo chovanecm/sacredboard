@@ -56,7 +56,7 @@ class PyMongoDataAccess(DataStorage):
         Get runs.
 
         .. deprecated:: 0.3
-        Use get_run_dao().get_runs instead
+            Use get_run_dao().get_runs instead.
         """
         return self.get_run_dao().get_runs(*args, **kwargs)
 
@@ -67,8 +67,9 @@ class PyMongoDataAccess(DataStorage):
         :param run_id: The ID of the run.
         :return: The whole object from the database.
 
-         .. deprecated:: 0.3
-         Use get_run_dao().get_runs instead"""
+        .. deprecated:: 0.3
+            Use get_run_dao().get_runs instead.
+        """
         return self.get_run_dao().get_run(run_id)
 
     @staticmethod

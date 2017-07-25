@@ -13,7 +13,7 @@ from gevent.pywsgi import WSGIServer
 
 from sacredboard.app.config import jinja_filters
 from sacredboard.app.data.filestorage import FileStorage
-from sacredboard.app.data.mongodb import PyMongoDataAccess
+from sacredboard.app.data.pymongo import PyMongoDataAccess
 from sacredboard.app.webapi import routes, metrics, runs
 
 locale.setlocale(locale.LC_ALL, '')

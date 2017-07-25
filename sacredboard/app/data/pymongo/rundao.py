@@ -74,9 +74,7 @@ class MongoRunDAO(RunDAO):
 
         :param run_id: The ID of the run.
         :return: The whole object from the database.
-
-         .. deprecated:: 0.3
-                Use get_run_dao().get_runs instead"""
+        """
         id = self._parse_id(run_id)
 
         run = self.generic_dao.find_record(self.collection_name,
@@ -200,6 +198,7 @@ class MongoRunDAO(RunDAO):
     def delete_run(self, run_id, run_only=False):
         """
         Delete run with the given id from the backend.
+
         :param run_id: Id of the run to delete.
         :param run_only: If true, only the run object is deleted. If false, the
         backend may delete additional related records as well.
