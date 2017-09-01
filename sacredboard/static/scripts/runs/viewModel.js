@@ -37,7 +37,8 @@ define(["knockout", "runs/filters/queryFilters", "runs/filters/queryFilter", "ru
                 "run-queued": new QueryFilter("status", "==", "\"QUEUED\""),
                 "run-failed": new QueryFilter("status", "==", "\"FAILED\""),
                 "run-interrupted": new QueryFilter("status", "==", "\"INTERRUPTED\""),
-                "run-dead": new QueryFilter("status", "==", "\"DEAD\"")
+                "run-dead": new QueryFilter("status", "==", "\"DEAD\""),
+                "run-timeout": new QueryFilter("status", "==", "\"TIMEOUT\"")
             },
             /**
              * Currently applied status filters.

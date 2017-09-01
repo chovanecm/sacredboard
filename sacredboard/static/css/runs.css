@@ -27,6 +27,10 @@
     color: orange;
 }
 
+[sacred-content="status-icon"][sacred-status="TIMEOUT"], .run-interrupted {
+    color: yellow;
+}
+
 .detail-page-box {
     overflow: auto;
     height: 35eM;
