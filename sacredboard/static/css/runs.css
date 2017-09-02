@@ -27,7 +27,7 @@
     color: orange;
 }
 
-[sacred-content="status-icon"][sacred-status="TIMEOUT"], .run-interrupted {
+[sacred-content="status-icon"][sacred-status="TIMEOUT"], .run-timeout {
     color: yellow;
 }
 
