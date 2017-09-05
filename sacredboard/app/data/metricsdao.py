@@ -10,6 +10,8 @@ class MetricsDAO:
     Interface for accessing Sacred metrics.
 
     Issue: https://github.com/chovanecm/sacredboard/issues/58
+
+    Extended because of: https://github.com/chovanecm/sacredboard/issues/66
     """
 
     def get_metric(self, run_id, metric_id):
@@ -34,4 +36,12 @@ class MetricsDAO:
 
         :raise NotFoundError
         """
-        raise NotImplementedError("The MetricsDAO method is abstract.")
+        raise NotImplementedError("The MetricsDAO class is abstract.")
+
+    def delete_metrics(self, run_id):
+        """
+        Delete all metrics belonging to the given run.
+
+        :param run_id: ID of the Run that the metric belongs to.
+        """
+        raise NotImplementedError("The MetricsDAO class is abstract.")

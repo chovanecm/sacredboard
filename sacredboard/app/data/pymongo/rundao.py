@@ -195,15 +195,11 @@ class MongoRunDAO(RunDAO):
             mongo_clause = {"$not": mongo_clause}
         return mongo_clause
 
-    def delete_run(self, run_id, run_only=False):
+    def delete_run(self, run_id):
         """
         Delete run with the given id from the backend.
 
         :param run_id: Id of the run to delete.
-        :param run_only: If true, only the run object is deleted. If false, the
-        backend may delete additional related records as well.
-        CURRENTLY ONLY THE RUN IS DELETED NO MATTER THE VALUE IS.
-        :type bool
         :raise NotImplementedError If not supported by the backend.
         :raise DataSourceError General data source error.
         :raise NotFoundError The run was not found. (Some backends may succeed

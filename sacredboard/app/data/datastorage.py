@@ -81,3 +81,9 @@ class DummyMetricsDAO(MetricsDAO):
         :raise NotFoundError
         """
         raise NotFoundError("Metrics not supported by this backend.")
+
+    def delete_metrics(self, run_id):
+        """
+        Do nothing.
+        """
+        pass

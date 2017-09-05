@@ -53,6 +53,15 @@ class MongoMetricsDAO(MetricsDAO):
         metric = self._to_intermediary_object(row)
         return metric
 
+    def delete_metrics(self, run_id):
+        """
+       Delete all metrics belonging to the given run.
+
+       :param run_id: ID of the Run that the metric belongs to.
+       """
+        self.generic_dao.delete_record(self.metrics_collection_name,
+                                       {"run_id": run_id})
+
     def _read_metric_from_db(self, metric_id, run_id, query):
         row = self.generic_dao.find_record(self.metrics_collection_name, query)
         if row is None:
