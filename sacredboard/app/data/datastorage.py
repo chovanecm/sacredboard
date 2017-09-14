@@ -1,4 +1,5 @@
 """Interfaces for data storage."""
+from sacredboard.app.data.rundao import RunDAO
 from .errors import NotFoundError
 from .metricsdao import MetricsDAO
 
@@ -50,7 +51,7 @@ class DataStorage:
         """
         raise NotImplementedError()
 
-    def get_metrics_dao(self):
+    def get_metrics_dao(self) -> MetricsDAO:
         """
         Return a data access object for metrics.
 
@@ -61,7 +62,7 @@ class DataStorage:
         """
         return DummyMetricsDAO()
 
-    def get_run_dao(self):
+    def get_run_dao(self) -> RunDAO:
         """
         Return a data access object for Runs.
 

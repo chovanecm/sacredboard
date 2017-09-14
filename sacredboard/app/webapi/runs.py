@@ -4,6 +4,7 @@ import json
 
 from flask import current_app, request, Response, render_template, Blueprint
 
+from sacredboard.app.business import RunFacade
 from sacredboard.app.data import DataSourceError
 
 runs = Blueprint("runs", __name__)
@@ -19,7 +20,7 @@ def api_runs():
 def api_run_delete(run_id):
     """Delete the given run and corresponding entities."""
     data = current_app.config["data"]  # type: DataStorage
-    data.get_run_dao().delete_run(run_id)
+    RunFacade(data).delete_run(run_id)
     return "DELETED run %s" % run_id
 
 
