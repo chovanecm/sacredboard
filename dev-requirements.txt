@@ -1,5 +1,7 @@
 pytest
 pytest-timeout
+pytest-bdd
+flexmock
 setuptools
 mongomock
 sphinx

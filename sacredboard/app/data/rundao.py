@@ -13,7 +13,11 @@ class RunDAO:
     """
 
     def get_run(self, run_id):
-        """Return the run associated with the id."""
+        """
+        Return the run associated with the id.
+
+        :raise NotFoundError when not found
+        """
         raise NotImplementedError("RunDAO is abstract.")
 
     def get_runs(self, sort_by=None, sort_direction=None,

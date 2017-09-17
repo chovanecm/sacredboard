@@ -6,6 +6,7 @@ Issue: https://github.com/chovanecm/sacredboard/issues/69
 import bson
 import pymongo
 
+from sacredboard.app.data import NotFoundError
 from sacredboard.app.data.pymongo import GenericDAO
 from sacredboard.app.data.rundao import RunDAO
 
@@ -74,11 +75,14 @@ class MongoRunDAO(RunDAO):
 
         :param run_id: The ID of the run.
         :return: The whole object from the database.
+        :raise NotFoundError when not found
         """
         id = self._parse_id(run_id)
 
         run = self.generic_dao.find_record(self.collection_name,
                                            {"_id": id})
+        if run is None:
+            raise NotFoundError("Run %s not found." % run_id)
         return run
 
     def _parse_id(self, run_id):
