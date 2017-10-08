@@ -15,7 +15,7 @@ from sacredboard.app.config import jinja_filters
 from sacredboard.app.data.filestorage import FileStorage
 from sacredboard.app.data.mongodb import PyMongoDataAccess
 from sacredboard.app.webapi import routes, metrics
-from sacredboard.app.prody import ReverseProxied
+from sacredboard.app.webapi.proxy import ReverseProxied
 
 locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
@@ -42,9 +42,10 @@ app = Flask(__name__)
                    "File Storage observer. (experimental)")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
-@click.option("-proxy_sub_url", default="/",
-              help="Run in sub-url mode. Example '-proxy_sub_url /sacredboard/'"
-              "Use with proxy")
+@click.option("-sub_url", default="/",
+              help="Run the app on a sub-url. Example '-sub_url /sacredboard/' "
+              "maps localhost:5000/ -> localhost:5000/sacredboard/"
+              "Use with Apache proxy")
 @click.option("--debug", is_flag=True, default=False,
               help="Run the application in Flask debug mode "
                    "(for development).")
