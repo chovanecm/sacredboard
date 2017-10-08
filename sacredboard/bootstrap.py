@@ -44,8 +44,8 @@ app = Flask(__name__)
               help="Do not open web browser automatically.")
 @click.option("-sub_url", default="/",
               help="Run the app on a sub-url. Example '-sub_url /sacredboard/' "
-              "maps localhost:5000/ -> localhost:5000/sacredboard/"
-              "Use with Apache proxy")
+              "maps localhost:5000/ -> localhost:5000/sacredboard/. "
+              "Useful with http proxy.")
 @click.option("--debug", is_flag=True, default=False,
               help="Run the application in Flask debug mode "
                    "(for development).")
