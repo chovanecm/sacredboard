@@ -75,7 +75,7 @@ class DataStorage:
 class DummyMetricsDAO(MetricsDAO):
     """Dummy Metrics DAO that does not find any metric."""
 
-    def get_metric(self, run_id, metric_id):
+    def get(self, run_id, metric_id):
         """
         Raise NotFoundError. Always.
 
@@ -83,7 +83,7 @@ class DummyMetricsDAO(MetricsDAO):
         """
         raise NotFoundError("Metrics not supported by this backend.")
 
-    def delete_metrics(self, run_id):
+    def delete(self, run_id):
         """
         Do nothing.
         """

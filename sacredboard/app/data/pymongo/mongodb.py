@@ -70,7 +70,7 @@ class PyMongoDataAccess(DataStorage):
         .. deprecated:: 0.3
             Use get_run_dao().get_runs instead.
         """
-        return self.get_run_dao().get_run(run_id)
+        return self.get_run_dao().get(run_id)
 
     @staticmethod
     def build_data_access(host, port, database_name, collection_name):

@@ -26,7 +26,7 @@ class MongoMetricsDAO(MetricsDAO):
         self.metrics_collection_name = "metrics"
         """Name of the MongoDB collection with metrics."""
 
-    def get_metric(self, run_id, metric_id):
+    def get(self, run_id, metric_id):
         """
         Read a metric of the given id and run.
 
@@ -54,7 +54,7 @@ class MongoMetricsDAO(MetricsDAO):
         metric = self._to_intermediary_object(row)
         return metric
 
-    def delete_metrics(self, run_id):
+    def delete(self, run_id):
         """
        Delete all metrics belonging to the given run.
 

@@ -20,7 +20,7 @@ def get_metric(run_id, metric_id):
     """
     data = current_app.config["data"]  # type: DataStorage
     dao = data.get_metrics_dao()
-    metric = dao.get_metric(run_id, metric_id)
+    metric = dao.get(run_id, metric_id)
 
     return Response(render_template(
         "api/metric.js",

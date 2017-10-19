@@ -14,7 +14,7 @@ class MetricsDAO:
     Extended because of: https://github.com/chovanecm/sacredboard/issues/66
     """
 
-    def get_metric(self, run_id, metric_id):
+    def get(self, run_id, metric_id):
         """
         Read a metric of the given id and run.
 
@@ -38,7 +38,7 @@ class MetricsDAO:
         """
         raise NotImplementedError("The MetricsDAO class is abstract.")
 
-    def delete_metrics(self, run_id):
+    def delete(self, run_id):
         """
         Delete all metrics belonging to the given run.
 

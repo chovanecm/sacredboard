@@ -12,7 +12,7 @@ class RunDAO:
     Issue: https://github.com/chovanecm/sacredboard/issues/69
     """
 
-    def get_run(self, run_id):
+    def get(self, run_id):
         """
         Return the run associated with the id.
 
@@ -25,7 +25,7 @@ class RunDAO:
         """Return all runs that match the query."""
         raise NotImplementedError("RunDAO is abstract.")
 
-    def delete_run(self, run_id):
+    def delete(self, run_id):
         """
         Delete run with the given id from the backend.
 

@@ -7,5 +7,7 @@ class RunFacade:
 
     def delete_run(self, run_id):
         ds = self.datastorage
-        ds.get_metrics_dao().delete_metrics(run_id)
-        ds.get_run_dao().delete_run(run_id)
+        ds.get_metrics_dao().delete(run_id)
+        ds.get_artifact_dao().delete(run_id)
+        ds.get_resource_dao().delete(run_id)
+        ds.get_run_dao().delete(run_id)

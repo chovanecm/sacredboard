@@ -12,7 +12,7 @@ test_client = None
 
 
 class FakeMetricsDAO(MetricsDAO):
-    def get_metric(self, run_id, metric_id):
+    def get(self, run_id, metric_id):
         if metric_id == "58dcfc41263e8cc29ade7a25" and run_id == 14:
             row = m1
         elif metric_id == "58dcfc41263e8cc29ade7a26" and run_id == 14:

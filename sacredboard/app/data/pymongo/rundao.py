@@ -69,7 +69,7 @@ class MongoRunDAO(RunDAO):
                                           limit)
         return r
 
-    def get_run(self, run_id):
+    def get(self, run_id):
         """
         Get a single run from the database.
 
@@ -199,7 +199,7 @@ class MongoRunDAO(RunDAO):
             mongo_clause = {"$not": mongo_clause}
         return mongo_clause
 
-    def delete_run(self, run_id):
+    def delete(self, run_id):
         """
         Delete run with the given id from the backend.
 
