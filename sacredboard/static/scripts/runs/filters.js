@@ -24,7 +24,7 @@ define(["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilte
              Example:
              <query-filter params="value: queryFilters"></query-filter>
 
-             @method
+             @function
              */
             "initialize": function () {
                 ko.components.register("query-filter", {

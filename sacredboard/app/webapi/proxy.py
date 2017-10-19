@@ -1,21 +1,26 @@
-# prody implementation
+"""
+Reverse proxy support for Sacredboard.
 
-# http://blog.macuyiko.com/post/2016/fixing-flask-url_for-when-behind-mod_proxy.html
+http://blog.macuyiko.com/post/2016/fixing-flask-url_for-when-behind-mod_proxy.html
+"""
 
 
 class ReverseProxied(object):
     """
-    Allow to use a reverse proxy
+    Allow to use a reverse proxy.
+
     http://blog.macuyiko.com/post/2016/fixing-flask-url_for-when-behind-mod_proxy.html
     """
 
     def __init__(self, app, script_name=None, scheme=None, server=None):
+        """Create a new wrapper for Flask."""
         self.app = app
         self.script_name = script_name
         self.scheme = scheme
         self.server = server
 
     def __call__(self, environ, start_response):
+        """Set environment for Flask."""
         script_name = environ.get('HTTP_X_SCRIPT_NAME', '') or self.script_name
         if script_name:
             environ['SCRIPT_NAME'] = script_name
