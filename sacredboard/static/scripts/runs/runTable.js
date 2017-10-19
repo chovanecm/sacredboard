@@ -71,7 +71,7 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
                  * and additional URL parameters to be passed to the backend.
                  */
                 ajax: {
-                    url: "/api/run",
+                    url: "api/run",
                     data: function (request) {
                         request.queryFilter = JSON.stringify(createRunTable.queryFilter);
 
@@ -132,7 +132,7 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
                     var id = row.data().id;
                     var loadDetailData = function () {
                         $.ajax({
-                            url: "/api/run/" + id
+                            url: "api/run/" + id
                         }).done(function (data) {
                             if (data.data[0].id != row.data().id) {
                                 /* Before this ajax function was called,

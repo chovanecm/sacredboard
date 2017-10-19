@@ -92,3 +92,4 @@ sacredboard/Scripts/
 
 \.idea/
 node_modules
+*~

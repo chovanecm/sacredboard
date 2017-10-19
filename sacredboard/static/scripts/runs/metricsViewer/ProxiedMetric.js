@@ -62,7 +62,7 @@ define(["runs/Metric", "knockout", "jquery"], function (Metric, ko, $) {
             }
             var self = this;
             this._fetchingInProgress = true;
-            $.getJSON("/api/run/" + this._runId + "/metric/" + this._metricId,
+            $.getJSON("api/run/" + this._runId + "/metric/" + this._metricId,
                 function (data) {
                     self._values(data["values"]);
                     self._steps(data["steps"]);
