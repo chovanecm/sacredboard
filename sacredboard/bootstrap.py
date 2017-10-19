@@ -42,7 +42,7 @@ app = Flask(__name__)
                    "File Storage observer. (experimental)")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
-@click.option("-sub_url", default="/",
+@click.option("--sub-url", default="/",
               help="Run the app on a sub-url. Example '-sub_url /sacredboard/' "
               "maps localhost:5000/ -> localhost:5000/sacredboard/. "
               "Useful with http proxy.")
