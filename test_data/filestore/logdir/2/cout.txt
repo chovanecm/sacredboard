@@ -1,0 +1,2 @@
+INFO - Pokus - Running command 'my_main'
+INFO - Pokus - Started run with ID "2"

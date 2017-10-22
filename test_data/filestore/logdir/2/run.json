@@ -1,0 +1,63 @@
+{
+  "artifacts": [],
+  "command": "my_main",
+  "experiment": {
+    "base_dir": "/home/martin/skola/diplomka/sandbox",
+    "dependencies": [
+      "numpy==1.11.3",
+      "sacred==0.7.0"
+    ],
+    "mainfile": "pokus.py",
+    "name": "Pokus",
+    "repositories": [],
+    "sources": [
+      [
+        "pokus.py",
+        "_sources/pokus_5b81183a27de50946dd24dfcce54d60d.py"
+      ]
+    ]
+  },
+  "heartbeat": "2017-06-06T13:50:59.503797",
+  "host": {
+    "ENV": {},
+    "cpu": "Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz",
+    "hostname": "vmmint18",
+    "os": [
+      "Linux",
+      "Linux-4.10.0-21-generic-x86_64-with-LinuxMint-18.1-serena"
+    ],
+    "python_version": "3.5.2"
+  },
+  "meta": {
+    "command": "my_main",
+    "options": {
+      "--beat_interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": "logdir",
+      "--force": false,
+      "--help": false,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print_config": false,
+      "--priority": null,
+      "--queue": false,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [],
+      "help": false,
+      "with": false
+    }
+  },
+  "resources": [],
+  "result": null,
+  "start_time": "2017-06-06T13:50:59.496668",
+  "status": "COMPLETED",
+  "stop_time": "2017-06-06T13:50:59.502563"
+}
