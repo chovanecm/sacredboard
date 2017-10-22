@@ -2,9 +2,10 @@
 """Module for launching processes and reading their output."""
 import atexit
 import os
-import select
 import time
 from subprocess import Popen, PIPE
+
+import select
 
 
 class Process:

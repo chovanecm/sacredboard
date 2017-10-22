@@ -4,6 +4,7 @@ Accessing the Metrics Data.
 Issue: https://github.com/chovanecm/sacredboard/issues/58
 """
 import datetime
+
 from flask import Response, render_template, Blueprint, current_app
 
 from sacredboard.app.data import NotFoundError

@@ -1,5 +1,5 @@
 """
-Module responsible for accessing the Metrics data in MongoDB.
+Module responsible for accessing the Run data in MongoDB.
 
 Issue: https://github.com/chovanecm/sacredboard/issues/69
 """

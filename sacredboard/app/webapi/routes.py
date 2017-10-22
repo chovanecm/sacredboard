@@ -8,9 +8,9 @@ from flask import current_app
 from flask import render_template
 from flask import request, redirect, url_for
 
+from ..process import process, tensorboard
 from ..process.tensorboard import TensorboardNotFoundError, \
     stop_all_tensorboards
-from ..process import process, tensorboard
 
 routes = Blueprint("routes", __name__)
 
