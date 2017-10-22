@@ -28,7 +28,7 @@ def api_run_delete(run_id):
 def api_run_get(run_id):
     """Return a single run as a JSON object."""
     data = current_app.config["data"]
-    run = data.get(run_id)
+    run = data.get_run_dao().get(run_id)
     records_total = 1 if run is not None else 0
     if records_total == 0:
         return Response(
@@ -81,7 +81,7 @@ def get_runs():
         if order_column == "hostname":
             order_column = "host.hostname"
 
-    runs = data.get_runs(
+    runs = data.get_run_dao().get_runs(
         start=start, limit=length,
         sort_by=order_column, sort_direction=order_dir, query=query)
     # records_total should be the total size of the records in the database,

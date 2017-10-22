@@ -74,25 +74,25 @@ def db_gateway() -> PyMongoDataAccess:
 
 
 def test_get_runs(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs())
+    runs = list(db_gateway.get_run_dao().get_runs())
     assert len(runs) == 2
     assert runs[0]["host"]["hostname"] == "ntbacer"
     assert runs[1]["host"]["hostname"] == "martin-virtual-machine"
 
 
 def test_get_runs_limit(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs(limit=1))
+    runs = list(db_gateway.get_run_dao().get_runs(limit=1))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
 
 
 def test_get_runs_order(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs(sort_by="host.python_version"))
+    runs = list(db_gateway.get_run_dao().get_runs(sort_by="host.python_version"))
     assert len(runs) == 2
     assert runs[0]["host"]["python_version"] == "3.4.3"
     assert runs[1]["host"]["python_version"] == "3.5.2"
 
-    runs = list(db_gateway.get_runs(sort_by="host.python_version",
+    runs = list(db_gateway.get_run_dao().get_runs(sort_by="host.python_version",
                                     sort_direction="desc"))
     assert len(runs) == 2
     assert runs[0]["host"]["python_version"] == "3.5.2"
@@ -108,7 +108,7 @@ filter2 = {"type": "and", "filters": [
 
 @pytest.mark.parametrize("query_filter", (filter1, filter2))
 def test_get_runs_filter(db_gateway: PyMongoDataAccess, query_filter):
-    runs = list(db_gateway.get_runs(query=query_filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=query_filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
 
@@ -120,7 +120,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
          "filters": [{"field": "result", "operator": "==", "value": 2403.52},
                      {"field": "host.python_version", "operator": "==",
                       "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
     assert runs[0]["result"] == 2403.52
@@ -132,7 +132,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
          "filters": [{"field": "result", "operator": "==", "value": 2403.52},
                      {"field": "host.python_version", "operator": "==",
                       "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "martin-virtual-machine"
     assert runs[0]["host"]["python_version"] == "3.5.2"
@@ -141,7 +141,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
         {"field": "result", "operator": "==", "value": 2403.52},
         {"field": "host.python_version", "operator": "==",
          "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=filter))
     assert len(runs) == 2
 
     assert runs[0]["host"]["hostname"] == "ntbacer"
@@ -152,7 +152,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
 
 
 def test_get_run(db_gateway: PyMongoDataAccess):
-    run = dict(db_gateway.get_run("57f9efb2e4b8490d19d7c30e"))
+    run = dict(db_gateway.get_run_dao().get("57f9efb2e4b8490d19d7c30e"))
     assert run["host"]["hostname"] == "ntbacer"
 
 

@@ -32,25 +32,6 @@ class DataStorage:
         """Initialize data accessor."""
         pass
 
-    def get_run(self, run_id):
-        """
-        Return the run associated with the id.
-
-        .. deprecated:: 0.3
-        Use get_run_dao().get_run() instead.
-        """
-        raise NotImplementedError()
-
-    def get_runs(self, sort_by=None, sort_direction=None,
-                 start=0, limit=None, query={"type": "and", "filters": []}):
-        """
-        Return all runs that match the query.
-
-        .. deprecated:: 0.3
-        Use get_run_dao().get_runs() instead.
-        """
-        raise NotImplementedError()
-
     def get_metrics_dao(self) -> MetricsDAO:
         """
         Return a data access object for metrics.
@@ -84,7 +65,5 @@ class DummyMetricsDAO(MetricsDAO):
         raise NotFoundError("Metrics not supported by this backend.")
 
     def delete(self, run_id):
-        """
-        Do nothing.
-        """
+        """Do nothing."""
         pass

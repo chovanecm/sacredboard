@@ -73,7 +73,7 @@ def tmpfilestore() -> FileStorage:
 
 def test_get_run(tmpfilestore : FileStorage):
     """Tests the get_run function."""
-    run42 = tmpfilestore.get_run(42)
+    run42 = tmpfilestore.get_run_dao().get(42)
 
     for key in ["info", "resources", "host", "experiment", "result", "artifacts", "comment", "start_time", "stop_time",
                 "heartbeat", "captured_out", "config"]:
@@ -81,7 +81,7 @@ def test_get_run(tmpfilestore : FileStorage):
 
 def test_get_runs(tmpfilestore : FileStorage):
     """Tests the get_runs function."""
-    runs = tmpfilestore.get_runs()
+    runs = tmpfilestore.get_run_dao().get_runs()
     runs = list(runs)
 
     assert 1 == len(runs)

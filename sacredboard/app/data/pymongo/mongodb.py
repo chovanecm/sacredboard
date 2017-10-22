@@ -51,27 +51,6 @@ class PyMongoDataAccess(DataStorage):
         """Return a new Mongo Client."""
         return pymongo.MongoClient(host=self._uri)
 
-    def get_runs(self, *args, **kwargs):
-        """
-        Get runs.
-
-        .. deprecated:: 0.3
-            Use get_run_dao().get_runs instead.
-        """
-        return self.get_run_dao().get_runs(*args, **kwargs)
-
-    def get_run(self, run_id):
-        """
-        Get a single run from the database.
-
-        :param run_id: The ID of the run.
-        :return: The whole object from the database.
-
-        .. deprecated:: 0.3
-            Use get_run_dao().get_runs instead.
-        """
-        return self.get_run_dao().get(run_id)
-
     @staticmethod
     def build_data_access(host, port, database_name, collection_name):
         """

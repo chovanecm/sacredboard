@@ -40,7 +40,7 @@ def test_removing_a_run_with_two_metrics():
 @when(parsers.parse('Run {run_id:d} exists'))
 def a_run_exists(data_access, run_id):
     """A run exists."""
-    data_access.get_run_dao().should_receive("get_run").with_args(run_id) \
+    data_access.get_run_dao().should_receive("get").with_args(run_id) \
         .and_return({"_id": run_id})
     assert data_access.get_run_dao().get(run_id) is not None
 
@@ -50,27 +50,15 @@ def a_metric_of_that_run_exists(data_access, metric_id, run_id):
     """A metric of that run exists."""
     data_access.get_run_dao().get(run_id)["info"] = {
         "metrics": [metric_id]}
-    data_access.get_metrics_dao().should_receive("get_metric") \
+    data_access.get_metrics_dao().should_receive("get") \
         .with_args(run_id, metric_id) \
         .and_return({"metric_id": str(metric_id), "run_id": str(run_id)})
     assert data_access.get_metrics_dao().get(run_id,
                                              metric_id) is not None
-
-@when(parsers.parse('Artifact {artifact_id} of run {run_id:d} exists'))
-def a_metric_of_that_run_exists(data_access,artifact_id, run_id):
-    """A metric of that run exists."""
-    data_access.get_run_dao().get(run_id)["info"] = {
-        "metrics": [metric_id]}
-    data_access.get_metrics_dao().should_receive("get_metric") \
-        .with_args(run_id, metric_id) \
-        .and_return({"metric_id": str(metric_id), "run_id": str(run_id)})
-    assert data_access.get_metrics_dao().get(run_id,
-                                             metric_id) is not None
-
 
 @when(parsers.parse('I delete run {run_id:d}'))
 def i_delete_the_run(run_facade, run_id):
-    run_facade.delete(run_id)
+    run_facade.delete_run(run_id)
 
 
 @then(parsers.parse('Metric {metric_id} of run {run_id:d} should not exist'))
@@ -111,14 +99,14 @@ def data_access():
 
     # once deleted, it should raise an error
     metric_dao.delete = lambda run_id: metric_dao.should_receive(
-        "get_metric").with_args(run_id, object).and_raise(NotFoundError)
+        "get").with_args(run_id, object).and_raise(NotFoundError)
     run_dao.delete = lambda run_id: run_dao.should_receive(
-        "get_run").with_args(run_id).and_raise(NotFoundError)
+        "get").with_args(run_id).and_raise(NotFoundError)
 
     # default behaviour:
-    run_dao.should_receive("get_run").with_args(object).and_raise(
+    run_dao.should_receive("get").with_args(object).and_raise(
         NotFoundError)
-    metric_dao.should_receive("get_metric").with_args(object,
+    metric_dao.should_receive("get").with_args(object,
                                                       object).and_raise(
         NotFoundError)
     return data_access
