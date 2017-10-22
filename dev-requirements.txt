@@ -1,11 +1,4 @@
-pytest
-pytest-timeout
-pytest-bdd
-flexmock
 setuptools
-mongomock
-sphinx
-sphinx_rtd_theme
 flake8
 pydocstyle
 tox

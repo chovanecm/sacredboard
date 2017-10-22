@@ -3,6 +3,7 @@ include setup.cfg
 include description.txt
 include requirements.txt
 include dev-requirements.txt
+include pytest-requirements.txt
 recursive-include sacredboard *.html *.css *.js *
 global-exclude __pycache__
 global-exclude *.py[co]

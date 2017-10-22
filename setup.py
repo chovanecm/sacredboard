@@ -9,6 +9,11 @@ def get_requirements():
         return f.readlines()
 
 
+def get_pytest_requirements():
+    with open("pytest-requirements.txt") as f:
+        return f.readlines()
+
+
 setup(
     author="Martin Chovanec",
     author_email="chovamar@fit.cvut.cz",
@@ -37,6 +42,6 @@ setup(
     },
     install_requires=get_requirements(),
     setup_requires=["pytest-runner"],
-    tests_require=["pytest", "mongomock"],
+    tests_require=get_pytest_requirements(),
     version="0.3.1"
 )
