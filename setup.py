@@ -43,5 +43,5 @@ setup(
     install_requires=get_requirements(),
     setup_requires=["pytest-runner"],
     tests_require=get_pytest_requirements(),
-    version="0.3.1"
+    version="0.4.0-pre"
 )
