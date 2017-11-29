@@ -44,7 +44,7 @@ webapi_modules = [routes, metrics, runs, jinja_filters]
                    "File Storage observer. (experimental)")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
-@click.option("--port", default="5000",
+@click.option("--port", default="5000", type=int,
               help="Run the app on a different port.")
 @click.option("--sub-url", default="/",
               help="Run the app on a sub-url. Example '-sub_url /sacredboard/' "
