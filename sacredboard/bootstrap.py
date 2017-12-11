@@ -44,6 +44,8 @@ webapi_modules = [routes, metrics, runs, jinja_filters]
                    "File Storage observer. (experimental)")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
+@click.option("--port", default=5000, type=int,
+              help="Run the app on a different port.")
 @click.option("--sub-url", default="/",
               help="Run the app on a sub-url. Example '-sub_url /sacredboard/' "
               "maps localhost:5000/ -> localhost:5000/sacredboard/. "
@@ -52,7 +54,7 @@ webapi_modules = [routes, metrics, runs, jinja_filters]
               help="Run the application in Flask debug mode "
                    "(for development).")
 @click.version_option()
-def run(debug, no_browser, m, mu, mc, f, sub_url):
+def run(debug, no_browser, m, mu, mc, f, port, sub_url):
     """
     Sacredboard.
 
@@ -65,6 +67,11 @@ Example usage:
 \b
 sacredboard -m sacred
     Starts Sacredboard on default port (5000) and connects to
+    a local MongoDB database called 'sacred'. Opens web browser.
+    Note: MongoDB must be listening on localhost.
+\b
+sacredboard -m sacred --port 9000
+    Starts Sacredboard on non- default port 9000 and connects to
     a local MongoDB database called 'sacred'. Opens web browser.
     Note: MongoDB must be listening on localhost.
 \b
@@ -111,7 +118,7 @@ sacredboard -m sacred -mc default.runs
     if debug:
         app.run(host="0.0.0.0", debug=True)
     else:
-        for port in range(5000, 5050):
+        for port in range(port, port + 50):
             http_server = WSGIServer(('0.0.0.0', port), app)
             try:
                 http_server.start()
