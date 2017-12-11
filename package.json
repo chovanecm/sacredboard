@@ -4,7 +4,7 @@
   "description": "Sacredboard NPM package file for automatic tests.",
   "dependencies": {},
   "devDependencies": [
-    "qunitjs",
+    "qunit",
     "requirejs",
     "eslint",
     "eslint-plugin-requirejs",
