@@ -73,6 +73,6 @@ def handle_not_found_error(e):
     return "Couldn't find resource:\n%s" % e, 404
 
 
-def initialize(app):
+def initialize(app, app_config):
     """Register the module in Flask."""
     app.register_blueprint(metrics)

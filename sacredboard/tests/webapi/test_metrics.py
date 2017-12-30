@@ -42,7 +42,7 @@ def init_tests():
     app.testing = True
     app.config["data"] = FakeDataStorage()
     test_client = app.test_client()
-    metrics.initialize(app)
+    metrics.initialize(app, {})
 
 
 def test_get_metric():

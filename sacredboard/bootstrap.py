@@ -9,18 +9,17 @@ import sys
 
 import click
 from flask import Flask
-from gevent.pywsgi import WSGIServer
 
 from sacredboard.app.config import jinja_filters
 from sacredboard.app.data.filestorage import FileStorage
 from sacredboard.app.data.pymongo import PyMongoDataAccess
-from sacredboard.app.webapi import routes, metrics, runs
-from sacredboard.app.webapi.proxy import ReverseProxied
+from sacredboard.app.webapi import routes, metrics, runs, proxy
+from sacredboard.app.webapi.wsgi_server import ServerRunner
 
 locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
-
-webapi_modules = [routes, metrics, runs, jinja_filters]
+server_runner = ServerRunner()
+webapi_modules = [proxy, routes, metrics, runs, jinja_filters, server_runner]
 
 
 @click.command()
@@ -108,28 +107,23 @@ sacredboard -m sacred -mc default.runs
     app.config['DEBUG'] = debug
     app.debug = debug
 
-    if sub_url is not "/":
-        app.wsgi_app = ReverseProxied(app.wsgi_app, script_name=sub_url)
+    app_config = {
+        "http.serve_on_endpoint": sub_url,
+        "http.port": port,
+        "debug": debug
+    }
+    _initialize_modules(app_config)
+    print("Starting sacredboard on port %d" % server_runner.started_on_port)
+    if not no_browser:
+        click.launch("http://127.0.0.1:%d" % server_runner.started_on_port)
 
+    server_runner.run_server()
+
+
+def _initialize_modules(app_config):
     for module in webapi_modules:
         # Initialize Web Api Modules
-        module.initialize(app)
-
-    if debug:
-        app.run(host="0.0.0.0", debug=True)
-    else:
-        for port in range(port, port + 50):
-            http_server = WSGIServer(('0.0.0.0', port), app)
-            try:
-                http_server.start()
-            except OSError as e:
-                # try next port
-                continue
-            print("Starting sacredboard on port %d" % port)
-            if not no_browser:
-                click.launch("http://127.0.0.1:%d" % port)
-            http_server.serve_forever()
-            break
+        module.initialize(app, app_config)
 
 
 def add_mongo_config(app, simple_connection_string,

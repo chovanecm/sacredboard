@@ -34,3 +34,10 @@ class ReverseProxied(object):
         if server:
             environ['HTTP_HOST'] = server
         return self.app(environ, start_response)
+
+
+def initialize(app, app_config):
+    """Initialize the module."""
+    sub_url = app_config["http.serve_on_endpoint"]
+    if sub_url is not "/":
+        app.wsgi_app = ReverseProxied(app.wsgi_app, script_name=sub_url)

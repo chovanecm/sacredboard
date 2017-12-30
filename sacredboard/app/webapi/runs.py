@@ -111,6 +111,6 @@ def handle_not_implemented_error(e: NotImplementedError):
     return "Not Implemented: %s" % e, 510
 
 
-def initialize(app):
+def initialize(app, app_config):
     """Register the module in Flask."""
     app.register_blueprint(runs)

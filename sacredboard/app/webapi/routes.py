@@ -83,6 +83,6 @@ def handle_tensorboard_unexpected_output(e: process.UnexpectedOutputError):
            % (e.output, e.expected), 503
 
 
-def initialize(app):
+def initialize(app, app_config):
     """Register all HTTP endpoints defined in this file."""
     app.register_blueprint(routes)
