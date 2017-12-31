@@ -22,16 +22,18 @@ class TensorboardNotFoundError(ProcessError):
     pass
 
 
-def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
+def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None, timeout=10):
     """
     Launch a new TensorBoard instance.
-
     :param logdir: Path to a TensorFlow summary directory
     :param listen_on: The IP address TensorBoard should listen on.
     :param tensorboard_args: Additional TensorBoard arguments.
+    :param timeout: Timeout after which the Timeout
+    :type timeout: float
     :return: Returns the port TensorBoard is listening on.
     :raise UnexpectedOutputError
     :raise TensorboardNotFoundError
+    :raise TimeoutError
     """
     if tensorboard_args is None:
         tensorboard_args = []
@@ -45,7 +47,7 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None):
 
     # Read first line of output from tensorboard - it should contain
     # the port where it is listening on
-    data = tensorboard_instance.read_line(time_limit=10)
+    data = tensorboard_instance.read_line(time_limit=timeout)
     search = re.search("on port ([0-9]+)", data)
     if search is not None:
         port = search.group(1)
