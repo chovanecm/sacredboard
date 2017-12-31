@@ -1,5 +1,6 @@
 default:
-	@echo make test		run all tests
+	@echo make pydependencies		Install Python dependencies
+	@echo make test		    run all tests
 	@echo make pytest		run Python tests only. Python3.5 or higher must be installed.
 	@echo make flake8		run Python code style checker
 	@echo make pydocstyle		run Python documentation style checker
@@ -24,4 +25,15 @@ qunit:	node_modules
 eslint:	node_modules
 	npm run lint -s
 
-test:	pytest qunit flake8 pydocstyle eslint
+pydependencies: pyrequirements pydevrequirements pytestrequirements
+
+pytestrequirements: pytest-requirements.txt
+	pip install -r pytest-requirements.txt
+
+pyrequirements: requirements.txt
+	pip install -r requirements.txt
+
+pydevrequirements: dev-requirements.txt
+	pip install -r dev-requirements.txt
+
+test: pytest qunit flake8 pydocstyle eslint

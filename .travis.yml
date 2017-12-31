@@ -1,66 +1,60 @@
-matrix:
-  include:
-    - language: python
-      python: "3.5"
-      env:
-        - INFO=PythonStyleCheck
-      script:
-        - make flake8
-    - language: python
-      python: "3.5"
-      env:
-        - INFO=PythonDocStringCheck
-      script:
-        - make pydocstyle
-    - language: node_js
-      env:
-        - INFO=JavaScriptTests
-      node_js: "7"
-      script:
-        - make qunit
-    - language: node_js
-      env:
-        - INFO=JavaScriptStyleCheck
-      node_js: "7"
-      script:
-        - make eslint
+  matrix:
+    include:
+      - language: python
+        python: "3.5"
+        before_script:
+          - pip install tox
+        env:
+        - INFO=PythonTests
+        script:
+        - tox -e py35
+        - tox -e coverage
+      - language: python
+        python: "3.6"
+        before_script:
+          - pip install tox
+        env:
+        - INFO=PythonTests
+        script:
+        - tox -e py36
 
-language: python
-python: "3.5"
-git:
-  depth: 3
-cache:
-  - pip
-  - directories:
-    - node_modules # NPM packages
-before_script:
-  - pip install tox
-env:
-- TOX_ENV=py34
-- TOX_ENV=py35
-- TOX_ENV=py36
-- TOX_ENV=coverage
-script:
-- tox -e $TOX_ENV
+      - language: python
+        python: "3.5"
+        env:
+          - INFO=PythonCodeCheck
+        before_script: make pydevrequirements
+        script:
+          - make flake8
+          - make pydocstyle
+
+      - language: node_js
+        env:
+          - INFO=JavaScriptTest
+        node_js: "7"
+        script:
+          - make qunit
+
+      - language: node_js
+        env:
+          - INFO=JavaScriptCodeCheck
+        node_js: "7"
+        script:
+          - make eslint
 
 
-# safelist
-branches:
-  only:
-  - master
-  - develop
-  - travis-speedup
+  git:
+    depth: 3
+  cache:
+    - pip
+    - directories:
+      - node_modules # NPM packages
 
-#- pip install flake8
-#- pip install coveralls
+  # safelist
+  branches:
+    only:
+    - master
+    - develop
 
-
-
-
-# command to install dependencies
-# install: python setup.py install
-# command to run tests
-
-#after_success:
-# not necessary, done by tox
-#  coveralls
+  #after_success:
+  # not necessary, done by tox
+  #  coveralls
