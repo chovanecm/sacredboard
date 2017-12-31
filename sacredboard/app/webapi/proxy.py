@@ -3,6 +3,7 @@ Reverse proxy support for Sacredboard.
 
 http://blog.macuyiko.com/post/2016/fixing-flask-url_for-when-behind-mod_proxy.html
 """
+from flask import Flask
 
 
 class ReverseProxied(object):
@@ -36,8 +37,15 @@ class ReverseProxied(object):
         return self.app(environ, start_response)
 
 
-def initialize(app, app_config):
-    """Initialize the module."""
+def initialize(app: Flask, app_config):
+    """
+    Initialize the module.
+
+    :param app: The Flask application.
+    :param app_config: Application configuration dictionary. If `http.serve_on_endpoint` attribute
+     is specified (e.g. /sacredboard/), the application will be hosted on that endpoint
+    (e.g. http://localhost:5000/sacredboard/)
+    """
     sub_url = app_config["http.serve_on_endpoint"]
     if sub_url is not "/":
         app.wsgi_app = ReverseProxied(app.wsgi_app, script_name=sub_url)

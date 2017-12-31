@@ -3,7 +3,7 @@
 import re
 from pathlib import Path
 
-from flask import Blueprint
+from flask import Blueprint, Flask
 from flask import current_app
 from flask import render_template
 from flask import request, redirect, url_for
@@ -83,6 +83,6 @@ def handle_tensorboard_unexpected_output(e: process.UnexpectedOutputError):
            % (e.output, e.expected), 503
 
 
-def initialize(app, app_config):
+def initialize(app: Flask, app_config):
     """Register all HTTP endpoints defined in this file."""
     app.register_blueprint(routes)

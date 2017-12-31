@@ -1,5 +1,6 @@
 # coding=utf-8
 """Module for starting the WSGI Server and the web application itself."""
+from flask import Flask
 from gevent.pywsgi import WSGIServer
 
 
@@ -10,8 +11,14 @@ class ServerRunner:
         """Once initialized, contains the port where the application will listen."""
         self.started_on_port = None
 
-    def initialize(self, app, app_config):
-        """Prepare the server to run and determine the port."""
+    def initialize(self, app: Flask, app_config):
+        """
+        Prepare the server to run and determine the port.
+
+        :param app: The Flask Application.
+        :param app_config: Configuration dictionary. This module uses the `debug`
+        (`True`/`False`) and `http.port` attributes.
+        """
         debug = app_config["debug"]
         port = app_config["http.port"]
         if debug:

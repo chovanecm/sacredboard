@@ -25,6 +25,7 @@ class TensorboardNotFoundError(ProcessError):
 def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None, timeout=10):
     """
     Launch a new TensorBoard instance.
+
     :param logdir: Path to a TensorFlow summary directory
     :param listen_on: The IP address TensorBoard should listen on.
     :param tensorboard_args: Additional TensorBoard arguments.
