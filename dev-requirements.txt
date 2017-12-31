@@ -1,4 +1,3 @@
 setuptools
 flake8
 pydocstyle
-tox
