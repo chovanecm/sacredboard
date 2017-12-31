@@ -1,33 +1,44 @@
 matrix:
   include:
+    - language: python
+      python: "3.5"
+      env:
+        - INFO=PythonStyleCheck
+      script:
+        - make flake8
+    - language: python
+      python: "3.5"
+      env:
+        - INFO=PythonDocStringCheck
+      script:
+        - make pydocstyle
     - language: node_js
       env:
         - INFO=JavaScriptTests
       node_js: "7"
-      before_script:
-        - npm install
       script:
-        - npm test
+        - make qunit
     - language: node_js
       env:
         - INFO=JavaScriptStyleCheck
       node_js: "7"
-      before_script:
-        - npm install
       script:
-        - npm run lint -s
+        - make eslint
+
 language: python
 python: "3.5"
 git:
   depth: 3
-cache: pip
+cache:
+  - pip
+  - directories:
+    - node_modules # NPM packages
 before_script:
   - pip install tox
 env:
 - TOX_ENV=py34
 - TOX_ENV=py35
-- TOX_ENV=flake8
-- TOX_ENV=pydocstyle
+- TOX_ENV=py36
 - TOX_ENV=coverage
 script:
 - tox -e $TOX_ENV
@@ -38,6 +49,7 @@ branches:
   only:
   - master
   - develop
+  - travis-speedup
 
 #- pip install flake8
 #- pip install coveralls
