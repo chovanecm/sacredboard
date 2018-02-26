@@ -71,11 +71,16 @@ def test_find_records_in_non_empty_collection():
     assert runs[1]["host"]["hostname"] == "martin-virtual-machine"
 
 
-def test_find_records_limit(mongo_client):
+def test_find_records_limit():
+    limit = 42
+    mongo_cursor = flexmock(DummyIterator())
+    mongo_cursor.should_receive("limit").once().with_args(limit).and_return(mongo_cursor)
+    collection = flexmock()
+    collection.should_receive("find").once().with_args({}).and_return(mongo_cursor)
+    mongo_client = {"testdb": {"runs": collection}}
     generic_dao = GenericDAO(mongo_client, "testdb")
-    runs = list(generic_dao.find_records("runs", limit=1))
-    assert len(runs) == 1, ""
-    assert runs[0]["host"]["hostname"] == "ntbacer"
+
+    generic_dao.find_records("runs", limit=limit)
 
 
 def test_find_records_order(mongo_client):
@@ -114,7 +119,11 @@ class DummyIterator:
         pass
 
     def skip(self, n):
-        pass
+        return self
 
     def count(self):
         pass
+
+    def limit(self, n):
+        pass
+
