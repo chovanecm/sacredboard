@@ -33,10 +33,10 @@ def test_find_record():
 
 
 def test_find_records_in_empty_collection():
-    mongo_cursor = flexmock(DummyMongoMock())
+    mongo_cursor = flexmock(DummyIterator())
     mongo_cursor.should_receive("skip").once().with_args(0).and_return(mongo_cursor)
-    mongo_cursor.should_receive("__iter__").and_return(mongo_cursor)
     mongo_cursor.should_receive("count").and_return(0)
+    mongo_cursor.should_receive("__next__").and_raise(StopIteration)
 
     collection = flexmock()
     collection.should_receive("find").once().with_args({}).and_return(mongo_cursor)
@@ -51,10 +51,12 @@ def test_find_records_in_empty_collection():
 
 
 def test_find_records_in_non_empty_collection():
-    mongo_cursor = flexmock(DummyMongoMock())
+    mongo_cursor = flexmock(DummyIterator())
     mongo_cursor.should_receive("skip").once().with_args(0).and_return(mongo_cursor)
-    mongo_cursor.should_receive("__iter__").and_return(mongo_cursor)
-    mongo_cursor.should_receive("__next__").and_yield({"host": {"hostname": "ntbacer"}}, {"host": {"hostname": "martin-virtual-machine"}})
+    mongo_cursor.should_receive("count").and_return(0)
+    mongo_cursor.should_receive("__next__").and_return({"host": {"hostname": "ntbacer"}})\
+        .and_return({"host": {"hostname": "martin-virtual-machine"}})\
+        .and_raise(StopIteration)
     mongo_cursor.should_receive("count").and_return(2)
 
     collection = flexmock()
@@ -103,16 +105,16 @@ def test_find_records_filter(mongo_client, filter):
     assert runs[0]["host"]["hostname"] == "ntbacer"
 
 
-class DummyMongoMock:
-
-    def skip(self, n):
-        return self
-
-    def __next__(self):
-        raise StopIteration
+class DummyIterator:
 
     def __iter__(self):
         return self
+
+    def __next__(self):
+        pass
+
+    def skip(self, n):
+        pass
 
     def count(self):
         pass
