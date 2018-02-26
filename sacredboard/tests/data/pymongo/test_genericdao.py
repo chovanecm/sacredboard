@@ -33,11 +33,11 @@ def test_find_record():
 
 
 def test_find_records_in_empty_collection():
-    mongo_cursor = flexmock()
-    mongo_cursor.should_receive("skip").and_return(mongo_cursor)
-    mongo_cursor.should_receive("__iter__").and_return(iter([]))
-    #mongo_cursor.should_receive("__next__").and_raise(StopIteration)
+    mongo_cursor = flexmock(DummyMongoMock())
+    mongo_cursor.should_receive("skip").once().with_args(0).and_return(mongo_cursor)
+    mongo_cursor.should_receive("__iter__").and_return(mongo_cursor)
     mongo_cursor.should_receive("count").and_return(0)
+
     collection = flexmock()
     collection.should_receive("find").once().with_args({}).and_return(mongo_cursor)
     mongo_client = {"testdb": {"EMPTY_COLLECTION": collection}}
@@ -49,10 +49,21 @@ def test_find_records_in_empty_collection():
     assert r.count() == 0
     assert len(list(r)) == 0
 
-def test_find_records_in_non_empty_collection(mongo_client):
-    # Existing collection
+
+def test_find_records_in_non_empty_collection():
+    mongo_cursor = flexmock(DummyMongoMock())
+    mongo_cursor.should_receive("skip").once().with_args(0).and_return(mongo_cursor)
+    mongo_cursor.should_receive("__iter__").and_return(mongo_cursor)
+    mongo_cursor.should_receive("__next__").and_yield({"host": {"hostname": "ntbacer"}}, {"host": {"hostname": "martin-virtual-machine"}})
+    mongo_cursor.should_receive("count").and_return(2)
+
+    collection = flexmock()
+    collection.should_receive("find").once().with_args({}).and_return(mongo_cursor)
+    mongo_client = {"testdb": {"runs": collection}}
     generic_dao = GenericDAO(mongo_client, "testdb")
+
     runs = list(generic_dao.find_records("runs"))
+
     assert len(runs) == 2
     assert runs[0]["host"]["hostname"] == "ntbacer"
     assert runs[1]["host"]["hostname"] == "martin-virtual-machine"
@@ -90,3 +101,18 @@ def test_find_records_filter(mongo_client, filter):
     runs = list(generic_dao.find_records("runs", query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
+
+
+class DummyMongoMock:
+
+    def skip(self, n):
+        return self
+
+    def __next__(self):
+        raise StopIteration
+
+    def __iter__(self):
+        return self
+
+    def count(self):
+        pass
