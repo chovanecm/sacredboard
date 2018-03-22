@@ -10,6 +10,7 @@ import sys
 import click
 from flask import Flask
 
+from sacredboard.app.sacredboard import Sacredboard
 from sacredboard.app.config import jinja_filters
 from sacredboard.app.data.filestorage import FileStorage
 from sacredboard.app.data.pymongo import PyMongoDataAccess
@@ -106,6 +107,9 @@ sacredboard -m sacred -mc default.runs
 
     app.config['DEBUG'] = debug
     app.debug = debug
+
+    version = Sacredboard.get_version()
+    print(version)
 
     app_config = {
         "http.serve_on_endpoint": sub_url,
