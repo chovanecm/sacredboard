@@ -40,7 +40,7 @@ def run_tensorboard(run_id, tflog_id):
     """Launch TensorBoard for a given run ID and log ID of that run."""
     data = current_app.config["data"]
     # optimisticaly suppose the run exists...
-    run = data.get(run_id)
+    run = data.get_run_dao().get(run_id)
     base_dir = Path(run["experiment"]["base_dir"])
     log_dir = Path(run["info"]["tensorflow"]["logdirs"][tflog_id])
     # TODO ugly!!!
