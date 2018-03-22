@@ -8,6 +8,7 @@ from flask import current_app
 from flask import render_template
 from flask import request, redirect, url_for
 
+from sacredboard.app.sacredboard import Sacredboard
 from ..process import process, tensorboard
 from ..process.tensorboard import TensorboardNotFoundError, \
     stop_all_tensorboards
@@ -31,7 +32,7 @@ def tests():
 def show_runs():
     """Render the main page with a list of experiment runs."""
     # return render_template("runs.html", runs=data.runs(), type=type)
-    return render_template("runs.html", runs=[], type=type)
+    return render_template("runs.html", runs=[], type=type, sacredboard_version=Sacredboard.get_version())
 
 
 @routes.route("/tensorboard/start/<run_id>/<int:tflog_id>")

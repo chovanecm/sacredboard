@@ -4,7 +4,7 @@
 import pkg_resources  # used to fetch the version number
 
 
-class sacredboard():
+class Sacredboard():
     """Class related to sacredboard itself. A better comment will follow later."""
 
     @staticmethod
