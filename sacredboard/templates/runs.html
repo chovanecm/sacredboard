@@ -44,7 +44,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Sacredboard</a>
+                <span class="navbar-brand"><a href="#">Sacredboard</a> {{ sacredboard_version }}</span>
             </div>
         </div>
     </nav>
@@ -75,6 +75,10 @@
                         type="checkbox"
                         data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters">
                 Interrupted,
+                <span class="run-timeout">&block;</span> <input
+                        type="checkbox"
+                        data-bind="checkedValue: predefinedFilters['run-timeout'], checked: statusFilters.filters">
+                Timeout,
                 <span class="run-dead">&block;</span> <input type="checkbox"
                                                              data-bind="checkedValue: predefinedFilters['run-dead'], checked: statusFilters.filters">
                 Probably dead,

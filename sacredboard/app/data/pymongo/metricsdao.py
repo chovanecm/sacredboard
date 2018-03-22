@@ -26,7 +26,7 @@ class MongoMetricsDAO(MetricsDAO):
         self.metrics_collection_name = "metrics"
         """Name of the MongoDB collection with metrics."""
 
-    def get_metric(self, run_id, metric_id):
+    def get(self, run_id, metric_id):
         """
         Read a metric of the given id and run.
 
@@ -48,23 +48,43 @@ class MongoMetricsDAO(MetricsDAO):
 
         :raise NotFoundError
         """
+        run_id = self._parse_run_id(run_id)
         query = self._build_query(run_id, metric_id)
         row = self._read_metric_from_db(metric_id, run_id, query)
         metric = self._to_intermediary_object(row)
         return metric
 
+    def delete(self, run_id):
+        """
+       Delete all metrics belonging to the given run.
+
+       :param run_id: ID of the Run that the metric belongs to.
+       """
+        self.generic_dao.delete_record(
+            self.metrics_collection_name,
+            {"run_id": self._parse_run_id(run_id)})
+
     def _read_metric_from_db(self, metric_id, run_id, query):
-        row = self.generic_dao.find_record(self.metrics_collection_name, query)
+        row = self.generic_dao.find_record(self.metrics_collection_name,
+                                           query)
         if row is None:
             raise NotFoundError("Metric %s for run %s not found."
                                 % (metric_id, run_id))
         return row
 
+    def _parse_run_id(self, run_id):
+        id = None
+        try:
+            id = int(run_id)
+        except ValueError:
+            id = run_id
+        return id
+
     def _build_query(self, run_id, metric_id):
         # Metrics in MongoDB is always an ObjectId
         try:
             id = ObjectId(metric_id)
-            return {"run_id": run_id, "_id": id}
+            return {"run_id": self._parse_run_id(run_id), "_id": id}
         except InvalidId as ex:
             raise NotFoundError("Metric Id %s is invalid "
                                 "ObjectId in MongoDB" % metric_id) from ex

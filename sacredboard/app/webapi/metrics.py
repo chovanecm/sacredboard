@@ -4,6 +4,7 @@ Accessing the Metrics Data.
 Issue: https://github.com/chovanecm/sacredboard/issues/58
 """
 import datetime
+
 from flask import Response, render_template, Blueprint, current_app
 
 from sacredboard.app.data import NotFoundError
@@ -20,7 +21,7 @@ def get_metric(run_id, metric_id):
     """
     data = current_app.config["data"]  # type: DataStorage
     dao = data.get_metrics_dao()
-    metric = dao.get_metric(run_id, metric_id)
+    metric = dao.get(run_id, metric_id)
 
     return Response(render_template(
         "api/metric.js",
@@ -72,6 +73,6 @@ def handle_not_found_error(e):
     return "Couldn't find resource:\n%s" % e, 404
 
 
-def initialize(app):
+def initialize(app, app_config):
     """Register the module in Flask."""
     app.register_blueprint(metrics)

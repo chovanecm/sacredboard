@@ -4,8 +4,8 @@
  *
  * The module is a candidate for rewriting into knockout.js
  */
-define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jquery"],
-    function (bootstrap, datatables, dtboostrap, generateDetailView, $) {
+define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView/component", "jquery", "knockout"],
+    function (bootstrap, datatables, dtboostrap, detailView, $, ko) {
         /**
          * Scroll down in the element.
          *
@@ -71,7 +71,7 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
                  * and additional URL parameters to be passed to the backend.
                  */
                 ajax: {
-                    url: "/api/run",
+                    url: "api/run",
                     data: function (request) {
                         request.queryFilter = JSON.stringify(createRunTable.queryFilter);
 
@@ -132,7 +132,7 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
                     var id = row.data().id;
                     var loadDetailData = function () {
                         $.ajax({
-                            url: "/api/run/" + id
+                            url: "api/run/" + id
                         }).done(function (data) {
                             if (data.data[0].id != row.data().id) {
                                 /* Before this ajax function was called,
@@ -144,8 +144,22 @@ define(["bootstrap", "datatable", "datatables-bootstrap", "runs/detailView", "jq
                             var detail_view = null;
                             //Show detail view if not shown yet
                             if (!row.child.isShown()) {
-                                row.child(generateDetailView(data.data[0])).show();
+                                var detailComponent = $("<detail-view params='run: run, deleteRunHandler: deleteRunHandler'></detail-view>");
+                                row.child(detailComponent).show();
                                 detail_view = tr[0].nextSibling;
+                                ko.applyBindings({
+                                    run: data.data[0],
+                                    deleteRunHandler: function (id) {
+                                        $.ajax({
+                                            method: "DELETE",
+                                            url: "/api/run/" + id
+                                        }).done(function (msg) {
+                                            table.row(row).remove().draw();
+                                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                                            alert("ERROR: Couldn't remove run " + id + "\nDetails: " + jqXHR.responseText + "\nError thrown: " + errorThrown);
+                                        });
+                                    }
+                                }, detail_view);
                             } else {
                                 //detail view already shown, update the content.
                                 detail_view = tr[0].nextSibling;

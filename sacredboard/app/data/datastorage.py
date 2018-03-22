@@ -1,4 +1,5 @@
 """Interfaces for data storage."""
+from sacredboard.app.data.rundao import RunDAO
 from .errors import NotFoundError
 from .metricsdao import MetricsDAO
 
@@ -12,11 +13,11 @@ class Cursor:
 
     def count(self):
         """Return the number of items in this cursor."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def __iter__(self):
         """Iterate over elements."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class DataStorage:
@@ -31,16 +32,7 @@ class DataStorage:
         """Initialize data accessor."""
         pass
 
-    def get_run(self, run_id):
-        """Return the run associated with the id."""
-        raise NotImplemented()
-
-    def get_runs(self, sort_by=None, sort_direction=None,
-                 start=0, limit=None, query={"type": "and", "filters": []}):
-        """Return all runs that match the query."""
-        raise NotImplemented()
-
-    def get_metrics_dao(self):
+    def get_metrics_dao(self) -> MetricsDAO:
         """
         Return a data access object for metrics.
 
@@ -51,14 +43,27 @@ class DataStorage:
         """
         return DummyMetricsDAO()
 
+    def get_run_dao(self) -> RunDAO:
+        """
+        Return a data access object for Runs.
+
+        :return: RunDAO
+        """
+        raise NotImplementedError(
+            "Run Data Access Object must be implemented.")
+
 
 class DummyMetricsDAO(MetricsDAO):
     """Dummy Metrics DAO that does not find any metric."""
 
-    def get_metric(self, run_id, metric_id):
+    def get(self, run_id, metric_id):
         """
         Raise NotFoundError. Always.
 
         :raise NotFoundError
         """
         raise NotFoundError("Metrics not supported by this backend.")
+
+    def delete(self, run_id):
+        """Do nothing."""
+        pass

@@ -1,3 +1,5 @@
+import json
+
 from setuptools import setup, find_packages
 
 with open('description.txt') as f:
@@ -6,6 +8,11 @@ with open('description.txt') as f:
 
 def get_requirements():
     with open("requirements.txt") as f:
+        return f.readlines()
+
+
+def get_pytest_requirements():
+    with open("pytest-requirements.txt") as f:
         return f.readlines()
 
 
@@ -37,6 +44,6 @@ setup(
     },
     install_requires=get_requirements(),
     setup_requires=["pytest-runner"],
-    tests_require=["pytest", "mongomock"],
-    version="0.3.1"
+    tests_require=get_pytest_requirements(),
+    version=json.load(open("package.json"))["version"]
 )

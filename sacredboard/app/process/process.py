@@ -2,9 +2,10 @@
 """Module for launching processes and reading their output."""
 import atexit
 import os
-import select
 import time
 from subprocess import Popen, PIPE
+
+import select
 
 
 class Process:
@@ -45,6 +46,8 @@ class Process:
         Read a line from the process.
 
         Block or wait for time_limit secs. Timeout does not work on Windows.
+
+        :raise TimeoutError
         """
         if self.proc is not None:
             poll_obj = select.poll()

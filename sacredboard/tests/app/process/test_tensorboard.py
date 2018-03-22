@@ -41,9 +41,10 @@ def test_run_tensorboard_binary_not_found():
     sacredboard.app.process.tensorboard.TENSORBOARD_BINARY = original_binary
 
 
-@py.mark.timeout(15)
+@py.mark.timeout(1)
 def test_run_tensorboard_timeout():
     """ Fails on Windows because of missing "poll" on stdout. """
     with py.raises(TimeoutError) as ex:
         port = sacredboard.app.process.tensorboard.run_tensorboard("/tmp/logdir",
-                                                                   tensorboard_args=["--print-nothing"])
+                                                                   tensorboard_args=["--print-nothing"],
+                                                                   timeout=0.5)

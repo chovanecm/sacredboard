@@ -8,7 +8,7 @@ and displays a list of experiments, their state, Sacred configuration and
 the standard output from the running program.  
 Python 3.5 and a modern web browser are  required for it to work properly.
 
-# Features in version 0.3
+# Features in version 0.4
 
 - Get an overview of running and finished experiments in a table,
  such as experiment name, machine on which it runs etc.
@@ -23,11 +23,14 @@ Python 3.5 and a modern web browser are  required for it to work properly.
      (does not work with TensorFlow 1.2 now)
 - Visualise [Metrics](http://sacred.readthedocs.io/en/latest/collected_information.html#metrics-api) in a chart.
 - Use the MongoDB and newly also FileStorage backend (experimental, thanks to [Gideon Dresdner](https://github.com/gideonite))
+- Delete experiments from the UI
 
 ## Roadmap
 
 ### Further Versions
-- Deleting experiments
+- Deleting experiments including related records, such as artifacts
+- [Customized formatting of the result column](https://github.com/chovanecm/sacredboard/issues/63)
+- Write wiki for developers :-)
 - TBD
 
 ## Screenshots
@@ -43,6 +46,15 @@ Install sacredboard using `pip`:
 To install the latest development version with new features, run:
 
     pip install https://github.com/chovanecm/sacredboard/archive/develop.zip
+
+### Dependencies
+
+Sacredboard may require additional dependencies to install, especilly Python3 development files and a C compiler:
+
+On Ubuntu/Debian:
+
+    libpython3-dev
+    build-essential
 
 ### Running
 

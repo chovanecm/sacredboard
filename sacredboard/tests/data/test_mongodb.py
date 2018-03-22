@@ -4,8 +4,8 @@ import mongomock
 import pytest
 
 from sacredboard.app.data import MetricsDAO
-from sacredboard.app.data.mongodb import PyMongoDataAccess
 from sacredboard.app.data.pymongo import MongoMetricsDAO
+from sacredboard.app.data.pymongo.mongodb import PyMongoDataAccess
 
 
 def create_mongomock_client():
@@ -18,7 +18,6 @@ def create_mongomock_client():
          "seed": 144363069, "dropout_keep_probability": 0.5,
          "max_character_ord": 255, "training_ds": "training", "num_classes": 3,
          "training_steps": 1000, "learning_rate": 0.0001, "hidden_size": 500},
-                        "start_time": {"$date": 1476004818913},
                         "_id": bson.ObjectId("57f9efb2e4b8490d19d7c30e"),
                         "info": {}, "resources": [],
                         "host": {"os": "Linux",
@@ -35,17 +34,16 @@ def create_mongomock_client():
                                                         ["numpy", "1.11.2"],
                                                         ["sacred", "0.6.10"]],
                                        "name": "German nouns"},
-                        "heartbeat": {"$date": 1479211200000},
+
                         "result": 2403.52, "artifacts": [], "comment": "",
-                        "stop_time": {"$date": 1476009883302},
+
                         "captured_out": "Output: \n"})
 
     db.runs.insert_one({
-        "stop_time": {"$date": 1477853779971},
-        "start_time": {"$date": 1477853779941}, "meta": {},
+       "meta": {},
         "_id": bson.ObjectId("58163443b1758523257c69ca"), "resources": [],
         "experiment": {"repositories": [], "name": "pokus", "sources": [
-            ["pokus.py", {"$oid": "58163443b1758523257c69c8"}]],
+            ["pokus.py", {"oid": "58163443b1758523257c69c8"}]],
                        "dependencies": ["numpy==1.11.2", "sacred==0.7b0"],
                        "base_dir": "/media/sf_Martin/Documents/archiv/archiv/\u0161kola/\u010cVUT/Magistr/Diplomka/sandbox"},
         "status": "COMPLETED", "config": {"seed": 185616783}, "result": None,
@@ -57,8 +55,7 @@ def create_mongomock_client():
         "format": "MongoObserver-0.7.0",
         "captured_out": "INFO - pokus - Running command 'run'\nINFO - pokus - Started run with ID \"58163443b1758523257c69ca\"\n",
         "artifacts": [], "command": "run",
-        "info": {"tensorflow": {"logdirs": ["./log/test_dir"]}},
-        "heartbeat": {"$date": 1477853779970}}
+        "info": {"tensorflow": {"logdirs": ["./log/test_dir"]}}}
     )
     assert len(list(db.runs.find())) == 2
     return client
@@ -74,25 +71,25 @@ def db_gateway() -> PyMongoDataAccess:
 
 
 def test_get_runs(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs())
+    runs = list(db_gateway.get_run_dao().get_runs())
     assert len(runs) == 2
     assert runs[0]["host"]["hostname"] == "ntbacer"
     assert runs[1]["host"]["hostname"] == "martin-virtual-machine"
 
 
 def test_get_runs_limit(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs(limit=1))
+    runs = list(db_gateway.get_run_dao().get_runs(limit=1))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
 
 
 def test_get_runs_order(db_gateway: PyMongoDataAccess):
-    runs = list(db_gateway.get_runs(sort_by="host.python_version"))
+    runs = list(db_gateway.get_run_dao().get_runs(sort_by="host.python_version"))
     assert len(runs) == 2
     assert runs[0]["host"]["python_version"] == "3.4.3"
     assert runs[1]["host"]["python_version"] == "3.5.2"
 
-    runs = list(db_gateway.get_runs(sort_by="host.python_version",
+    runs = list(db_gateway.get_run_dao().get_runs(sort_by="host.python_version",
                                     sort_direction="desc"))
     assert len(runs) == 2
     assert runs[0]["host"]["python_version"] == "3.5.2"
@@ -108,7 +105,7 @@ filter2 = {"type": "and", "filters": [
 
 @pytest.mark.parametrize("query_filter", (filter1, filter2))
 def test_get_runs_filter(db_gateway: PyMongoDataAccess, query_filter):
-    runs = list(db_gateway.get_runs(query=query_filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=query_filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
 
@@ -120,7 +117,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
          "filters": [{"field": "result", "operator": "==", "value": 2403.52},
                      {"field": "host.python_version", "operator": "==",
                       "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "ntbacer"
     assert runs[0]["result"] == 2403.52
@@ -132,7 +129,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
          "filters": [{"field": "result", "operator": "==", "value": 2403.52},
                      {"field": "host.python_version", "operator": "==",
                       "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=filter))
     assert len(runs) == 1
     assert runs[0]["host"]["hostname"] == "martin-virtual-machine"
     assert runs[0]["host"]["python_version"] == "3.5.2"
@@ -141,7 +138,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
         {"field": "result", "operator": "==", "value": 2403.52},
         {"field": "host.python_version", "operator": "==",
          "value": "3.5.2"}]}]}
-    runs = list(db_gateway.get_runs(query=filter))
+    runs = list(db_gateway.get_run_dao().get_runs(query=filter))
     assert len(runs) == 2
 
     assert runs[0]["host"]["hostname"] == "ntbacer"
@@ -152,7 +149,7 @@ def test_get_runs_filter_or(db_gateway: PyMongoDataAccess):
 
 
 def test_get_run(db_gateway: PyMongoDataAccess):
-    run = dict(db_gateway.get_run("57f9efb2e4b8490d19d7c30e"))
+    run = dict(db_gateway.get_run_dao().get("57f9efb2e4b8490d19d7c30e"))
     assert run["host"]["hostname"] == "ntbacer"
 
 

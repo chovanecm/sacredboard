@@ -1,60 +1,35 @@
-# coding=utf-8
-"""Accesses data in Sacred's MongoDB."""
+"""
+Module responsible for accessing the Run data in MongoDB.
+
+Issue: https://github.com/chovanecm/sacredboard/issues/69
+"""
 import bson
 import pymongo
 
-from sacredboard.app.data.datastorage import Cursor, DataStorage
-from sacredboard.app.data.pymongo import GenericDAO, MongoMetricsDAO
+from sacredboard.app.data import NotFoundError
+from sacredboard.app.data.pymongo import GenericDAO
+from sacredboard.app.data.rundao import RunDAO
 
 
-class MongoDbCursor(Cursor):
-    """Implements Cursor for mongodb."""
+class MongoRunDAO(RunDAO):
+    """Implementation of MetricsDAO for MongoDB."""
 
-    def __init__(self, mongodb_cursor):
-        """Initialize a MongoDB cursor."""
-        self.mongodb_cursor = mongodb_cursor
+    def __init__(self, generic_dao: GenericDAO, collection_name="runs"):
+        """
+        Create new Run accessor for MongoDB.
 
-    def count(self):
-        """Return the number of items in this cursor."""
-        return self.mongodb_cursor.count()
-
-    def __iter__(self):
-        """Iterate over runs."""
-        return self.mongodb_cursor
-
-
-class PyMongoDataAccess(DataStorage):
-    """Access records in MongoDB."""
+        :param generic_dao: A configured generic MongoDB data access object
+         pointing to an appropriate database.
+        :param collection_name: The collection to search runs in.
+        """
+        self.generic_dao = generic_dao
+        self.collection_name = collection_name
+        """Name of the MongoDB collection with Runs."""
 
     RUNNING_DEAD_RUN_CLAUSE = {
         "status": "RUNNING", "$where": "new Date() - this.heartbeat > 120000"}
     RUNNING_NOT_DEAD_CLAUSE = {
         "status": "RUNNING", "$where": "new Date() - this.heartbeat <= 120000"}
-
-    def __init__(self, uri, database_name, collection_name):
-        """
-        Set up MongoDB access layer, don't connect yet.
-
-        Better use the static methods build_data_access
-        or build_data_access_with_uri
-        """
-        super().__init__()
-        self._uri = uri
-        self._db_name = database_name
-        self._client = None
-        self._db = None
-        self._collection_name = collection_name
-        self._generic_dao = None
-
-    def connect(self):
-        """Initialize the database connection."""
-        self._client = self._create_client()
-        self._db = getattr(self._client, self._db_name)
-        self._generic_dao = GenericDAO(self._client, self._db_name)
-
-    def _create_client(self):
-        """Return a new Mongo Client."""
-        return pymongo.MongoClient(host=self._uri)
 
     def get_runs(self, sort_by=None, sort_direction=None,
                  start=0, limit=None, query={"type": "and", "filters": []}):
@@ -89,33 +64,34 @@ class PyMongoDataAccess(DataStorage):
         :func:`~PyMongoDataAccess.RUNNING_NOT_DEAD_CLAUSE`
         """
         mongo_query = self._to_mongo_query(query)
-        cursor = getattr(self._db, self._collection_name).find(mongo_query)
-        if sort_by is not None:
-            cursor = self._apply_sort(cursor, sort_by, sort_direction)
-        cursor = cursor.skip(start)
-        if limit is not None:
-            cursor = cursor.limit(limit)
+        r = self.generic_dao.find_records(self.collection_name, mongo_query,
+                                          sort_by, sort_direction, start,
+                                          limit)
+        return r
 
-        return MongoDbCursor(cursor)
-
-    def get_run(self, run_id):
+    def get(self, run_id):
         """
         Get a single run from the database.
 
         :param run_id: The ID of the run.
         :return: The whole object from the database.
+        :raise NotFoundError when not found
         """
-        try:
-            cursor = getattr(self._db, self._collection_name) \
-                .find({"_id": int(run_id)})
-        except ValueError:
-            # Probably not a number.
-            cursor = getattr(self._db, self._collection_name) \
-                .find({"_id": bson.ObjectId(run_id)})
-        run = None
-        for c in cursor:
-            run = c
+        id = self._parse_id(run_id)
+
+        run = self.generic_dao.find_record(self.collection_name,
+                                           {"_id": id})
+        if run is None:
+            raise NotFoundError("Run %s not found." % run_id)
         return run
+
+    def _parse_id(self, run_id):
+        id = None
+        try:
+            id = int(run_id)
+        except ValueError:
+            id = bson.ObjectId(run_id)
+        return id
 
     @staticmethod
     def _apply_sort(cursor, sort_by, sort_direction):
@@ -153,11 +129,11 @@ class PyMongoDataAccess(DataStorage):
         mongo_query = []
         for clause in query["filters"]:
             if clause.get("type") is None:
-                mongo_clause = PyMongoDataAccess. \
+                mongo_clause = MongoRunDAO. \
                     _simple_clause_to_query(clause)
             else:
                 # It's a subclause
-                mongo_clause = PyMongoDataAccess._to_mongo_query(clause)
+                mongo_clause = MongoRunDAO._to_mongo_query(clause)
             mongo_query.append(mongo_clause)
 
         if len(mongo_query) == 0:
@@ -183,7 +159,7 @@ class PyMongoDataAccess(DataStorage):
         value = clause["value"]
         if clause["field"] == "status" and clause["value"] in ["DEAD",
                                                                "RUNNING"]:
-            return PyMongoDataAccess. \
+            return MongoRunDAO. \
                 _status_filter_to_query(clause)
         if clause["operator"] == "==":
             mongo_clause[clause["field"]] = value
@@ -216,53 +192,22 @@ class PyMongoDataAccess(DataStorage):
         :return: A MongoDB clause.
         """
         if clause["value"] == "RUNNING":
-            mongo_clause = PyMongoDataAccess.RUNNING_NOT_DEAD_CLAUSE
+            mongo_clause = MongoRunDAO.RUNNING_NOT_DEAD_CLAUSE
         elif clause["value"] == "DEAD":
-            mongo_clause = PyMongoDataAccess.RUNNING_DEAD_RUN_CLAUSE
+            mongo_clause = MongoRunDAO.RUNNING_DEAD_RUN_CLAUSE
         if clause["operator"] == "!=":
             mongo_clause = {"$not": mongo_clause}
         return mongo_clause
 
-    @staticmethod
-    def build_data_access(host, port, database_name, collection_name):
+    def delete(self, run_id):
         """
-        Create data access gateway.
+        Delete run with the given id from the backend.
 
-        :param host: The database server to connect to.
-        :type host: str
-        :param port: Database port.
-        :type port: int
-        :param database_name: Database name.
-        :type database_name: str
-        :param collection_name: Name of the collection with Sacred runs.
-        :type collection_name: str
+        :param run_id: Id of the run to delete.
+        :raise NotImplementedError If not supported by the backend.
+        :raise DataSourceError General data source error.
+        :raise NotFoundError The run was not found. (Some backends may succeed
+        even if the run does not exist.
         """
-        return PyMongoDataAccess("mongodb://%s:%d" % (host, port),
-                                 database_name, collection_name)
-
-    @staticmethod
-    def build_data_access_with_uri(uri, database_name, collection_name):
-        """
-        Create data access gateway given a MongoDB URI.
-
-        :param uri: Connection string as defined in
-                https://docs.mongodb.com/manual/reference/connection-string/
-        :type uri: str
-        :param database_name: Database name
-        :type database_name: str
-        :param collection_name: Name of the collection
-        where Sacred stores its runs
-        :type collection_name: str
-        """
-        return PyMongoDataAccess(uri, database_name, collection_name)
-
-    def get_metrics_dao(self):
-        """
-        Return a data access object for metrics.
-
-        The method can be called only after a connection to DB is established.
-        Issue: https://github.com/chovanecm/sacredboard/issues/62
-
-        :return MetricsDAO
-        """
-        return MongoMetricsDAO(self._generic_dao)
+        return self.generic_dao.delete_record(self.collection_name,
+                                              self._parse_id(run_id))

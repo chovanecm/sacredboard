@@ -2,7 +2,48 @@
 """WebAPI module for handling run-related requests."""
 import json
 
-from flask import current_app, request, Response, render_template
+from flask import current_app, request, Response, render_template, Blueprint
+
+from sacredboard.app.business import RunFacade
+from sacredboard.app.data import DataSourceError
+
+runs = Blueprint("runs", __name__)
+
+
+@runs.route("/api/run")
+def api_runs():
+    """Return a list of runs as a JSON object."""
+    return get_runs()
+
+
+@runs.route("/api/run/<run_id>", methods=["DELETE"])
+def api_run_delete(run_id):
+    """Delete the given run and corresponding entities."""
+    data = current_app.config["data"]  # type: DataStorage
+    RunFacade(data).delete_run(run_id)
+    return "DELETED run %s" % run_id
+
+
+@runs.route("/api/run/<run_id>", methods=["GET"])
+def api_run_get(run_id):
+    """Return a single run as a JSON object."""
+    data = current_app.config["data"]
+    run = data.get_run_dao().get(run_id)
+    records_total = 1 if run is not None else 0
+    if records_total == 0:
+        return Response(
+            render_template(
+                "api/error.js",
+                error_code=404,
+                error_message="Run %s not found." % run_id),
+            status=404,
+            mimetype="application/json")
+    records_filtered = records_total
+    return Response(render_template("api/runs.js", runs=[run], draw=1,
+                                    recordsTotal=records_total,
+                                    recordsFiltered=records_filtered,
+                                    full_object=True),
+                    mimetype="application/json")
 
 
 def parse_int_arg(name, default):
@@ -40,7 +81,7 @@ def get_runs():
         if order_column == "hostname":
             order_column = "host.hostname"
 
-    runs = data.get_runs(
+    runs = data.get_run_dao().get_runs(
         start=start, limit=length,
         sort_by=order_column, sort_direction=order_dir, query=query)
     # records_total should be the total size of the records in the database,
@@ -52,3 +93,24 @@ def get_runs():
         draw=draw, recordsTotal=records_total,
         recordsFiltered=records_filtered),
         mimetype="application/json")
+
+
+@runs.errorhandler(DataSourceError)
+def handle_data_source_error(e: DataSourceError):
+    """Handle Exception: DataSource Error."""
+    return "Data source error: %s" % e, 500
+
+
+@runs.errorhandler(NotImplementedError)
+def handle_not_implemented_error(e: NotImplementedError):
+    """
+    Raise exception: not implemented error.
+
+    Raise an exception if the operation is not supported by the backend.
+    """
+    return "Not Implemented: %s" % e, 510
+
+
+def initialize(app, app_config):
+    """Register the module in Flask."""
+    app.register_blueprint(runs)
