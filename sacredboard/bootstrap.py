@@ -40,7 +40,7 @@ webapi_modules = [proxy, routes, metrics, runs, jinja_filters, server_runner]
                    "or Sacred v0.6 (which used default.runs). "
                    "Default: runs")
 @click.option("-F", default="",
-              help="Path to directory containing experiment results of the"
+              help="Path to directory containing experiment results of the "
                    "File Storage observer. (experimental)")
 @click.option("--no-browser", is_flag=True, default=False,
               help="Do not open web browser automatically.")
