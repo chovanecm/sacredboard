@@ -29,6 +29,10 @@
                     <a data-bind="attr: {href: '#experiment-meta-' + run.id}"
                        data-toggle="pill">Meta Info</a>
                 </li>
+                   <li role="presentation">
+                    <a data-bind="attr: {href: '#experiment-hostinfo-' + run.id}"
+                       data-toggle="pill">Host Info</a>
+                </li>
                 <li role="presentation">
                     <a data-bind="attr: {href: '#tensorflow-' + run.id}"
                        data-toggle="pill">Tensorflow logs</a>
@@ -76,6 +80,14 @@
                 <div class="detail-page-box">
                     <dictionary-browser
                             params="value: run.object.meta"></dictionary-browser>
+                </div>
+            </div>
+                        <div data-bind="attr: {id: 'experiment-hostinfo-' + run.id}"
+                 class="tab-pane table-responsive">
+                <h4>Host Information</h4>
+                <div class="detail-page-box">
+                    <dictionary-browser
+                            params="value: run.object.host"></dictionary-browser>
                 </div>
             </div>
             <div data-bind="attr: {id: 'captured-output-' + run.id}"
