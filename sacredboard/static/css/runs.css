@@ -31,6 +31,10 @@
     color: yellow;
 }
 
+label {
+    font-weight: normal;
+}
+
 .detail-page-box {
     overflow: auto;
     height: 35eM;

@@ -81,9 +81,10 @@
             <div data-bind="attr: {id: 'captured-output-' + run.id}"
                  class="tab-pane">
                 <h4>Captured output from the experiment</h4>
-                <pre class="scrollDown detail-page-box"
+                <pre class="detail-page-box"
                      sacred-content="captured_out"
-                     data-bind="text: run.object.captured_out"></pre>
+                     data-bind="text: run.object.captured_out, css: {scrollDown: scrollOutputDown}"></pre>
+                <label><input type="checkbox" data-bind="checked: scrollOutputDown" name="scrollOutputDown"> Keep scrolling down</label>
             </div>
             <div data-bind="attr: {id: 'tensorflow-' + run.id}"
                  class="tab-pane">
