@@ -22,6 +22,11 @@
                        data-toggle="pill">Captured output</a>
                 </li>
                 <li role="presentation">
+                    <a data-bind="attr: {href: '#experiment-result-' + run.id}"
+                       data-toggle="pill">Result</a>
+                </li>
+
+                <li role="presentation">
                     <a data-bind="attr: {href: '#experiment-experiment-' + run.id}"
                        data-toggle="pill">Experiment</a>
                 </li>
@@ -64,6 +69,14 @@
                 <div class="detail-page-box">
                     <dictionary-browser
                             params="value: run.object.info"></dictionary-browser>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'experiment-result-' + run.id}"
+                 class="tab-pane table-responsive">
+                <h4>Result</h4>
+                <div class="detail-page-box">
+                    <dictionary-browser
+                            params="value: run.result"></dictionary-browser>
                 </div>
             </div>
             <div data-bind="attr: {id: 'experiment-experiment-' + run.id}"
