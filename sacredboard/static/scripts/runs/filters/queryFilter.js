@@ -15,7 +15,7 @@ define(["knockout", "enquotedStringOrNumberValidator"],
          *
          * @param {string} field - The database field to be filtered by.
          * @param {string} operator - The operator to be used. {@link QueryFilters.operators).
-         * @param {string|Number} value - The value to be applied in the filter (a primitive type).
+         * @param {string|number} value - The value to be applied in the filter (a primitive type).
          * @class
          * @alias module:runs/filter/queryFilter
          */
