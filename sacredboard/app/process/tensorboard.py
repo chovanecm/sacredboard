@@ -1,5 +1,4 @@
 """Module for managing TensorBoard processes."""
-import re
 
 from sacredboard.app.process.process \
     import Process, ProcessError, UnexpectedOutputError
@@ -58,12 +57,13 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", port=6006, tensorboard_args=Non
             return port
         elif "TensorBoard attempted to bind to port" in line:
             break
-    
+
     tensorboard_instance.terminate()
     raise UnexpectedOutputError(
         data,
         expected="Confirmation that Tensorboard has started"
     )
+
 
 if __name__ == "__main__":
     print(run_tensorboard("."))

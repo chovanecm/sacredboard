@@ -52,6 +52,11 @@ class Process:
         return self._read_line("stdout", time_limit)
 
     def read_line_stderr(self, time_limit=None):
+        """
+        Read a line from the process standard error.
+
+        Wait at most time_limit seconds for output, then :raise TimeoutError.
+        """
         return self._read_line("stderr", time_limit)
 
     def _read_line(self, source, time_limit=None):
