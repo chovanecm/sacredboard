@@ -48,8 +48,8 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", tensorboard_args=None, timeout=
 
     # Read first line of output from tensorboard - it should contain
     # the port where it is listening on
-    data = tensorboard_instance.read_line(time_limit=timeout)
-    search = re.search("on port ([0-9]+)", data)
+    data = tensorboard_instance.read_line_stderr(time_limit=timeout)
+    search = re.search("at http://[.+]:([0-9]+)", data)
     if search is not None:
         port = search.group(1)
         return port
