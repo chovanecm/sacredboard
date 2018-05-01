@@ -62,7 +62,7 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", port=6006, tensorboard_args=Non
     tensorboard_instance.terminate()
     raise UnexpectedOutputError(
         data,
-        expected="Confirmation that Tensorboard has started but it keeps outputting... "
+        expected="Confirmation that Tensorboard has started"
     )
 
 if __name__ == "__main__":

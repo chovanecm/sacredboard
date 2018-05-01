@@ -28,7 +28,7 @@ def mock_tensorboard(logdir, host, port, print_nonsense, print_nothing,
             print('Lorem ipsum %d' % i, file=sys.stderr)
             time.sleep(0.1)
     elif address_in_use:
-        print('Tried to connect to port %d, but address is in use.' % 1234, file=sys.stderr)
+        print('TensorBoard attempted to bind to port %d, but it was already in use' % 1234, file=sys.stderr)
     else:
         time.sleep(1)
 
