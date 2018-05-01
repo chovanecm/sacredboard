@@ -58,12 +58,12 @@ class Process:
         if self.proc is not None:
             read_from = self._get_read_object(source)
             poll_obj = select.poll()
-            poll_obj.register(read_from, self._get_select_type(source))
+            poll_obj.register(read_from, select.POLLIN)
             start = time.time()
             while time_limit is None or time.time() - start < time_limit:
                 poll_result = poll_obj.poll(0)
                 if poll_result:
-                    line = source.readline().decode()
+                    line = read_from.readline().decode()
                     return line
                 else:
                     time.sleep(0.05)
@@ -71,16 +71,13 @@ class Process:
         else:
             return None
 
-    def _get_select_type(self, source):
-        return select.POLLIN if source == "stdin" else select.POLLERR
-
     def _get_read_object(self, source):
-        if source == "stdin":
-            read_from = self.proc.stdin
+        if source == "stdout":
+            read_from = self.proc.stdout
         elif source == "stderr":
             read_from = self.proc.stderr
         else:
-            raise ValueError("Unknown source " + source + ". Valid: stdin, stderr")
+            raise ValueError("Unknown source " + source + ". Valid: stdout, stderr")
         return read_from
 
     def terminate(self, wait=False):
