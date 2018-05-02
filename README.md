@@ -20,7 +20,7 @@ Python 3.5 and a modern web browser are  required for it to work properly.
     charts and [Tensorflow](https://www.tensorflow.org) graph visualisations,
     provided that the experiment uses Sacred's 
     [Integration with Tensorflow](http://sacred.readthedocs.io/en/latest/tensorflow.html)
-     (does not work with TensorFlow 1.2 now)
+     (this feature was broken for a long time and is (partially) fixed in the current dev version)
 - Visualise [Metrics](http://sacred.readthedocs.io/en/latest/collected_information.html#metrics-api) in a chart.
 - Use the MongoDB and newly also FileStorage backend (experimental, thanks to [Gideon Dresdner](https://github.com/gideonite))
 - Delete experiments from the UI
