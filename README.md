@@ -8,6 +8,12 @@ and displays a list of experiments, their state, Sacred configuration and
 the standard output from the running program.  
 Python 3.5 and a modern web browser are  required for it to work properly.
 
+### Project Background (is Sacredboard dead?)
+
+Sacredboard was written as a part of a [master's thesis](https://dspace.cvut.cz/bitstream/handle/10467/69995/F8-DP-2017-Chovanec-Martin-thesis.pdf?sequence=1&isAllowed=y) at Czech Technical University in 2016 and 2017. Supervised by the main developer of Sacred (Klaus Greff from the [Swiss AI Lab IDSIA](http://www.idsia.ch/)), who promoted Sacredboard on the Sacred homepage and at the end of his talk at the [SciPy 2017 Python conference](https://www.youtube.com/watch?v=qqg7RO0o1OE), it has become used by more people that I expected.
+
+Unfortunately, the days I was full-time working on the tool as a student writing his thesis are gone. Sacredboard is now a side project, updated rather once in a while than on a regular basis, mainly because of its active users that deserve their requests for improvements and bugfixes to be addressed.
+
 # Features in version 0.4
 
 - Get an overview of running and finished experiments in a table,
