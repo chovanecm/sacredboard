@@ -48,3 +48,7 @@ def test_run_tensorboard_timeout():
         port = sacredboard.app.process.tensorboard.run_tensorboard("/tmp/logdir",
                                                                    tensorboard_args=["--print-nothing"],
                                                                    timeout=0.5)
+def test_parse_port_from_tensorboard_output():
+    input = "TensorBoard 1.8.0 at http://martin-VirtualBox:36869"
+    port = sacredboard.app.process.tensorboard.parse_port_from_tensorboard_output(input)
+    assert port == 36869

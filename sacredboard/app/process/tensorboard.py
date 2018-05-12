@@ -3,6 +3,7 @@
 from sacredboard.app.process.process \
     import Process, ProcessError, UnexpectedOutputError
 import time
+import re
 
 TENSORBOARD_BINARY = "tensorboard"
 
@@ -22,12 +23,13 @@ class TensorboardNotFoundError(ProcessError):
     pass
 
 
-def run_tensorboard(logdir, listen_on="0.0.0.0", port=6006, tensorboard_args=None, timeout=10):
+def run_tensorboard(logdir, listen_on="0.0.0.0", port=0, tensorboard_args=None, timeout=10):
     """
     Launch a new TensorBoard instance.
 
     :param logdir: Path to a TensorFlow summary directory
     :param listen_on: The IP address TensorBoard should listen on.
+    :param port: Port number to listen on. 0 for a random port.
     :param tensorboard_args: Additional TensorBoard arguments.
     :param timeout: Timeout after which the Timeout
     :type timeout: float
@@ -53,6 +55,7 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", port=6006, tensorboard_args=Non
         line = tensorboard_instance.read_line_stderr(time_limit=timeout)
         data += line
         if "at http://" in line:
+            port = parse_port_from_tensorboard_output(line)
             # Good case
             return port
         elif "TensorBoard attempted to bind to port" in line:
@@ -63,6 +66,24 @@ def run_tensorboard(logdir, listen_on="0.0.0.0", port=6006, tensorboard_args=Non
         data,
         expected="Confirmation that Tensorboard has started"
     )
+
+
+def parse_port_from_tensorboard_output(tensorboard_output: str) -> int:
+    """
+    Parse tensorboard port from its outputted message.
+
+    :param tensorboard_output: Output message of Tensorboard
+    in format TensorBoard 1.8.0 at http://martin-VirtualBox:36869
+    :return: Returns the port TensorBoard is listening on.
+    :raise UnexpectedOutputError
+    """
+    search = re.search("at http://[^:]+:([0-9]+)", tensorboard_output)
+    if search is not None:
+        port = search.group(1)
+        return int(port)
+    else:
+        raise UnexpectedOutputError(tensorboard_output, "Address and port where Tensorboard has started,"
+                                                        " e.g. TensorBoard 1.8.0 at http://martin-VirtualBox:36869")
 
 
 if __name__ == "__main__":
