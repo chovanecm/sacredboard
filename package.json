@@ -3,15 +3,15 @@
   "version": "0.4.1-dev4",
   "description": "Sacredboard NPM package file for automatic tests.",
   "dependencies": {},
-  "devDependencies": [
-    "qunit",
-    "requirejs",
-    "eslint",
-    "eslint-plugin-requirejs",
-    "eslint-plugin-jsdoc",
-    "jsdoc",
-    "docdash"
-  ],
+  "devDependencies": {
+    "qunit": "2.6.0",
+    "requirejs": "*",
+    "eslint": "*",
+    "eslint-plugin-requirejs": "*",
+    "eslint-plugin-jsdoc": "*",
+    "jsdoc": "*",
+    "docdash": "*"
+  },
   "scripts": {
     "test": "cd sacredboard/static/scripts/tests && qunit node_tests.js",
     "lint": "eslint \"sacredboard/static/scripts/**/*.js\"",
