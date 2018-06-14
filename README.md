@@ -95,7 +95,7 @@ To display help, run
 
 ## Contributing
 
-Contributions to Sacred are welcomed (see issues for inspiration).
+Contributions to Sacred are welcome (see issues for inspiration).
 The project tries to follow the git-flow workflow. Therefore,
 contributions of new features should be developed against the `develop` branch. Thank you!
 
