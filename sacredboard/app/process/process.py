@@ -89,7 +89,10 @@ class Process:
         """Terminate the process."""
         if self.proc is not None:
             self.proc.stdout.close()
-            self.proc.terminate()
+            try:
+                self.proc.terminate()
+            except ProcessLookupError as e:
+                pass
             if wait:
                 self.proc.wait()
 

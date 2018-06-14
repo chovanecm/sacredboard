@@ -39,6 +39,22 @@ define(["knockout", "text!./template.html", "plot/component", "runs/Metric"],
                  * @memberOf viewModel
                  */
                 this.selectedMetrics = ko.observableArray();
+
+                this.selectAllMetrics = ko.pureComputed({
+                    read: function () {
+                        return self.availableMetrics().length === self.selectedMetrics().length;
+                    },
+                    write: function (value) {
+                        if (value == true) {
+                            self.availableMetrics()
+                                .filter(metric => self.selectedMetrics.indexOf(metric) < 0)
+                                .forEach(metric => self.selectedMetrics.push(metric));
+                        } else {
+                            self.selectedMetrics.removeAll();
+                        }
+                    }
+                });
+
                 //this.axisTypes = ["linear", "log", "date"];.
                 /**
                  * One of linear, log, date
