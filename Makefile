@@ -37,3 +37,6 @@ pydevrequirements: dev-requirements.txt
 	pip install -r dev-requirements.txt
 
 test: pytest qunit flake8 pydocstyle eslint
+
+clean:
+	rm -r node_modules
