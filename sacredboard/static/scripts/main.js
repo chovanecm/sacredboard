@@ -9,7 +9,9 @@ var require = {
         "datatables-bootstrap" : "../vendors/datatables/DataTables-1.10.15/js/dataTables.bootstrap",
         bootstrap: "../vendors/bootstrap/js/bootstrap.min",
         "text": "../vendors/text",
-        "plotly": "../vendors/plotly/plotly-latest.min"
+        "plotly": "../vendors/plotly/plotly-latest.min",
+        "moment": "../vendors/moment/moment-with-locales",
+        "bootstrap-datetimepicker": "../vendors/eonasdan-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min"
 
     },
     shim : {

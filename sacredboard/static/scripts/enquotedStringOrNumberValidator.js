@@ -19,22 +19,29 @@ define(["knockout"], function (ko) {
         //define a function to do validation
         function validate(newValue) {
             var error = false;
-            var message;
-            try {
-                var parsed = JSON.parse(newValue);
-                // only string or numbers
-                if (typeof(parsed) != "string" && typeof(parsed) != "number") {
-                    error = true;
-                    message = "Enquoted \"string\" or number required.";
-                }
+            var message = "Enquoted \"string\", number, or d:ISO-Date required.";
 
-                if (queryFilter.operator() == "regex" && typeof(parsed) != "string") {
+            //Check date
+            if (newValue.startsWith("d:")) {
+                const strDate = newValue.substr(2);
+                const date = Date.parse(strDate);
+                error = isNaN(date);
+            } else {
+                // Check strings and numbers
+                try {
+                    var parsed = JSON.parse(newValue);
+                    // only string or numbers
+                    if (typeof(parsed) != "string" && typeof(parsed) != "number") {
+                        error = true;
+                    }
+
+                    if (queryFilter.operator() == "regex" && typeof(parsed) != "string") {
+                        error = true;
+                        message = "Enquoted \"string\" value required for regular expressions";
+                    }
+                } catch (ex) {
                     error = true;
-                    message = "Enquoted \"string\" value required for regular expressions";
                 }
-            } catch (ex) {
-                error = true;
-                message = "Enquoted \"string\" or number required.";
             }
             target.hasError(error);
             target.validationMessage(error ? message : "");

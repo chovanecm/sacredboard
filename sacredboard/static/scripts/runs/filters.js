@@ -2,8 +2,8 @@
 /**
  * Defines the view-model for filters.
  */
-define(["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilter", "runs/filters/queryFilters"],
-    function (ko, $, htmlTemplate, QueryFilter, QueryFilters) {
+define(["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilter", "runs/filters/queryFilters", "bootstrap-datetimepicker"],
+    function (ko, $, htmlTemplate, QueryFilter, QueryFilters, dateTimePicker) {
 
         /**
          * Experiment Run Filter view-model module.
@@ -33,6 +33,7 @@ define(["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilte
                         this.queryFilters = params.value;
                         this.filterToAdd = ko.observable(new QueryFilter("", "", ""));
                         this.addFilter = function () {
+                            console.log(this.dateTimePicker.date());
                             if (this.filterReadyToAdd()) {
                                 this.queryFilters().addFilter(this.filterToAdd().clone());
                             }
@@ -42,6 +43,15 @@ define(["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilte
                             var fieldAndOperatorSet = (this.filterToAdd().field() != "" && this.filterToAdd().operator() != "");
                             return fieldAndOperatorSet && !this.filterToAdd().value.hasError();
                         };
+                        const picker = $('#datetimepicker1');
+                        picker.datetimepicker({showClose: true, sideBySide: true, keepInvalid: true});
+
+                        this.dateTimePicker = picker.data("DateTimePicker");
+                        picker.on("dp.change", e => this.filterToAdd().value("d:" + e.date.toISOString()));
+
+                        function getSelectedDate() {
+                            return this.dateTimePicker.date();
+                        }
 
                     },
                     template: htmlTemplate

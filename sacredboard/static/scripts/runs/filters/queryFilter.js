@@ -93,7 +93,11 @@ define(["knockout", "enquotedStringOrNumberValidator"],
                  * validateJSONValue validator from the enquotedStringOrNumberValidator
                  * module (required by this module)
                  */
-                this.value = ko.observable(value).extend({validateJSONValue: this});
+                this.value = ko.observable(value).extend(
+                    {
+                        validateJSONValue: this
+                    });
+
                 /**
                  * JavaScript native value of the user's value input.
                  *
@@ -102,9 +106,19 @@ define(["knockout", "enquotedStringOrNumberValidator"],
                  * and an enquoted "string" must be trimmed from the extra quotes.
                  */
                 this.nativeValue = ko.pureComputed(function () {
-                    return JSON.parse(this.value());
+                    return this.holdsDateValue() ? this.getStrDateValue() : JSON.parse(this.value());
                 }, this);
+            }
 
+            holdsDateValue() {
+                return this.value().startsWith("d:");
+            }
+
+            getStrDateValue() {
+                if (!this.holdsDateValue()) {
+                    throw new Error("Cannot get string date value of a non-date query value: " + this.value());
+                }
+                return this.value().substr(2);
             }
 
             /**
@@ -128,11 +142,15 @@ define(["knockout", "enquotedStringOrNumberValidator"],
              * the filter for serialisation as requested by the Sacredboard API.
              */
             toDto() {
-                return {
+                const dto = {
                     "field": this.field(),
                     "operator": this.operator(),
                     "value": this.nativeValue()
                 };
+                if (this.holdsDateValue()) {
+                    dto["valueType"] = "DateTime";
+                }
+                return dto;
             }
 
             addParentObserver(observer) {
