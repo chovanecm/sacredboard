@@ -5,6 +5,7 @@ Issue: https://github.com/chovanecm/sacredboard/issues/69
 """
 import bson
 import pymongo
+import isodate
 
 from sacredboard.app.data import NotFoundError
 from sacredboard.app.data.pymongo import GenericDAO
@@ -156,25 +157,28 @@ class MongoRunDAO(RunDAO):
         """
         # It's a regular clause
         mongo_clause = {}
-        value = clause["value"]
+
+        value_mapping = {
+            None: lambda x: x,
+            "DateTime": lambda val: isodate.parse_datetime(val)
+        }
+
+        value = value_mapping[clause.get("valueType")](clause["value"])
+
+        operator_mapping = {
+            "==": "$eq",
+            ">": "$gt",
+            ">=": "$gte",
+            "<": "$lt",
+            "<=": "$lte",
+            "!=": "$ne",
+            "regex": "$regex"
+        }
         if clause["field"] == "status" and clause["value"] in ["DEAD",
                                                                "RUNNING"]:
             return MongoRunDAO. \
                 _status_filter_to_query(clause)
-        if clause["operator"] == "==":
-            mongo_clause[clause["field"]] = value
-        elif clause["operator"] == ">":
-            mongo_clause[clause["field"]] = {"$gt": value}
-        elif clause["operator"] == ">=":
-            mongo_clause[clause["field"]] = {"$gte": value}
-        elif clause["operator"] == "<":
-            mongo_clause[clause["field"]] = {"$lt": value}
-        elif clause["operator"] == "<=":
-            mongo_clause[clause["field"]] = {"$lte": value}
-        elif clause["operator"] == "!=":
-            mongo_clause[clause["field"]] = {"$ne": value}
-        elif clause["operator"] == "regex":
-            mongo_clause[clause["field"]] = {"$regex": value}
+        mongo_clause[clause["field"]] = {operator_mapping[clause["operator"]]: value}
         return mongo_clause
 
     @staticmethod

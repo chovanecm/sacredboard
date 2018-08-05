@@ -3,3 +3,4 @@ click
 pymongo
 gevent
 simplejson
+isodate
