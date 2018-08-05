@@ -4,7 +4,7 @@ define(["knockout"], function (ko) {
      * in the dictionary-browser component.
      *
      * The DictEntries are intended to be built as trees:
-     * there is one root DictEntry with arbitrary name holding the entire
+     * There is one root DictEntry with arbitrary name holding the entire
      * dictionary or array. Its display value is calculated based on the
      * actual value type (array, object, native type).
      *

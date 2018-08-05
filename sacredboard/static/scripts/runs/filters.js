@@ -23,7 +23,7 @@ define(["knockout", "jquery", "text!runs/filters.html", "runs/filters/queryFilte
              other than terminal clause filters on the top level of the QueryFilters.
              (Nested QueryFilters are ignored).
              Example:
-             <query-filter params="value: queryFilters"></query-filter>
+             <query-filter params="value: queryFilters"></query-filter>.
 
              @function
              */
