@@ -14,7 +14,7 @@ Sacredboard was written as a part of a [master's thesis](https://dspace.cvut.cz/
 
 Unfortunately, the days I was full-time working on the tool as a student writing his thesis are gone. Sacredboard is now a side project, updated rather once in a while than on a regular basis, mainly because of its active users that deserve their requests for improvements and bugfixes to be addressed.
 
-# Features in version 0.4
+# Features in version 0.4.2
 
 - Get an overview of running and finished experiments in a table,
  such as experiment name, machine on which it runs etc.
@@ -26,7 +26,6 @@ Unfortunately, the days I was full-time working on the tool as a student writing
     charts and [Tensorflow](https://www.tensorflow.org) graph visualisations,
     provided that the experiment uses Sacred's 
     [Integration with Tensorflow](http://sacred.readthedocs.io/en/latest/tensorflow.html)
-     (this feature was broken for a long time and is (partially) fixed in the current dev version)
 - Visualise [Metrics](http://sacred.readthedocs.io/en/latest/collected_information.html#metrics-api) in a chart.
 - Use the MongoDB and newly also FileStorage backend (experimental, thanks to [Gideon Dresdner](https://github.com/gideonite))
 - Delete experiments from the UI
