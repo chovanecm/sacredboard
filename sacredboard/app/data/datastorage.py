@@ -1,6 +1,7 @@
 """Interfaces for data storage."""
 from sacredboard.app.data.rundao import RunDAO
 from .errors import NotFoundError
+from .filesdao import FilesDAO
 from .metricsdao import MetricsDAO
 
 
@@ -51,6 +52,15 @@ class DataStorage:
         """
         raise NotImplementedError(
             "Run Data Access Object must be implemented.")
+
+    def get_files_dao(self) -> FilesDAO:
+        """
+        Return a data access object for files.
+
+        :return: FilesDAO
+        """
+        raise NotImplementedError(
+            "Artifacts Data Access Object must be implemented.")
 
 
 class DummyMetricsDAO(MetricsDAO):

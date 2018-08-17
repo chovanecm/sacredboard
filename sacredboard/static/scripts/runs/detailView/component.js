@@ -13,8 +13,9 @@ define(
         "text!./template.html",
         "runs/dictionaryBrowser/component",
         "runs/metricsViewer/component",
+        "runs/filesBrowser/component",
         "jquery"],
-    function (ko, escapeHtml, htmlTemplate, dictionaryBrowser, metricsViewer, $) {
+    function (ko, escapeHtml, htmlTemplate, dictionaryBrowser, metricsViewer, filesBrowser, $) {
         ko.components.register("detail-view", {
             /**
              * Remove run.

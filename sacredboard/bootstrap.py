@@ -14,13 +14,13 @@ from sacredboard.app.sacredboard import Sacredboard
 from sacredboard.app.config import jinja_filters
 from sacredboard.app.data.filestorage import FileStorage
 from sacredboard.app.data.pymongo import PyMongoDataAccess
-from sacredboard.app.webapi import routes, metrics, runs, proxy
+from sacredboard.app.webapi import routes, metrics, runs, files, proxy
 from sacredboard.app.webapi.wsgi_server import ServerRunner
 
 locale.setlocale(locale.LC_ALL, '')
 app = Flask(__name__)
 server_runner = ServerRunner()
-webapi_modules = [proxy, routes, metrics, runs, jinja_filters, server_runner]
+webapi_modules = [proxy, routes, metrics, runs, files, jinja_filters, server_runner]
 
 
 @click.command()

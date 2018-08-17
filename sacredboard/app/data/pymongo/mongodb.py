@@ -3,7 +3,7 @@
 import pymongo
 
 from sacredboard.app.data.datastorage import Cursor, DataStorage
-from sacredboard.app.data.pymongo import GenericDAO, MongoMetricsDAO
+from sacredboard.app.data.pymongo import GenericDAO, MongoMetricsDAO, MongoFilesDAO
 from sacredboard.app.data.pymongo.rundao import MongoRunDAO
 
 
@@ -102,3 +102,11 @@ class PyMongoDataAccess(DataStorage):
         :return: RunDAO
         """
         return MongoRunDAO(self._generic_dao, self._collection_name)
+
+    def get_files_dao(self):
+        """
+        Return a data access object for Files.
+
+        :return: RunDAO
+        """
+        return MongoFilesDAO(self._generic_dao)

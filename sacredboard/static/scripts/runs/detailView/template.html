@@ -46,6 +46,14 @@
                     <a data-bind="attr: {href: '#metrics-' + run.id}"
                        data-toggle="pill">Metrics plots</a>
                 </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#artifacts-' + run.id}"
+                       data-toggle="pill">Artifacts</a>
+                </li>
+                <li role="presentation">
+                    <a data-bind="attr: {href: '#sources-' + run.id}"
+                       data-toggle="pill">Sources</a>
+                </li>
                 <li>
                     <button class="btn btn-block btn-danger"
                             data-bind="click: deleteRun">
@@ -144,6 +152,22 @@
             <div data-bind="attr: {id: 'metrics-' + run.id}" class="tab-pane">
                 <div class="detail-page-box">
                     <metrics-viewer params="run: run.object"></metrics-viewer>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'artifacts-' + run.id}"
+                 class="tab-pane table-responsive">
+                <h4>Artifacts</h4>
+                <div class="detail-page-box">
+                    <files-browser
+                            params='files: run.object.artifacts, run_id:run.object._id, all_url:"/api/artifacts/"'></files-browser>
+                </div>
+            </div>
+            <div data-bind="attr: {id: 'sources-' + run.id}"
+                 class="tab-pane table-responsive">
+                <h4>Sources</h4>
+                <div class="detail-page-box">
+                    <files-browser
+                            params='files: run.object.experiment.sources, run_id:run.object._id, all_url:"/api/sources/"'></files-browser>
                 </div>
             </div>
         </div>
