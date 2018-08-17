@@ -32,6 +32,12 @@ define(
                 var self = this;
                 this.escape = escapeHtml;
                 this.run = params.run;
+
+                function isExperimentRunning() {
+                    return self.run.is_alive;
+                }
+
+                this.scrollOutputDown = ko.observable(isExperimentRunning());
                 this._deleteFunction = params.deleteRunHandler ||
                     function (id) {
                         throw "Not Implemented";

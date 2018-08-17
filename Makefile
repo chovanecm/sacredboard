@@ -14,7 +14,7 @@ flake8:
 	flake8 sacredboard
 
 pytest:
-	python setup.py test
+	python setup.py test -v
 
 node_modules:	package.json
 	npm install

@@ -5,7 +5,7 @@ define(["./formatDate"], function (formatDate) {
      *
      * Return number as is or dates as a formatted string that is accepted by Plotly.
      *
-     * @param {Date[]|Number[]} dataPoints - Array of numbers or dates to be used as values.
+     * @param {Date[]|number[]} dataPoints - Array of numbers or dates to be used as values.
      */
     function convertDataPoints(dataPoints) {
         return dataPoints.map(function (value) {

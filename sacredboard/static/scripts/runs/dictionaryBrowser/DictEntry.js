@@ -74,7 +74,7 @@ define(["knockout"], function (ko) {
      * In case of arrays, the returned keys are its indices as strings.
      *
      * @param {boolean} sort - Sort the returned array of keys.
-     * @returns {String[]} The array of the value keys or an empty array for native types.
+     * @returns {string[]} The array of the value keys or an empty array for native types.
      */
     DictEntry.prototype.getChildrenKeys = function (sort) {
         var keys = [];

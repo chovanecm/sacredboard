@@ -8,7 +8,13 @@ and displays a list of experiments, their state, Sacred configuration and
 the standard output from the running program.  
 Python 3.5 and a modern web browser are  required for it to work properly.
 
-# Features in version 0.4
+### Project Background (is Sacredboard dead?)
+
+Sacredboard was written as a part of a [master's thesis](https://dspace.cvut.cz/bitstream/handle/10467/69995/F8-DP-2017-Chovanec-Martin-thesis.pdf?sequence=1&isAllowed=y) at Czech Technical University in 2016 and 2017. Supervised by the main developer of Sacred (Klaus Greff from the [Swiss AI Lab IDSIA](http://www.idsia.ch/)), who promoted Sacredboard on the Sacred homepage and at the end of his talk at the [SciPy 2017 Python conference](https://www.youtube.com/watch?v=qqg7RO0o1OE), it has become used by more people that I expected.
+
+Unfortunately, the days I was full-time working on the tool as a student writing his thesis are gone. Sacredboard is now a side project, updated rather once in a while than on a regular basis, mainly because of its active users that deserve their requests for improvements and bugfixes to be addressed.
+
+# Features in version 0.4.2
 
 - Get an overview of running and finished experiments in a table,
  such as experiment name, machine on which it runs etc.
@@ -20,7 +26,6 @@ Python 3.5 and a modern web browser are  required for it to work properly.
     charts and [Tensorflow](https://www.tensorflow.org) graph visualisations,
     provided that the experiment uses Sacred's 
     [Integration with Tensorflow](http://sacred.readthedocs.io/en/latest/tensorflow.html)
-     (does not work with TensorFlow 1.2 now)
 - Visualise [Metrics](http://sacred.readthedocs.io/en/latest/collected_information.html#metrics-api) in a chart.
 - Use the MongoDB and newly also FileStorage backend (experimental, thanks to [Gideon Dresdner](https://github.com/gideonite))
 - Delete experiments from the UI
@@ -89,7 +94,7 @@ To display help, run
 
 ## Contributing
 
-Contributions to Sacred are welcomed (see issues for inspiration).
+Contributions to Sacred are welcome (see issues for inspiration).
 The project tries to follow the git-flow workflow. Therefore,
 contributions of new features should be developed against the `develop` branch. Thank you!
 

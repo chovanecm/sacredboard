@@ -14,9 +14,9 @@ define([], function () {
         /**
          * Create a new Series object.
          *
-         * @param {ko.observable.Array.<Date>|ko.observable.Array.<Number>} x - X data of the series.
+         * @param {ko.observable.Array.<Date>|ko.observable.Array.<number>} x - X data of the series.
          * Either an array of dates or numbers.
-         * @param {ko.observable.Array.<Number>} y - Y data of the series.
+         * @param {ko.observable.Array.<number>} y - Y data of the series.
          * @param {string} label - Label of the series.
          *
          * @example new Series(

@@ -61,30 +61,30 @@
         <table id="runs" class="table table-striped table-hover">
             <caption>Experiments Run Overview<br>
                 Legend:
-                <span class="run-alive">&block;</span> <input type="checkbox"
+                <span class="run-alive">&block;</span> <label><input type="checkbox"
                                                               data-bind="checkedValue: predefinedFilters['run-alive'], checked: statusFilters.filters">
-                Running,
-                <span class="run-completed">&block;</span> <input
+                Running,</label>
+                <span class="run-completed">&block;</span> <label><input
                         type="checkbox"
                         data-bind="checkedValue: predefinedFilters['run-completed'], checked: statusFilters.filters">
-                Completed,
-                <span class="run-failed">&block;</span> <input type="checkbox"
+                Completed,</label>
+                <span class="run-failed">&block;</span> <label><input type="checkbox"
                                                                data-bind="checkedValue: predefinedFilters['run-failed'], checked: statusFilters.filters">
-                Failed,
-                <span class="run-interrupted">&block;</span> <input
+                Failed,</label>
+                <span class="run-interrupted">&block;</span> <label><input
                         type="checkbox"
                         data-bind="checkedValue: predefinedFilters['run-interrupted'], checked: statusFilters.filters">
-                Interrupted,
-                <span class="run-timeout">&block;</span> <input
+                Interrupted,</label>
+                <span class="run-timeout">&block;</span> <label><input
                         type="checkbox"
                         data-bind="checkedValue: predefinedFilters['run-timeout'], checked: statusFilters.filters">
-                Timeout,
-                <span class="run-dead">&block;</span> <input type="checkbox"
+                Timeout,</label>
+                <span class="run-dead">&block;</span> <label><input type="checkbox"
                                                              data-bind="checkedValue: predefinedFilters['run-dead'], checked: statusFilters.filters">
-                Probably dead,
-                <span class="run-queued">&block;</span> <input type="checkbox"
+                Probably dead,</label>
+                <span class="run-queued">&block;</span> <label><input type="checkbox"
                                                                data-bind="checkedValue: predefinedFilters['run-queued'], checked: statusFilters.filters">
-                Queued
+                Queued</label>
                     &nbsp;&nbsp; <button data-bind="click: reloadTable">Refresh</button>
             </caption>
             <thead>

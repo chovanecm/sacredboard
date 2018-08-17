@@ -34,7 +34,7 @@ class Process:
         # necessary for reading from processes that don't flush
         # stdout automatically
         environment["PYTHONUNBUFFERED"] = "1"
-        self.proc = Popen(self.command, env=environment, stdout=PIPE)
+        self.proc = Popen(self.command, env=environment, stdout=PIPE, stderr=PIPE)
         Process.instances.append(self)
 
     def is_running(self):
@@ -49,14 +49,26 @@ class Process:
 
         :raise TimeoutError
         """
+        return self._read_line("stdout", time_limit)
+
+    def read_line_stderr(self, time_limit=None):
+        """
+        Read a line from the process standard error.
+
+        Wait at most time_limit seconds for output, then :raise TimeoutError.
+        """
+        return self._read_line("stderr", time_limit)
+
+    def _read_line(self, source, time_limit=None):
         if self.proc is not None:
+            read_from = self._get_read_object(source)
             poll_obj = select.poll()
-            poll_obj.register(self.proc.stdout, select.POLLIN)
+            poll_obj.register(read_from, select.POLLIN)
             start = time.time()
             while time_limit is None or time.time() - start < time_limit:
                 poll_result = poll_obj.poll(0)
                 if poll_result:
-                    line = self.proc.stdout.readline().decode()
+                    line = read_from.readline().decode()
                     return line
                 else:
                     time.sleep(0.05)
@@ -64,11 +76,23 @@ class Process:
         else:
             return None
 
+    def _get_read_object(self, source):
+        if source == "stdout":
+            read_from = self.proc.stdout
+        elif source == "stderr":
+            read_from = self.proc.stderr
+        else:
+            raise ValueError("Unknown source " + source + ". Valid: stdout, stderr")
+        return read_from
+
     def terminate(self, wait=False):
         """Terminate the process."""
         if self.proc is not None:
             self.proc.stdout.close()
-            self.proc.terminate()
+            try:
+                self.proc.terminate()
+            except ProcessLookupError as e:
+                pass
             if wait:
                 self.proc.wait()
 
@@ -127,6 +151,17 @@ class WindowsProcess(Process):
         """
         if self.proc is not None:
             return self.proc.stdout.readline().decode()
+        else:
+            return None
+
+    def read_line_stderr(self, time_limit=None):
+        """
+        Read a line from the process.
+
+        On Windows, this the time_limit has no effect, it always blocks.
+        """
+        if self.proc is not None:
+            return self.proc.stderr.readline().decode()
         else:
             return None
 

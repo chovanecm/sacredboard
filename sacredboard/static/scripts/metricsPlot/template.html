@@ -2,13 +2,18 @@
     <div class="col-md-2">
         <div class="form-group">
             <label>Metrics</label>
-            <!-- ko foreach: availableMetrics  -->
-            <div class="checkbox">
-                <label><input type="checkbox"
-                              data-bind="value: name, checkedValue: $data, checked: $parent.selectedMetrics"><span
-                        data-bind="text: name"></span></label>
+            <div class="checkbox" data-bind="visible: availableMetrics().length > 0">
+                <label><input type="checkbox" data-bind="checked: selectAllMetrics"><i>Display all</i></label>
             </div>
-            <!-- /ko -->
+            <ul style="padding-left: 0.5eM">
+                <!-- ko foreach: availableMetrics  -->
+                <li class="checkbox">
+                    <label><input type="checkbox"
+                                  data-bind="checkedValue: $data, checked: $parent.selectedMetrics"><span
+                            data-bind="text: name"></span></label>
+                </li>
+                <!-- /ko -->
+            </ul>
             <div data-bind="visible: availableMetrics().length == 0">No metrics to show</div>
         </div>
         <div class="form-group">

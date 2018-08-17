@@ -14,11 +14,11 @@ sacredboard.app.process.tensorboard.TENSORBOARD_BINARY = "python %s/tensorboard.
 @py.mark.timeout(15)
 def test_run_tensorboard():
     port = sacredboard.app.process.tensorboard.run_tensorboard("/tmp/logdir")
-    assert port == "6006"
+    assert port == 6006
 
 
 @py.mark.timeout(15)
-def test_run_tensorboard_other_output():
+def test_run_tensorboard_unexpected_output():
     with py.raises(p.UnexpectedOutputError) as ex:
         port = sacredboard.app.process.tensorboard.run_tensorboard("/tmp/logdir",
                                                                    tensorboard_args=["--print-nonsense"])
@@ -48,3 +48,7 @@ def test_run_tensorboard_timeout():
         port = sacredboard.app.process.tensorboard.run_tensorboard("/tmp/logdir",
                                                                    tensorboard_args=["--print-nothing"],
                                                                    timeout=0.5)
+def test_parse_port_from_tensorboard_output():
+    input = "TensorBoard 1.8.0 at http://martin-VirtualBox:36869"
+    port = sacredboard.app.process.tensorboard.parse_port_from_tensorboard_output(input)
+    assert port == 36869
