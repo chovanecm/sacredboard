@@ -1,6 +1,6 @@
 {
   "name": "sacredboard",
-  "version": "0.4.1-dev5",
+  "version": "0.4.2",
   "description": "Sacredboard NPM package file for automatic tests.",
   "dependencies": {},
   "devDependencies": {
