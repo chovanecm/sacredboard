@@ -24,6 +24,10 @@ define(["knockout", "text!runs/filesBrowser/template.html"],
                     window.location.href = `api/file/${file.file_id.$oid}`;
                 };
 
+                this.viewFile = function (file) {
+                    window.open(`api/fileview/${file.file_id.$oid}`, "_blank");
+                };
+
                 this.downloadFileAll = function (vm) {
                     window.location.href = this.url_all + vm.run_id;
                 };

@@ -5,14 +5,17 @@
         <tr>
             <td data-bind="text: name"></td>
             <td>
-                <button class="btn btn-info" data-bind="click: $parent.downloadFile">
+                <button class="btn btn-info" data-bind="click: $parent.viewFile">
+                    VIEW
+                </button>
+                <button class="btn btn-primary" data-bind="click: $parent.downloadFile">
                     DOWNLOAD
                 </button>
             </td>
         </tr>
     </tbody>
 </table>
-<button class="btn btn-info" data-bind="click: downloadFileAll">
+<button class="btn btn-primary" data-bind="click: downloadFileAll">
     DOWNLOAD ALL
 </button>
 <!-- /ko -->

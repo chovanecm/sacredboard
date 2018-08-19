@@ -1,15 +1,15 @@
 """
 Accessing the files.
 """
-from flask import Blueprint, current_app, send_file
-
-from sacredboard.app.data import NotFoundError
-import bson
 from enum import Enum
 import io
 import os
 import mimetypes
 import zipfile
+
+from flask import Blueprint, current_app, render_template, send_file, Response
+
+from sacredboard.app.data import NotFoundError
 
 
 files = Blueprint("files", __name__)
@@ -26,7 +26,17 @@ _filetype_suffices = {
 }
 
 
-def get_file(file_id: str):
+def _get_binary_info(binary: bytes):
+    hex_data = ""
+    for i in range(0, 10):
+        if i > 0:
+            hex_data += " "
+        hex_data += hex(binary[i])
+    hex_data += " ..."
+    return f"Binary data\nLength: {len(binary)}\nFirst 10 bytes: {hex_data}"
+
+
+def get_file(file_id: str, download):
     """
     Get a specific file from GridFS.
 
@@ -34,19 +44,25 @@ def get_file(file_id: str):
     """
     data = current_app.config["data"]  # type: DataStorage
     dao = data.get_files_dao()
-    oid = bson.ObjectId(file_id)
-    file = dao.get(oid)
+    file = dao.get(file_id)
 
-    basename = os.path.basename(file.filename)
-    _, ext = os.path.splitext(basename)
+    if download:
+        mime = mimetypes.guess_type(file.filename)[0]
+        if mime is None:
+            # unknown type
+            mime = "binary/octet-stream"
 
-    if ext not in mimetypes.types_map:
-        # unknown type
-        mime = "binary/octet-stream"
+        basename = os.path.basename(file.filename)
+        return send_file(file, mimetype=mime, attachment_filename=basename, as_attachment=True)
     else:
-        mime = mimetypes.types_map[ext]
-
-    return send_file(file, mimetype=mime, attachment_filename=basename, as_attachment=True)
+        rawdata = file.read()
+        try:
+            text = rawdata.decode('utf-8')
+        except UnicodeDecodeError:
+            # not decodable as utf-8
+            text = _get_binary_info(rawdata)
+        html = render_template("api/file_view.html", content=text)
+        return Response(html)
 
 
 def get_files_zip(run_id: int, filetype: _FileType):
@@ -67,20 +83,24 @@ def get_files_zip(run_id: int, filetype: _FileType):
         for f in target_files:
             # source and artifact files use a different data structure
             file_id = f['file_id'] if 'file_id' in f else f[1]
-            oid = bson.ObjectId(file_id)
-            file = dao_files.get(oid)
+            file = dao_files.get(file_id)
             data = zipfile.ZipInfo(file.filename)
             data.compress_type = zipfile.ZIP_DEFLATED
             zf.writestr(data, file.read())
     memory_file.seek(0)
 
-    fn_suffix = _filetype_suffices(filetype)
+    fn_suffix = _filetype_suffices[filetype]
     return send_file(memory_file, attachment_filename=f'run{run_id}_{fn_suffix}.zip', as_attachment=True)
 
 
 @files.route("/api/file/<string:file_id>")
 def api_file(file_id):
-    return get_file(file_id)
+    return get_file(file_id, True)
+
+
+@files.route("/api/fileview/<string:file_id>")
+def api_fileview(file_id):
+    return get_file(file_id, False)
 
 
 @files.route("/api/artifacts/<int:run_id>")
