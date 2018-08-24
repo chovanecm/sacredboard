@@ -7,6 +7,8 @@ import os
 import mimetypes
 import zipfile
 
+import gridfs
+
 from flask import Blueprint, current_app, render_template, send_file, Response
 
 from sacredboard.app.data import NotFoundError
@@ -83,8 +85,8 @@ def get_files_zip(run_id: int, filetype: _FileType):
         for f in target_files:
             # source and artifact files use a different data structure
             file_id = f['file_id'] if 'file_id' in f else f[1]
-            file = dao_files.get(file_id)
-            data = zipfile.ZipInfo(file.filename)
+            file: gridfs.GridOut = dao_files.get(file_id)
+            data = zipfile.ZipInfo(file.filename, date_time=file.upload_date.timetuple())
             data.compress_type = zipfile.ZIP_DEFLATED
             zf.writestr(data, file.read())
     memory_file.seek(0)

@@ -24,7 +24,7 @@ class MongoFilesDAO(FilesDAO):
 
         self._fs = gridfs.GridFS(self.generic_dao._database)
 
-    def get(self, file_id: Union[str, bson.ObjectId]):
+    def get(self, file_id: Union[str, bson.ObjectId]) -> gridfs.GridOut:
         """Return the file identified by a file_id string."""
         if isinstance(file_id, str):
             file_id = bson.ObjectId(file_id)
