@@ -1,12 +1,8 @@
-"""
-Interface for accessing Sacred files.
-"""
+"""Interface for accessing Sacred files."""
 
 
 class FilesDAO:
-    """
-    Interface for accessing files.
-    """
+    """Interface for accessing files."""
 
     def get(self, file_id):
         """

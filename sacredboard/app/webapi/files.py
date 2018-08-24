@@ -1,13 +1,9 @@
-"""
-Accessing the files.
-"""
+"""Accessing the files."""
 from enum import Enum
 import io
 import os
 import mimetypes
 import zipfile
-
-import gridfs
 
 from flask import Blueprint, current_app, render_template, send_file, Response
 
@@ -35,7 +31,7 @@ def _get_binary_info(binary: bytes):
             hex_data += " "
         hex_data += hex(binary[i])
     hex_data += " ..."
-    return f"Binary data\nLength: {len(binary)}\nFirst 10 bytes: {hex_data}"
+    return "Binary data\nLength: {}\nFirst 10 bytes: {}".format(len(binary), hex_data)
 
 
 def get_file(file_id: str, download):
@@ -68,6 +64,7 @@ def get_file(file_id: str, download):
 
 
 def get_files_zip(run_id: int, filetype: _FileType):
+    """Send all artifacts or sources of a run as ZIP."""
     data = current_app.config["data"]
     dao_runs = data.get_run_dao()
     dao_files = data.get_files_dao()
@@ -85,33 +82,37 @@ def get_files_zip(run_id: int, filetype: _FileType):
         for f in target_files:
             # source and artifact files use a different data structure
             file_id = f['file_id'] if 'file_id' in f else f[1]
-            file: gridfs.GridOut = dao_files.get(file_id)
+            file = dao_files.get(file_id)
             data = zipfile.ZipInfo(file.filename, date_time=file.upload_date.timetuple())
             data.compress_type = zipfile.ZIP_DEFLATED
             zf.writestr(data, file.read())
     memory_file.seek(0)
 
     fn_suffix = _filetype_suffices[filetype]
-    return send_file(memory_file, attachment_filename=f'run{run_id}_{fn_suffix}.zip', as_attachment=True)
+    return send_file(memory_file, attachment_filename='run{}_{}.zip'.format(run_id, fn_suffix), as_attachment=True)
 
 
 @files.route("/api/file/<string:file_id>")
 def api_file(file_id):
+    """Download a file."""
     return get_file(file_id, True)
 
 
 @files.route("/api/fileview/<string:file_id>")
 def api_fileview(file_id):
+    """View a file."""
     return get_file(file_id, False)
 
 
 @files.route("/api/artifacts/<int:run_id>")
 def api_artifacts(run_id):
+    """Download all artifacts of a run as ZIP."""
     return get_files_zip(run_id, _FileType.ARTIFACT)
 
 
 @files.route("/api/sources/<int:run_id>")
 def api_sources(run_id):
+    """Download all sources of a run as ZIP."""
     return get_files_zip(run_id, _FileType.SOURCE)
 
 

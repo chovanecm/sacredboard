@@ -1,6 +1,4 @@
-"""
-Module responsible for accessing the Files data in MongoDB.
-"""
+"""Module responsible for accessing the Files data in MongoDB."""
 from typing import Union
 
 import bson
@@ -25,7 +23,13 @@ class MongoFilesDAO(FilesDAO):
         self._fs = gridfs.GridFS(self.generic_dao._database)
 
     def get(self, file_id: Union[str, bson.ObjectId]) -> gridfs.GridOut:
-        """Return the file identified by a file_id string."""
+        """
+        Return the file identified by a file_id string.
+
+        The return value is a file-like object which also has the following attributes:
+        filename: str
+        upload_date: datetime
+        """
         if isinstance(file_id, str):
             file_id = bson.ObjectId(file_id)
         return self._fs.get(file_id)
