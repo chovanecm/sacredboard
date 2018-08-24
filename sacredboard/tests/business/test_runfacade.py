@@ -19,26 +19,27 @@ from sacredboard.app.data import DataStorage, MetricsDAO, NotFoundError
 from sacredboard.app.data.rundao import RunDAO
 
 
+@pytest.mark.skip(reason="Bug in pytest-bdd https://github.com/pytest-dev/pytest-bdd/issues/250")
 @scenario('runfacade.feature', 'Removing a run')
-def test_removing_a_run():
+def test_removing_a_run1():
     """Removing a run."""
     pass
 
 
+@pytest.mark.skip(reason="Bug in pytest-bdd https://github.com/pytest-dev/pytest-bdd/issues/250")
 @scenario('runfacade.feature', 'Removing a run when two runs exist')
-def test_removing_a_run():
+def test_abcremoving_a_run2():
     """Removing a run when two runs exist"""
     pass
 
-
+@pytest.mark.skip(reason="Bug in pytest-bdd https://github.com/pytest-dev/pytest-bdd/issues/250")
 @scenario('runfacade.feature', 'Removing a run with two metrics')
 def test_removing_a_run_with_two_metrics():
     """Removing a run with two metrics"""
     pass
 
-
 @when(parsers.parse('Run {run_id:d} exists'))
-def a_run_exists(data_access, run_id):
+def a_run_exists(run_id, data_access):
     """A run exists."""
     data_access.get_run_dao().should_receive("get").with_args(run_id) \
         .and_return({"_id": run_id})
