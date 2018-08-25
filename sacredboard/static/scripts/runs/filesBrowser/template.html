@@ -1,0 +1,25 @@
+<!-- ko if: files.length > 0 -->
+<table class="table table-condensed table-hover"
+        style="border-left: groove">
+    <tbody as data-bind="foreach: files">
+        <tr>
+            <td data-bind="text: name"></td>
+            <td>
+                <button class="btn btn-info" data-bind="click: $parent.viewFile">
+                    VIEW
+                </button>
+                <button class="btn btn-primary" data-bind="click: $parent.downloadFile">
+                    DOWNLOAD
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<button class="btn btn-primary" data-bind="click: downloadFileAll">
+    DOWNLOAD ALL
+</button>
+<!-- /ko -->
+<!-- ko ifnot: files.length > 0 -->
+No files
+<!-- /ko -->
+
