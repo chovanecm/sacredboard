@@ -58,7 +58,11 @@ class FileStoreRunDAO(RunDAO):
         """
         config = _read_json(_path_to_config(self.directory, run_id))
         run = _read_json(_path_to_run(self.directory, run_id))
-        info = _read_json(_path_to_info(self.directory, run_id))
+        try:
+            info = _read_json(_path_to_info(self.directory, run_id))
+        except IOError:
+            info = {}
+
         return _create_run(run_id, run, config, info)
 
 
