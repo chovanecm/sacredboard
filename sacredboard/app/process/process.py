@@ -91,7 +91,7 @@ class Process:
             self.proc.stdout.close()
             try:
                 self.proc.terminate()
-            except ProcessLookupError as e:
+            except ProcessLookupError:
                 pass
             if wait:
                 self.proc.wait()

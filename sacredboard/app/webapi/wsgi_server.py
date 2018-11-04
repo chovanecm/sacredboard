@@ -29,7 +29,7 @@ class ServerRunner:
                 self.http_server = WSGIServer(('0.0.0.0', port), app)
                 try:
                     self.http_server.start()
-                except OSError as e:
+                except OSError:
                     # try next port
                     continue
                 self.started_on_port = port
