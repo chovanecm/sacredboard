@@ -74,8 +74,9 @@ def _create_run(run_id, runjson, configjson, infojson):
     # TODO probably want a smarter way of detecting
     # which values have type "time."
     for k in ["start_time", "stop_time", "heartbeat"]:
-        runjson[k] = datetime.datetime.strptime(runjson[k],
-                                                '%Y-%m-%dT%H:%M:%S.%f')
+        if k in runjson:
+            runjson[k] = datetime.datetime.strptime(runjson[k],
+                                                    '%Y-%m-%dT%H:%M:%S.%f')
     return runjson
 
 
