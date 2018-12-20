@@ -14,6 +14,10 @@ Sacredboard was written as a part of a [master's thesis](https://dspace.cvut.cz/
 
 Unfortunately, the days I was full-time working on the tool as a student writing his thesis are gone. Sacredboard is now a side project, updated rather once in a while than on a regular basis, mainly because of its active users that deserve their requests for improvements and bugfixes to be addressed.
 
+**Please consider trying [Omniboard](https://github.com/vivekratnavel/omniboard)**, a new (and actively developed!) Sacredboard alternative by Vivek Ratnavel Subramanian and Yusaku Sako.
+
+A big thanks to everyone who has helped improving Sacredboad!
+
 # Features in version 0.4.2
 
 - Get an overview of running and finished experiments in a table,
@@ -32,7 +36,7 @@ Unfortunately, the days I was full-time working on the tool as a student writing
 
 ## Roadmap
 
-### Further Versions
+### Further Versions (maybe…)
 - Deleting experiments including related records, such as artifacts
 - [Customized formatting of the result column](https://github.com/chovanecm/sacredboard/issues/63)
 - Write wiki for developers :-)
