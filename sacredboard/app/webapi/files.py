@@ -5,7 +5,7 @@ import os
 import mimetypes
 import zipfile
 
-from flask import Blueprint, current_app, render_template, send_file, Response
+from flask import Blueprint, current_app, render_template, send_file, Response, send_from_directory
 
 from sacredboard.app.data import NotFoundError
 
@@ -42,24 +42,26 @@ def get_file(file_id: str, download):
     """
     data = current_app.config["data"]  # type: DataStorage
     dao = data.get_files_dao()
-    file = dao.get(file_id)
+    file_fp, filename, upload_date = dao.get(file_id)
 
     if download:
-        mime = mimetypes.guess_type(file.filename)[0]
+        mime = mimetypes.guess_type(filename)[0]
         if mime is None:
             # unknown type
             mime = "binary/octet-stream"
 
-        basename = os.path.basename(file.filename)
-        return send_file(file, mimetype=mime, attachment_filename=basename, as_attachment=True)
+        basename = os.path.basename(filename)
+        return send_file(file_fp, mimetype=mime, attachment_filename=basename, as_attachment=True)
+
     else:
-        rawdata = file.read()
+        rawdata = file_fp.read()
         try:
             text = rawdata.decode('utf-8')
         except UnicodeDecodeError:
             # not decodable as utf-8
             text = _get_binary_info(rawdata)
         html = render_template("api/file_view.html", content=text)
+        file_fp.close()
         return Response(html)
 
 
@@ -82,8 +84,8 @@ def get_files_zip(run_id: int, filetype: _FileType):
         for f in target_files:
             # source and artifact files use a different data structure
             file_id = f['file_id'] if 'file_id' in f else f[1]
-            file = dao_files.get(file_id)
-            data = zipfile.ZipInfo(file.filename, date_time=file.upload_date.timetuple())
+            file, filename, upload_date = dao_files.get(file_id)
+            data = zipfile.ZipInfo(filename, date_time=upload_date.timetuple())
             data.compress_type = zipfile.ZIP_DEFLATED
             zf.writestr(data, file.read())
     memory_file.seek(0)

@@ -1,5 +1,7 @@
 """Module responsible for accessing the Files data in MongoDB."""
+import datetime
 from typing import Union
+import typing
 
 import bson
 import gridfs
@@ -22,7 +24,7 @@ class MongoFilesDAO(FilesDAO):
 
         self._fs = gridfs.GridFS(self.generic_dao._database)
 
-    def get(self, file_id: Union[str, bson.ObjectId]) -> gridfs.GridOut:
+    def get(self, file_id: Union[str, bson.ObjectId]) -> [typing.BinaryIO, str, datetime.datetime]:
         """
         Return the file identified by a file_id string.
 
@@ -32,4 +34,5 @@ class MongoFilesDAO(FilesDAO):
         """
         if isinstance(file_id, str):
             file_id = bson.ObjectId(file_id)
-        return self._fs.get(file_id)
+        file = self._fs.get(file_id)
+        return file, file.filename, file.upload_date
