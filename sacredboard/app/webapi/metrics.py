@@ -7,7 +7,7 @@ import datetime
 
 from flask import Response, render_template, Blueprint, current_app
 
-from sacredboard.app.data import NotFoundError
+from sacredboard.app.data import NotFoundError, DataStorage
 
 metrics = Blueprint("metrics", __name__)
 

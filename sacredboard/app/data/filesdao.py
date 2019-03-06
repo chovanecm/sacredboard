@@ -9,6 +9,7 @@ class FilesDAO:
     def get(self, file_id) -> [typing.BinaryIO, str, datetime.datetime]:
         """
         Return the file associated with the id as binary stream and its filename and upload date.
+
         :raise NotFoundError when not found
         """
         raise NotImplementedError("RunDAO is abstract.")

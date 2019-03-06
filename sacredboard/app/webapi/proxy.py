@@ -47,5 +47,5 @@ def initialize(app: Flask, app_config):
     (e.g. http://localhost:5000/sacredboard/)
     """
     sub_url = app_config["http.serve_on_endpoint"]
-    if sub_url is not "/":
+    if sub_url != "/":
         app.wsgi_app = ReverseProxied(app.wsgi_app, script_name=sub_url)

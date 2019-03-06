@@ -5,7 +5,7 @@ import json
 from flask import current_app, request, Response, render_template, Blueprint
 
 from sacredboard.app.business import RunFacade
-from sacredboard.app.data import DataSourceError
+from sacredboard.app.data import DataSourceError, DataStorage
 
 runs = Blueprint("runs", __name__)
 

@@ -1,14 +1,13 @@
 """Accessing the files."""
-from enum import Enum
 import io
-import os
 import mimetypes
+import os
 import zipfile
+from enum import Enum
 
-from flask import Blueprint, current_app, render_template, send_file, Response, send_from_directory
+from flask import Blueprint, current_app, render_template, send_file, Response
 
-from sacredboard.app.data import NotFoundError
-
+from sacredboard.app.data import NotFoundError, DataStorage
 
 files = Blueprint("files", __name__)
 
